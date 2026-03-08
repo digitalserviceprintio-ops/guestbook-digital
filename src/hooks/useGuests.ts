@@ -84,9 +84,11 @@ export function useGuests() {
 
       if (error) {
         toast({ title: "Error", description: "Gagal mengupdate tamu.", variant: "destructive" });
+      } else {
+        await fetchGuests();
       }
     },
-    [toast]
+    [toast, fetchGuests]
   );
 
   const deleteGuest = useCallback(
