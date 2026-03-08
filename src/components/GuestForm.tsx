@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Guest, AttendanceStatus, GuestCategory, statusLabels } from "@/types/guest";
+import { Guest, AttendanceStatus, GuestCategory, Gender, statusLabels, genderLabels } from "@/types/guest";
 import { X } from "lucide-react";
 
 interface GuestFormProps {
