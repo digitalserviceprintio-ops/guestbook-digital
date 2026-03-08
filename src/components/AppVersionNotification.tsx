@@ -18,30 +18,64 @@ export function AppVersionNotification() {
 
   return (
     <AnimatePresence>
-      {/* Maintenance Banner */}
+      {/* Maintenance Full-Screen Overlay */}
       {isMaintenance && (
-        <motion.div
-          key="maintenance"
-          initial={{ opacity: 0, y: -60 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -60 }}
-          className="fixed top-0 left-0 right-0 z-[60] bg-warning text-warning-foreground px-4 py-3"
-        >
-          <div className="max-w-lg mx-auto flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 shrink-0" />
-              <div>
-                <p className="text-sm font-body font-semibold">Sedang Dalam Pemeliharaan</p>
-                <p className="text-xs font-body opacity-90">
+        <>
+          <motion.div
+            key="maintenance-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-foreground/40 backdrop-blur-md z-[60]"
+          />
+          <motion.div
+            key="maintenance"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[61] flex items-center justify-center p-4 sm:p-6"
+          >
+            <div className="w-full max-w-sm sm:max-w-md rounded-2xl bg-background shadow-elevated overflow-hidden">
+              {/* Header */}
+              <div className="bg-warning p-5 sm:p-6">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-warning-foreground/15 flex items-center justify-center shrink-0">
+                    <AlertTriangle className="h-6 w-6 sm:h-7 sm:w-7 text-warning-foreground" />
+                  </div>
+                  <div>
+                    <h2 className="font-display text-lg sm:text-xl font-bold text-warning-foreground">
+                      Sedang Dalam Pemeliharaan
+                    </h2>
+                    <p className="text-xs sm:text-sm font-body text-warning-foreground/80 mt-0.5">
+                      Mohon maaf atas ketidaknyamanannya
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-5 sm:p-6 space-y-4">
+                <p className="text-sm sm:text-base font-body text-foreground leading-relaxed">
                   {latestVersion.maintenance_message || "Aplikasi sedang dalam proses pemeliharaan. Beberapa fitur mungkin tidak berfungsi sementara."}
                 </p>
+                <div className="flex items-center gap-2 text-xs font-body text-muted-foreground bg-muted rounded-xl px-3 py-2.5">
+                  <Wrench className="h-4 w-4 shrink-0" />
+                  <span>Tim kami sedang bekerja untuk menyelesaikannya.</span>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+                <button
+                  onClick={dismissMaintenance}
+                  className="w-full bg-warning text-warning-foreground font-body font-semibold py-3 sm:py-3.5 rounded-xl hover:opacity-90 transition-opacity text-sm sm:text-base"
+                >
+                  Saya Mengerti
+                </button>
               </div>
             </div>
-            <button onClick={dismissMaintenance} className="p-1 rounded-lg hover:bg-warning-foreground/10 shrink-0">
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </motion.div>
+          </motion.div>
+        </>
       )}
 
       {/* Update Notification Popup */}
@@ -55,12 +89,12 @@ export function AppVersionNotification() {
             onClick={dismissUpdate}
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            className="fixed inset-x-4 top-[10%] md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-md z-[55]"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="fixed inset-0 z-[55] flex items-center justify-center p-4 sm:p-6"
           >
-            <div className="rounded-2xl bg-background shadow-elevated overflow-hidden">
+            <div className="w-full max-w-sm sm:max-w-md rounded-2xl bg-background shadow-elevated overflow-hidden">
               {/* Header */}
               <div className="gradient-navy p-5 text-primary-foreground relative">
                 <button
