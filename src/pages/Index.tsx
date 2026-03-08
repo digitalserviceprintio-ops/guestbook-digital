@@ -43,9 +43,10 @@ const Index = () => {
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
+      logout();
       navigate("/");
     }, IDLE_TIMEOUT);
-  }, [navigate]);
+  }, [navigate, logout]);
 
   useEffect(() => {
     resetTimer();
