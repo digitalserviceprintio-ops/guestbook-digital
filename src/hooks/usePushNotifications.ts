@@ -80,7 +80,7 @@ export function usePushNotifications() {
     const newPrefs = { ...prefs, ...updates };
     setPrefs(newPrefs);
     saveLocalPrefs(newPrefs);
-    const fp = getDeviceFingerprint();
+    const fp = generateDeviceFingerprint();
     await supabase.from("notification_subscriptions").upsert(
       {
         device_fingerprint: fp,
