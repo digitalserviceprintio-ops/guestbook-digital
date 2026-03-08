@@ -11,7 +11,8 @@ import defaultHero from "@/assets/wedding-hero.jpg";
 const Welcome = () => {
   const navigate = useNavigate();
   const { settings, loading } = useWeddingSettings();
-  const { isAuthenticated } = useTokenAuth();
+  const { isAuthenticated, hasSavedToken, quickLogin, tokenLabel } = useTokenAuth();
+  const [quickLoading, setQuickLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const images = settings.heroImages && settings.heroImages.length > 0
