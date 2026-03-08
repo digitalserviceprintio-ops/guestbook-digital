@@ -15,6 +15,13 @@ const Welcome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [now, setNow] = useState(new Date());
+
+  // Live clock
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const images = settings.heroImages && settings.heroImages.length > 0
     ? settings.heroImages
