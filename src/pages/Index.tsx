@@ -88,6 +88,13 @@ const Index = () => {
             >
               <FileBarChart className="h-4 w-4" />
             </button>
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Pengaturan"
+            >
+              <Settings className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </motion.header>
