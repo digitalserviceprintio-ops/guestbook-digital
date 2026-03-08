@@ -127,53 +127,54 @@ const Report = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
+        className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-4 sm:px-5 py-3 sm:py-4"
       >
         <div className="flex items-center justify-between max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button onClick={() => navigate("/dashboard")} className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-display text-lg md:text-xl font-bold text-foreground">Laporan</h1>
+            <h1 className="font-display text-base sm:text-lg md:text-xl font-bold text-foreground">Laporan</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 gradient-navy text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
+              className="flex items-center gap-1 sm:gap-1.5 gradient-navy text-primary-foreground font-body font-semibold px-2.5 sm:px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-[11px] sm:text-xs md:text-sm"
             >
-              <Printer className="h-4 w-4" />
-              Cetak
+              <Printer className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">Cetak</span>
             </button>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 gradient-gold text-accent-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
+              className="flex items-center gap-1 sm:gap-1.5 gradient-gold text-accent-foreground font-body font-semibold px-2.5 sm:px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-[11px] sm:text-xs md:text-sm"
             >
-              <FileSpreadsheet className="h-4 w-4" />
-              Excel
+              <FileSpreadsheet className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">Excel</span>
             </button>
           </div>
         </div>
       </motion.header>
 
-      <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 py-5 pb-10 space-y-5">
+      <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-4 sm:px-5 py-4 sm:py-5 pb-10 space-y-4 sm:space-y-5">
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col gap-2.5 sm:gap-3 sm:flex-row">
           {/* Category Filter */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex rounded-xl bg-card p-1 shadow-card flex-1">
             {filterTabs.map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setActiveFilter(tab.value)}
-                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-xs md:text-sm font-body font-medium transition-all ${
+                className={`flex-1 flex items-center justify-center gap-1 sm:gap-1.5 rounded-lg py-2 sm:py-2.5 text-[11px] sm:text-xs md:text-sm font-body font-medium transition-all ${
                   activeFilter === tab.value
                     ? "gradient-gold text-accent-foreground shadow-card"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <tab.icon className="h-3.5 w-3.5" />
+                <tab.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 {tab.label}
               </button>
             ))}
@@ -189,7 +190,7 @@ const Report = () => {
               <button
                 key={tab.value}
                 onClick={() => setGenderFilter(tab.value)}
-                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs md:text-sm font-body font-medium transition-all ${
+                className={`flex-1 flex items-center justify-center gap-1 rounded-lg py-2 text-[11px] sm:text-xs md:text-sm font-body font-medium transition-all ${
                   genderFilter === tab.value
                     ? "gradient-navy text-primary-foreground shadow-card"
                     : "text-muted-foreground hover:text-foreground"
@@ -203,38 +204,38 @@ const Report = () => {
 
         {/* Summary Stats */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-          <h2 className="font-display text-base md:text-lg font-bold text-foreground mb-3">
+          <h2 className="font-display text-sm sm:text-base md:text-lg font-bold text-foreground mb-2.5 sm:mb-3">
             Ringkasan {activeFilter === "semua" ? "Keseluruhan" : categoryLabels[activeFilter]}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
             <SummaryCard icon={Users} label="Total Undangan" value={stats.total.toString()} />
             <SummaryCard icon={UserCheck} label="Hadir" value={stats.hadir.toString()} color="text-success" />
             <SummaryCard icon={UserX} label="Tidak Hadir" value={stats.tidakHadir.toString()} color="text-destructive" />
             <SummaryCard icon={Clock} label="Belum Konfirmasi" value={stats.belum.toString()} color="text-pending" />
           </div>
-          <div className="grid grid-cols-2 gap-3 mt-3">
-            <div className="rounded-xl gradient-navy p-4 shadow-elevated">
-              <p className="text-[10px] md:text-xs font-body text-primary-foreground/80">Total Tamu</p>
-              <p className="text-2xl md:text-3xl font-display font-bold text-primary-foreground">{stats.totalTamu}</p>
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-2 sm:mt-3">
+            <div className="rounded-xl gradient-navy p-3 sm:p-4 shadow-elevated">
+              <p className="text-[9px] sm:text-[10px] md:text-xs font-body text-primary-foreground/80">Total Tamu</p>
+              <p className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-primary-foreground">{stats.totalTamu}</p>
             </div>
-            <div className="rounded-xl gradient-gold p-4 shadow-elevated">
-              <p className="text-[10px] md:text-xs font-body text-accent-foreground/80">Total Amplop</p>
-              <p className="text-lg md:text-xl font-display font-bold text-accent-foreground">{formatRupiah(stats.totalAmplop)}</p>
+            <div className="rounded-xl gradient-gold p-3 sm:p-4 shadow-elevated">
+              <p className="text-[9px] sm:text-[10px] md:text-xs font-body text-accent-foreground/80">Total Amplop</p>
+              <p className="text-sm sm:text-lg md:text-xl font-display font-bold text-accent-foreground">{formatRupiah(stats.totalAmplop)}</p>
             </div>
           </div>
         </motion.div>
 
         {/* Gender & Souvenir Stats */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <div className="rounded-xl bg-card p-4 shadow-card space-y-2.5">
+          <div className="rounded-xl bg-card p-3 sm:p-4 shadow-card space-y-2 sm:space-y-2.5">
             <Row label="Laki-laki" value={stats.lakiLaki} />
             <Row label="Perempuan" value={stats.perempuan} />
-            <div className="border-t border-border pt-2.5">
+            <div className="border-t border-border pt-2 sm:pt-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs md:text-sm font-body text-muted-foreground flex items-center gap-1.5">
-                  <Gift className="h-3.5 w-3.5" /> Souvenir Diambil
+                <span className="text-[11px] sm:text-xs md:text-sm font-body text-muted-foreground flex items-center gap-1.5">
+                  <Gift className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> Souvenir Diambil
                 </span>
-                <span className="text-sm md:text-base font-body font-semibold text-success">{stats.souvenirPickedUp} / {stats.hadir}</span>
+                <span className="text-xs sm:text-sm md:text-base font-body font-semibold text-success">{stats.souvenirPickedUp} / {stats.hadir}</span>
               </div>
             </div>
           </div>
@@ -244,36 +245,39 @@ const Report = () => {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
           <button
             onClick={() => setShowDetail(!showDetail)}
-            className="flex items-center justify-between w-full mb-3"
+            className="flex items-center justify-between w-full mb-2.5 sm:mb-3"
           >
-            <h2 className="font-display text-base md:text-lg font-bold text-foreground">Detail Tamu</h2>
-            {showDetail ? <ChevronUp className="h-5 w-5 text-muted-foreground" /> : <ChevronDown className="h-5 w-5 text-muted-foreground" />}
+            <h2 className="font-display text-sm sm:text-base md:text-lg font-bold text-foreground">Detail Tamu</h2>
+            {showDetail ? <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />}
           </button>
 
           {showDetail && (
             <>
               {/* Mobile card view */}
-              <div className="space-y-2 md:hidden">
+              <div className="space-y-2 lg:hidden">
                 {filteredGuests.length === 0 ? (
-                  <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
+                  <p className="text-center text-xs sm:text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
                 ) : (
                   filteredGuests.map((guest, idx) => (
-                    <div key={guest.id} className={`rounded-xl p-3 ${idx % 2 === 0 ? "bg-card" : "bg-muted"}`}>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-body font-semibold text-sm text-card-foreground">{idx + 1}. {guest.name}</p>
-                          <p className="text-[11px] font-body text-muted-foreground mt-0.5">
+                    <div key={guest.id} className={`rounded-xl p-2.5 sm:p-3 ${idx % 2 === 0 ? "bg-card" : "bg-muted"}`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-body font-semibold text-xs sm:text-sm text-card-foreground truncate">{idx + 1}. {guest.name}</p>
+                          <p className="text-[10px] sm:text-[11px] font-body text-muted-foreground mt-0.5">
                             {guest.gender === "laki_laki" ? "L" : "P"} · {guest.numberOfGuests} org · <span className={`font-medium ${
                               guest.status === "hadir" ? "text-success" :
                               guest.status === "tidak_hadir" ? "text-destructive" : "text-pending"
                             }`}>{statusLabels[guest.status]}</span>
                           </p>
+                          {guest.address && (
+                            <p className="text-[10px] font-body text-muted-foreground mt-0.5 truncate">{guest.address}</p>
+                          )}
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs font-body text-muted-foreground">
+                        <div className="text-right shrink-0">
+                          <p className="text-[10px] sm:text-xs font-body text-muted-foreground">
                             {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
                           </p>
-                          <p className="text-[10px] font-body mt-0.5">
+                          <p className="text-[9px] sm:text-[10px] font-body mt-0.5">
                             {guest.souvenirPickedUp ? (
                               <span className="text-success font-medium">Souvenir ✓</span>
                             ) : guest.status === "hadir" ? (
@@ -288,7 +292,7 @@ const Report = () => {
               </div>
 
               {/* Desktop table view */}
-              <div className="hidden md:block space-y-2">
+              <div className="hidden lg:block space-y-2">
                 {filteredGuests.length === 0 ? (
                   <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
                 ) : (
@@ -359,12 +363,12 @@ const Report = () => {
 
 function SummaryCard({ icon: Icon, label, value, color }: { icon: any; label: string; value: string; color?: string }) {
   return (
-    <div className="rounded-xl bg-card p-3.5 shadow-card">
-      <div className="flex items-center gap-2 mb-1">
-        <Icon className={`h-4 w-4 ${color || "text-accent"}`} />
-        <span className="text-[11px] md:text-xs font-body text-muted-foreground">{label}</span>
+    <div className="rounded-xl bg-card p-2.5 sm:p-3.5 shadow-card">
+      <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+        <Icon className={`h-3 w-3 sm:h-4 sm:w-4 ${color || "text-accent"}`} />
+        <span className="text-[10px] sm:text-[11px] md:text-xs font-body text-muted-foreground">{label}</span>
       </div>
-      <p className="text-xl md:text-2xl font-display font-bold text-card-foreground">{value}</p>
+      <p className="text-lg sm:text-xl md:text-2xl font-display font-bold text-card-foreground">{value}</p>
     </div>
   );
 }
@@ -372,8 +376,8 @@ function SummaryCard({ icon: Icon, label, value, color }: { icon: any; label: st
 function Row({ label, value, color }: { label: string; value: number; color?: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-xs md:text-sm font-body text-muted-foreground">{label}</span>
-      <span className={`text-sm md:text-base font-body font-semibold ${color || "text-card-foreground"}`}>{value}</span>
+      <span className="text-[11px] sm:text-xs md:text-sm font-body text-muted-foreground">{label}</span>
+      <span className={`text-xs sm:text-sm md:text-base font-body font-semibold ${color || "text-card-foreground"}`}>{value}</span>
     </div>
   );
 }
