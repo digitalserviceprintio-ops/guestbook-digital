@@ -130,6 +130,7 @@ const Index = () => {
             onSearchChange={setSearch}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onShowQR={(guest) => navigate(`/guest-qr/${guest.id}`)}
           />
         </div>
       </main>
