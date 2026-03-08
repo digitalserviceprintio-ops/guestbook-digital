@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { Guest, AttendanceStatus, GuestCategory } from "@/types/guest";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { syncGuestToSpreadsheet } from "@/lib/syncSpreadsheet";
 
 export function useGuests() {
   const [guests, setGuests] = useState<Guest[]>([]);
