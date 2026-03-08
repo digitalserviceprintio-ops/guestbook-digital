@@ -98,6 +98,7 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            <button
               onClick={() => navigate("/souvenir")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
               title="Souvenir"
