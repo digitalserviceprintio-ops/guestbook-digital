@@ -171,19 +171,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* FAB */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.4, type: "spring" }}
-        onClick={() => {
-          setEditingGuest(null);
-          setFormOpen(true);
-        }}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 h-14 w-14 rounded-full gradient-gold shadow-elevated flex items-center justify-center z-30 hover:opacity-90 transition-opacity"
-      >
-        <Plus className="h-6 w-6 text-primary-foreground" />
-      </motion.button>
 
       {/* Form Sheet */}
       <GuestForm
