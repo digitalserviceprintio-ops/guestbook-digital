@@ -49,6 +49,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
 
     const data = {
       name: name.trim(),
+      gender,
       numberOfGuests,
       address,
       envelopeAmount: parseInt(envelopeAmount) || 0,
