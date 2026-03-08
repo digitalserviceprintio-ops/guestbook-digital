@@ -105,6 +105,7 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal menghapus tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
+        syncGuestToSpreadsheet("delete", { id, name: "" });
       }
     },
     [toast, fetchGuests]
