@@ -40,6 +40,7 @@ const Index = () => {
   const navigate = useNavigate();
   const { logout, fullLogout, tokenLabel } = useTokenAuth();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { prefs, permissionState, requestPermission } = usePushNotifications();
   const IDLE_TIMEOUT = 20000; // 20 seconds
 
   const resetTimer = useCallback(() => {
