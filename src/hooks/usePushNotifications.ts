@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { getDeviceFingerprint } from "@/lib/deviceFingerprint";
+import { generateDeviceFingerprint } from "@/lib/deviceFingerprint";
 
 interface NotificationPrefs {
   enabled: boolean;
