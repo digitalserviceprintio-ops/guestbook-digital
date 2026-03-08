@@ -1,6 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
 import { Guest, AttendanceStatus, statusLabels, formatRupiah, genderLabels } from "@/types/guest";
-import { Search, Pencil, Trash2, MapPin, Banknote } from "lucide-react";
+import { Search, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
@@ -11,7 +10,6 @@ interface GuestListProps {
   onSearchChange: (s: string) => void;
   onEdit: (guest: Guest) => void;
   onDelete: (id: string) => void;
-  
 }
 
 const filterOptions: { value: AttendanceStatus | "all"; label: string }[] = [
@@ -38,6 +36,7 @@ export function GuestList({
 }: GuestListProps) {
   return (
     <div className="space-y-3">
+      {/* Search & Filter */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -66,76 +65,113 @@ export function GuestList({
         </div>
       </div>
 
-      <div className="space-y-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-3 md:space-y-0">
-        <AnimatePresence mode="popLayout">
-          {guests.length === 0 && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center text-sm text-muted-foreground py-8 font-body md:col-span-full"
-            >
-              Belum ada tamu yang terdaftar
-            </motion.p>
-          )}
-          {guests.map((guest) => (
-            <motion.div
-              key={guest.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="rounded-xl bg-card p-4 shadow-card"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-display font-semibold text-card-foreground truncate">
-                      {guest.name}
-                    </h3>
-                    <Badge className={`text-[10px] px-2 py-0 ${statusColorMap[guest.status]} border-0`}>
-                      {statusLabels[guest.status]}
-                    </Badge>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground font-body">
-                    <span>{genderLabels[guest.gender]} · {guest.numberOfGuests} orang</span>
-                    {guest.envelopeAmount > 0 && (
-                      <span className="flex items-center gap-1 text-primary font-medium">
-                        <Banknote className="h-3 w-3" />
-                        {formatRupiah(guest.envelopeAmount)}
-                      </span>
-                    )}
-                  </div>
-                  {guest.address && (
-                    <p className="text-xs text-muted-foreground mt-0.5 font-body flex items-center gap-1">
-                      <MapPin className="h-3 w-3 shrink-0" />
-                      {guest.address}
-                    </p>
-                  )}
-                  {guest.notes && (
-                    <p className="text-xs text-muted-foreground mt-0.5 font-body italic">
-                      {guest.notes}
-                    </p>
-                  )}
-                </div>
-                <div className="flex gap-1 shrink-0">
-                  <button
-                    onClick={() => onEdit(guest)}
-                    className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => onDelete(guest.id)}
-                    className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* Mobile: Card rows / Desktop: Table */}
+      {guests.length === 0 ? (
+        <p className="text-center text-sm text-muted-foreground py-8 font-body">
+          Belum ada tamu yang terdaftar
+        </p>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden md:block rounded-2xl bg-card shadow-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm font-body">
+                <thead>
+                  <tr className="border-b border-border bg-secondary/50">
+                    <th className="text-left px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">No</th>
+                    <th className="text-left px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Nama</th>
+                    <th className="text-left px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Gender</th>
+                    <th className="text-center px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Jumlah</th>
+                    <th className="text-left px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Status</th>
+                    <th className="text-right px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Amplop</th>
+                    <th className="text-left px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Alamat</th>
+                    <th className="text-left px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Catatan</th>
+                    <th className="text-center px-4 py-3 font-semibold text-muted-foreground text-xs uppercase tracking-wide">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {guests.map((guest, idx) => (
+                    <tr key={guest.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
+                      <td className="px-4 py-3 text-muted-foreground">{idx + 1}</td>
+                      <td className="px-4 py-3 font-semibold text-card-foreground whitespace-nowrap">{guest.name}</td>
+                      <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{genderLabels[guest.gender]}</td>
+                      <td className="px-4 py-3 text-center text-card-foreground">{guest.numberOfGuests}</td>
+                      <td className="px-4 py-3">
+                        <Badge className={`text-[10px] px-2 py-0.5 ${statusColorMap[guest.status]} border-0`}>
+                          {statusLabels[guest.status]}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-3 text-right text-card-foreground whitespace-nowrap">
+                        {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground max-w-[180px] truncate">{guest.address || "-"}</td>
+                      <td className="px-4 py-3 text-muted-foreground italic max-w-[150px] truncate">{guest.notes || "-"}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-center gap-1">
+                          <button onClick={() => onEdit(guest)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button onClick={() => onDelete(guest.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-destructive">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile: Compact Table */}
+          <div className="md:hidden rounded-2xl bg-card shadow-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs font-body">
+                <thead>
+                  <tr className="border-b border-border bg-secondary/50">
+                    <th className="text-left px-3 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px]">Nama</th>
+                    <th className="text-center px-2 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px]">Jml</th>
+                    <th className="text-center px-2 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px]">Status</th>
+                    <th className="text-right px-2 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px]">Amplop</th>
+                    <th className="text-center px-2 py-2.5 font-semibold text-muted-foreground uppercase tracking-wide text-[10px]">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {guests.map((guest) => (
+                    <tr key={guest.id} className="border-b border-border/50">
+                      <td className="px-3 py-2.5">
+                        <p className="font-semibold text-card-foreground truncate max-w-[120px]">{guest.name}</p>
+                        {guest.address && (
+                          <p className="text-[10px] text-muted-foreground truncate max-w-[120px]">{guest.address}</p>
+                        )}
+                      </td>
+                      <td className="px-2 py-2.5 text-center text-card-foreground">{guest.numberOfGuests}</td>
+                      <td className="px-2 py-2.5 text-center">
+                        <Badge className={`text-[9px] px-1.5 py-0 ${statusColorMap[guest.status]} border-0`}>
+                          {statusLabels[guest.status]}
+                        </Badge>
+                      </td>
+                      <td className="px-2 py-2.5 text-right text-card-foreground whitespace-nowrap">
+                        {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
+                      </td>
+                      <td className="px-2 py-2.5">
+                        <div className="flex items-center justify-center gap-0.5">
+                          <button onClick={() => onEdit(guest)} className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button onClick={() => onDelete(guest.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors text-destructive">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
