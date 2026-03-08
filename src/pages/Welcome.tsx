@@ -29,6 +29,32 @@ const Welcome = () => {
     return () => clearInterval(interval);
   }, [images.length]);
 
+  // Background music
+  const musicUrl = settings.backgroundMusic?.url;
+
+  useEffect(() => {
+    if (!musicUrl) return;
+    const audio = new Audio(musicUrl);
+    audio.loop = true;
+    audio.volume = 0.3;
+    audioRef.current = audio;
+    return () => {
+      audio.pause();
+      audio.src = "";
+    };
+  }, [musicUrl]);
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicPlaying) {
+      audio.pause();
+    } else {
+      audio.play().catch(() => {});
+    }
+    setMusicPlaying(!musicPlaying);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
