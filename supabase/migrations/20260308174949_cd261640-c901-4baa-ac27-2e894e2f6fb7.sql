@@ -1,0 +1,1 @@
+ALTER TABLE public.guests ADD COLUMN gender text NOT NULL DEFAULT 'laki_laki';
