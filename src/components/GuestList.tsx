@@ -97,7 +97,7 @@ export function GuestList({
                     </Badge>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground font-body">
-                    <span>{guest.numberOfGuests} orang</span>
+                    <span>{genderLabels[guest.gender]} · {guest.numberOfGuests} orang</span>
                     {guest.envelopeAmount > 0 && (
                       <span className="flex items-center gap-1 text-primary font-medium">
                         <Banknote className="h-3 w-3" />

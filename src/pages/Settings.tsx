@@ -213,6 +213,26 @@ const Settings = () => {
             />
           </div>
         </motion.div>
+
+        {/* Reset Data */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
+          <h2 className="font-display text-base font-bold text-destructive">Reset Data</h2>
+          <p className="text-xs font-body text-muted-foreground">Hapus semua data tamu dan reset souvenir. Pengaturan acara tidak akan dihapus.</p>
+          <button
+            onClick={async () => {
+              if (!window.confirm("Apakah Anda yakin ingin menghapus SEMUA data tamu? Tindakan ini tidak dapat dibatalkan.")) return;
+              const { error } = await supabase.from("guests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+              if (error) {
+                toast({ title: "Error", description: "Gagal mereset data.", variant: "destructive" });
+              } else {
+                toast({ title: "Berhasil", description: "Semua data tamu telah dihapus." });
+              }
+            }}
+            className="w-full bg-destructive text-destructive-foreground font-body font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
+          >
+            Hapus Semua Data Tamu
+          </button>
+        </motion.div>
       </main>
     </div>
   );
