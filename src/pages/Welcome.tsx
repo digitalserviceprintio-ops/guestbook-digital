@@ -139,6 +139,9 @@ const Welcome = () => {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="text-center space-y-2">
+          <p className="text-xs md:text-sm font-body text-muted-foreground tracking-widest uppercase">Bismillahirrahmanirrahim</p>
+          <p className="text-sm md:text-base font-body text-muted-foreground leading-relaxed">{settings.invitationText}</p>
+        </motion.div>
 
         {/* Event Details */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="rounded-2xl bg-card p-6 md:p-8 shadow-elevated space-y-4">
