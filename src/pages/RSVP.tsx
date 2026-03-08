@@ -65,6 +65,13 @@ const RSVP = () => {
     );
   }
 
+  useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => navigate("/"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, navigate]);
+
   if (submitted) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-5">
@@ -76,6 +83,7 @@ const RSVP = () => {
               ? `Konfirmasi kehadiran Anda (${numberOfGuests} orang) telah kami terima. Sampai jumpa di hari bahagia kami!`
               : "Terima kasih atas konfirmasinya. Semoga kita bisa bertemu di lain kesempatan."}
           </p>
+          <p className="text-xs font-body text-muted-foreground/60">Kembali ke halaman utama dalam 3 detik...</p>
         </motion.div>
       </div>
     );
