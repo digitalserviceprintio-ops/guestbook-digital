@@ -404,6 +404,7 @@ const Settings = () => {
 
             {/* App Version Info */}
             <AppVersionCard />
+            <DeveloperCard />
           </div>
         </div>
       </main>
@@ -456,6 +457,18 @@ function AppVersionCard() {
           ))}
         </div>
       )}
+    </motion.div>
+  );
+}
+
+function DeveloperCard() {
+  return (
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-2 text-center">
+      <p className="text-[10px] font-body font-semibold text-muted-foreground uppercase tracking-wide">Dikembangkan oleh</p>
+      <p className="font-display text-base font-bold text-card-foreground">MicroData2R</p>
+      <p className="text-xs font-body text-muted-foreground">
+        Jl. Inpres Desa Sidomulyo, Kec. Air Kumbang
+      </p>
     </motion.div>
   );
 }
