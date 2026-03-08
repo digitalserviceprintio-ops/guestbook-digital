@@ -43,6 +43,13 @@ const RSVP = () => {
   const inputClass =
     "w-full rounded-xl bg-card px-4 py-3 text-sm md:text-base font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
 
+  useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => navigate("/"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, navigate]);
+
   if (settingsLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -64,13 +71,6 @@ const RSVP = () => {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (submitted) {
-      const timer = setTimeout(() => navigate("/"), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [submitted, navigate]);
 
   if (submitted) {
     return (
