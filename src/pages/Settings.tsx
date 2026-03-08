@@ -4,7 +4,10 @@ import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, 
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
+import { useAppVersion } from "@/hooks/useAppVersion";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 const Settings = () => {
   const navigate = useNavigate();
