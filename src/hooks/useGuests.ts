@@ -97,9 +97,11 @@ export function useGuests() {
 
       if (error) {
         toast({ title: "Error", description: "Gagal menghapus tamu.", variant: "destructive" });
+      } else {
+        await fetchGuests();
       }
     },
-    [toast]
+    [toast, fetchGuests]
   );
 
   const filteredGuests = useMemo(() => {
