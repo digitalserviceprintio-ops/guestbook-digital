@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
@@ -87,6 +87,13 @@ const Index = () => {
               title="Laporan"
             >
               <FileBarChart className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => navigate("/settings")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Pengaturan"
+            >
+              <Settings className="h-4 w-4" />
             </button>
           </div>
         </div>
