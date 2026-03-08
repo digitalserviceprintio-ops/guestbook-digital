@@ -96,16 +96,6 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => {
-                setEditingGuest(null);
-                setFormOpen(true);
-              }}
-              className="flex items-center gap-1.5 gradient-gold text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Tambah Tamu</span>
-            </button>
-            <button
               onClick={() => navigate("/souvenir")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
               title="Souvenir"
@@ -179,6 +169,22 @@ const Index = () => {
           />
         </div>
       </main>
+
+      {/* Floating Add Button */}
+      <motion.button
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => {
+          setEditingGuest(null);
+          setFormOpen(true);
+        }}
+        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full gradient-gold shadow-elevated flex items-center justify-center text-primary-foreground hover:opacity-90 transition-opacity"
+      >
+        <Plus className="h-6 w-6" />
+      </motion.button>
 
 
       {/* Form Sheet */}
