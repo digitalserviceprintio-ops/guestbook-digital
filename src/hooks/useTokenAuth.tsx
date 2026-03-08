@@ -21,11 +21,29 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
   const [tokenLabel, setTokenLabel] = useState("");
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("access_token");
-    const savedLabel = sessionStorage.getItem("access_token_label");
+    const saved = localStorage.getItem("access_token");
+    const savedLabel = localStorage.getItem("access_token_label");
     if (saved) {
-      setIsAuthenticated(true);
       setTokenLabel(savedLabel || "");
+      // Auto-validate token is still active
+      import("@/integrations/supabase/client").then(({ supabase }) => {
+        supabase
+          .from("access_tokens")
+          .select("token, label, is_active")
+          .eq("token", saved)
+          .eq("is_active", true)
+          .maybeSingle()
+          .then(({ data }) => {
+            if (data) {
+              setIsAuthenticated(true);
+              setTokenLabel(data.label);
+            } else {
+              // Token no longer valid, clear it
+              localStorage.removeItem("access_token");
+              localStorage.removeItem("access_token_label");
+            }
+          });
+      });
     }
   }, []);
 
