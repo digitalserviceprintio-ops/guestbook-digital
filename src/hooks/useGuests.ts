@@ -76,6 +76,7 @@ export function useGuests() {
     async (id: string, data: Partial<Guest>) => {
       const updateData: Record<string, unknown> = {};
       if (data.name !== undefined) updateData.name = data.name;
+      if (data.gender !== undefined) updateData.gender = data.gender;
       if (data.numberOfGuests !== undefined) updateData.number_of_guests = data.numberOfGuests;
       if (data.address !== undefined) updateData.address = data.address;
       if (data.envelopeAmount !== undefined) updateData.envelope_amount = data.envelopeAmount;
