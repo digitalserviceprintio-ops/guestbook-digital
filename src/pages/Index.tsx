@@ -126,6 +126,13 @@ const Index = () => {
             >
               <Settings className="h-4 w-4" />
             </button>
+            <button
+              onClick={() => { logout(); navigate("/"); }}
+              className="p-2.5 rounded-xl bg-destructive/10 hover:bg-destructive/20 transition-colors text-destructive"
+              title="Logout"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </motion.header>
