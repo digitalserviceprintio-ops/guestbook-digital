@@ -2,6 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+export interface BackgroundMusic {
+  title: string;
+  url: string;
+  category: string;
+}
+
 export interface WeddingSettings {
   id: string;
   groomName: string;
@@ -16,6 +22,7 @@ export interface WeddingSettings {
   closingText: string;
   heroImageUrl: string;
   heroImages: string[];
+  backgroundMusic: BackgroundMusic | null;
   rsvpOpen: boolean;
 }
 
@@ -33,6 +40,7 @@ const defaultSettings: WeddingSettings = {
   closingText: "Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir.",
   heroImageUrl: "",
   heroImages: [],
+  backgroundMusic: null,
   rsvpOpen: true,
 };
 
