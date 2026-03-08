@@ -15,9 +15,11 @@ const Report = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<FilterCategory>("semua");
+  const [genderFilter, setGenderFilter] = useState<GenderFilter>("semua");
   const [showDetail, setShowDetail] = useState(true);
 
-  const filteredGuests = activeFilter === "semua" ? allGuests : allGuests.filter((g) => g.category === activeFilter);
+  const filteredByCategory = activeFilter === "semua" ? allGuests : allGuests.filter((g) => g.category === activeFilter);
+  const filteredGuests = genderFilter === "semua" ? filteredByCategory : filteredByCategory.filter((g) => g.gender === genderFilter);
 
   const makeStats = (list: Guest[]) => ({
     total: list.length,
