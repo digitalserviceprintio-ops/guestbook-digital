@@ -118,6 +118,14 @@ export function GuestList({
                   )}
                 </div>
                 <div className="flex gap-1 shrink-0">
+                  {onShowQR && guest.status === "hadir" && (
+                    <button
+                      onClick={() => onShowQR(guest)}
+                      className="p-2 rounded-lg hover:bg-secondary transition-colors text-primary"
+                    >
+                      <QrCode className="h-4 w-4" />
+                    </button>
+                  )}
                   <button
                     onClick={() => onEdit(guest)}
                     className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
