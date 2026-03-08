@@ -271,7 +271,7 @@ const Settings = () => {
                                 ...form,
                                 backgroundMusic: {
                                   title: song.title,
-                                  url: form.backgroundMusic?.title === song.title ? (form.backgroundMusic?.url || "") : "",
+                                  url: song.url,
                                   category: cat.category,
                                 },
                               });
