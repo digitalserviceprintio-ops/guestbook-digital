@@ -100,6 +100,7 @@ export function useWeddingSettings() {
       if (updates.closingText !== undefined) dbUpdates.closing_text = updates.closingText;
       if (updates.heroImageUrl !== undefined) dbUpdates.hero_image_url = updates.heroImageUrl;
       if (updates.heroImages !== undefined) dbUpdates.hero_images = updates.heroImages;
+      if (updates.backgroundMusic !== undefined) dbUpdates.background_music = updates.backgroundMusic;
       if (updates.rsvpOpen !== undefined) dbUpdates.rsvp_open = updates.rsvpOpen;
 
       const { error } = await supabase
