@@ -220,6 +220,120 @@ const Settings = () => {
               </div>
             </motion.div>
 
+            {/* Background Music */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }} className="space-y-3">
+              <h2 className="font-display text-base md:text-lg font-bold text-foreground flex items-center gap-2">
+                <Music className="h-5 w-5 text-primary" />
+                Musik Latar
+              </h2>
+              <p className="text-xs md:text-sm font-body text-muted-foreground">Pilih musik latar untuk halaman undangan digital.</p>
+
+              {/* Preset songs */}
+              {[
+                {
+                  category: "Instrumental Piano/Akustik",
+                  songs: [
+                    { title: "Instrumental Piano Romantis", url: "" },
+                    { title: "Akustik Guitar Wedding", url: "" },
+                  ],
+                },
+                {
+                  category: "Lagu Romantis Indonesia",
+                  songs: [
+                    { title: "Menikahimu - Kahitna", url: "" },
+                    { title: "Janji Suci - Yovie & Nuno", url: "" },
+                    { title: "Teman Hidup - Tulus", url: "" },
+                  ],
+                },
+                {
+                  category: "Lagu Romantis Barat",
+                  songs: [
+                    { title: "Perfect - Ed Sheeran", url: "" },
+                    { title: "All of Me - John Legend", url: "" },
+                    { title: "I'm Yours - Jason Mraz", url: "" },
+                  ],
+                },
+                {
+                  category: "Musik Islami",
+                  songs: [
+                    { title: "Barakallahu Lakuma - Maher Zain", url: "" },
+                    { title: "Kupinang Kau dengan Bismillah - Ungu", url: "" },
+                  ],
+                },
+              ].map((cat) => (
+                <div key={cat.category} className="space-y-1.5">
+                  <h3 className="text-xs font-body font-semibold text-muted-foreground uppercase tracking-wide">{cat.category}</h3>
+                  <div className="space-y-1">
+                    {cat.songs.map((song) => {
+                      const isSelected = form.backgroundMusic?.title === song.title && form.backgroundMusic?.category === cat.category;
+                      return (
+                        <button
+                          key={song.title}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              setForm({ ...form, backgroundMusic: null });
+                            } else {
+                              setForm({
+                                ...form,
+                                backgroundMusic: {
+                                  title: song.title,
+                                  url: form.backgroundMusic?.title === song.title ? (form.backgroundMusic?.url || "") : "",
+                                  category: cat.category,
+                                },
+                              });
+                            }
+                          }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-sm font-body transition-all ${
+                            isSelected
+                              ? "gradient-gold text-primary-foreground shadow-card"
+                              : "bg-card text-card-foreground hover:bg-secondary"
+                          }`}
+                        >
+                          🎵 {song.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* URL input for selected song */}
+              {form.backgroundMusic && (
+                <div className="rounded-xl bg-card p-4 shadow-card space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-body font-semibold text-card-foreground">
+                      🎶 {form.backgroundMusic.title}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, backgroundMusic: null })}
+                      className="p-1 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <input
+                      value={form.backgroundMusic.url}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          backgroundMusic: { ...form.backgroundMusic!, url: e.target.value },
+                        })
+                      }
+                      placeholder="Paste URL MP3 atau link musik..."
+                      className={inputClass}
+                    />
+                  </div>
+                  <p className="text-[10px] font-body text-muted-foreground">
+                    Masukkan URL langsung ke file MP3 atau link audio yang bisa diputar.
+                  </p>
+                </div>
+              )}
+            </motion.div>
+
             {/* Reset Data */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
               <h2 className="font-display text-base md:text-lg font-bold text-destructive">Reset Data</h2>
