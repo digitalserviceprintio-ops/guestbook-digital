@@ -3,15 +3,21 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 interface TokenAuthContextType {
   isAuthenticated: boolean;
   tokenLabel: string;
+  hasSavedToken: boolean;
   login: (token: string) => Promise<boolean>;
+  quickLogin: () => Promise<boolean>;
   logout: () => void;
+  fullLogout: () => void;
 }
 
 const TokenAuthContext = createContext<TokenAuthContextType>({
   isAuthenticated: false,
   tokenLabel: "",
+  hasSavedToken: false,
   login: async () => false,
+  quickLogin: async () => false,
   logout: () => {},
+  fullLogout: () => {},
 });
 
 export const useTokenAuth = () => useContext(TokenAuthContext);
