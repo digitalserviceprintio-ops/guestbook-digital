@@ -94,6 +94,16 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => {
+                setEditingGuest(null);
+                setFormOpen(true);
+              }}
+              className="flex items-center gap-1.5 gradient-gold text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Tambah Tamu</span>
+            </button>
+            <button
               onClick={() => navigate("/souvenir")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
               title="Souvenir"
