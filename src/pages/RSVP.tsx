@@ -145,7 +145,6 @@ const RSVP = () => {
         </motion.form>
       </div>
     </div>
-    </div>
   );
 };
 
