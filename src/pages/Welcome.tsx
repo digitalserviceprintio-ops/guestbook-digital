@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Heart, MapPin, Calendar, Clock } from "lucide-react";
+import { Heart, MapPin, Calendar, Clock, Volume2, VolumeX, LogIn } from "lucide-react";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { LoginModal } from "@/components/LoginModal";
-import { LogIn } from "lucide-react";
 import defaultHero from "@/assets/wedding-hero.jpg";
 
 const Welcome = () => {
@@ -14,6 +13,8 @@ const Welcome = () => {
   const { isAuthenticated, hasSavedToken, quickLogin, tokenLabel } = useTokenAuth();
   const [quickLoading, setQuickLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const images = settings.heroImages && settings.heroImages.length > 0
     ? settings.heroImages
