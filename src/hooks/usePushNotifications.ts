@@ -67,7 +67,7 @@ export function usePushNotifications() {
       setPrefs(newPrefs);
       saveLocalPrefs(newPrefs);
       // Save to DB
-      const fp = getDeviceFingerprint();
+      const fp = generateDeviceFingerprint();
       await supabase.from("notification_subscriptions").upsert(
         { device_fingerprint: fp, enabled: true, notify_rsvp: true, notify_checkin: true, notify_reminder: true },
         { onConflict: "device_fingerprint" }
