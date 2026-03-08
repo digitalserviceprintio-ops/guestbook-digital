@@ -35,6 +35,25 @@ const Index = () => {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const IDLE_TIMEOUT = 20000; // 20 seconds
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      navigate("/");
+    }, IDLE_TIMEOUT);
+  }, [navigate]);
+
+  useEffect(() => {
+    resetTimer();
+    const events = ["mousedown", "mousemove", "keydown", "touchstart", "scroll"];
+    events.forEach((e) => window.addEventListener(e, resetTimer));
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      events.forEach((e) => window.removeEventListener(e, resetTimer));
+    };
+  }, [resetTimer]);
 
   const handleEdit = (guest: Guest) => {
     setEditingGuest(guest);
