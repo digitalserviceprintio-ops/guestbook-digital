@@ -28,7 +28,6 @@ const SouvenirCounter = () => {
         { facingMode: "environment" },
         { fps: 10, qrbox: { width: 250, height: 250 } },
         (decodedText) => {
-          // Extract guest ID from URL
           const match = decodedText.match(/souvenir-scan\/([a-f0-9-]+)/i);
           if (match) {
             html5Qr.stop().then(() => {
@@ -61,104 +60,106 @@ const SouvenirCounter = () => {
         animate={{ opacity: 1, y: 0 }}
         className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
       >
-        <div className="flex items-center gap-3 max-w-lg mx-auto">
+        <div className="flex items-center gap-3 max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto">
           <button onClick={() => navigate("/dashboard")} className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="font-display text-lg font-bold text-foreground">Counter Souvenir</h1>
-            <p className="text-[11px] font-body text-muted-foreground">Scan QR tamu untuk pengambilan</p>
+            <h1 className="font-display text-lg md:text-xl font-bold text-foreground">Counter Souvenir</h1>
+            <p className="text-[11px] md:text-xs font-body text-muted-foreground">Scan QR tamu untuk pengambilan</p>
           </div>
         </div>
       </motion.header>
 
-      <main className="max-w-lg mx-auto px-5 py-5 space-y-5">
+      <main className="max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto px-5 py-5 space-y-5">
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-xl bg-card p-3 shadow-card text-center">
-            <p className="text-[10px] font-body text-muted-foreground">Tamu Hadir</p>
-            <p className="text-xl font-display font-bold text-card-foreground">{souvenirStats.total}</p>
+          <div className="rounded-xl bg-card p-3 md:p-4 shadow-card text-center">
+            <p className="text-[10px] md:text-xs font-body text-muted-foreground">Tamu Hadir</p>
+            <p className="text-xl md:text-2xl font-display font-bold text-card-foreground">{souvenirStats.total}</p>
           </div>
-          <div className="rounded-xl bg-card p-3 shadow-card text-center">
+          <div className="rounded-xl bg-card p-3 md:p-4 shadow-card text-center">
             <div className="flex items-center justify-center gap-1 mb-0.5">
               <CheckCircle2 className="h-3 w-3 text-success" />
-              <p className="text-[10px] font-body text-muted-foreground">Sudah Ambil</p>
+              <p className="text-[10px] md:text-xs font-body text-muted-foreground">Sudah Ambil</p>
             </div>
-            <p className="text-xl font-display font-bold text-success">{souvenirStats.pickedUp}</p>
+            <p className="text-xl md:text-2xl font-display font-bold text-success">{souvenirStats.pickedUp}</p>
           </div>
-          <div className="rounded-xl bg-card p-3 shadow-card text-center">
+          <div className="rounded-xl bg-card p-3 md:p-4 shadow-card text-center">
             <div className="flex items-center justify-center gap-1 mb-0.5">
               <Gift className="h-3 w-3 text-primary" />
-              <p className="text-[10px] font-body text-muted-foreground">Belum Ambil</p>
+              <p className="text-[10px] md:text-xs font-body text-muted-foreground">Belum Ambil</p>
             </div>
-            <p className="text-xl font-display font-bold text-primary">{souvenirStats.remaining}</p>
+            <p className="text-xl md:text-2xl font-display font-bold text-primary">{souvenirStats.remaining}</p>
           </div>
         </div>
 
-        {/* Scanner */}
-        <div className="rounded-2xl bg-card p-5 shadow-elevated space-y-4">
-          <div id="qr-reader" ref={readerRef} className="rounded-xl overflow-hidden" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Scanner */}
+          <div className="rounded-2xl bg-card p-5 shadow-elevated space-y-4">
+            <div id="qr-reader" ref={readerRef} className="rounded-xl overflow-hidden" />
 
-          {!scanning ? (
-            <button
-              onClick={startScan}
-              className="w-full gradient-gold text-primary-foreground font-body font-semibold py-3.5 rounded-xl shadow-elevated hover:opacity-90 transition-opacity text-sm flex items-center justify-center gap-2"
-            >
-              <QrCode className="h-5 w-5" />
-              Mulai Scan QR
-            </button>
-          ) : (
-            <button
-              onClick={stopScan}
-              className="w-full bg-destructive text-destructive-foreground font-body font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity text-sm"
-            >
-              Berhenti Scan
-            </button>
-          )}
-        </div>
-
-        {/* Guest list with souvenir status */}
-        <div>
-          <h2 className="font-display text-base font-bold text-foreground mb-3">Daftar Pengambilan</h2>
-          <div className="space-y-2">
-            {allGuests
-              .filter((g) => g.status === "hadir")
-              .map((guest) => (
-                <motion.div
-                  key={guest.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="rounded-xl bg-card p-3 shadow-card flex items-center justify-between"
-                >
-                  <div>
-                    <p className="font-body font-semibold text-sm text-card-foreground">{guest.name}</p>
-                    <p className="text-[11px] font-body text-muted-foreground">{guest.numberOfGuests} orang</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {guest.souvenirPickedUp ? (
-                      <span className="flex items-center gap-1 text-success text-xs font-body font-medium">
-                        <CheckCircle2 className="h-4 w-4" /> Sudah
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => navigate(`/souvenir-scan/${guest.id}`)}
-                        className="text-xs font-body font-medium text-primary hover:underline"
-                      >
-                        Proses
-                      </button>
-                    )}
-                    <button
-                      onClick={() => navigate(`/guest-qr/${guest.id}`)}
-                      className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
-                    >
-                      <QrCode className="h-4 w-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            {allGuests.filter((g) => g.status === "hadir").length === 0 && (
-              <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada tamu yang hadir</p>
+            {!scanning ? (
+              <button
+                onClick={startScan}
+                className="w-full gradient-gold text-primary-foreground font-body font-semibold py-3.5 rounded-xl shadow-elevated hover:opacity-90 transition-opacity text-sm md:text-base flex items-center justify-center gap-2"
+              >
+                <QrCode className="h-5 w-5" />
+                Mulai Scan QR
+              </button>
+            ) : (
+              <button
+                onClick={stopScan}
+                className="w-full bg-destructive text-destructive-foreground font-body font-semibold py-3.5 rounded-xl hover:opacity-90 transition-opacity text-sm md:text-base"
+              >
+                Berhenti Scan
+              </button>
             )}
+          </div>
+
+          {/* Guest list with souvenir status */}
+          <div>
+            <h2 className="font-display text-base md:text-lg font-bold text-foreground mb-3">Daftar Pengambilan</h2>
+            <div className="space-y-2">
+              {allGuests
+                .filter((g) => g.status === "hadir")
+                .map((guest) => (
+                  <motion.div
+                    key={guest.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="rounded-xl bg-card p-3 shadow-card flex items-center justify-between"
+                  >
+                    <div>
+                      <p className="font-body font-semibold text-sm text-card-foreground">{guest.name}</p>
+                      <p className="text-[11px] font-body text-muted-foreground">{guest.numberOfGuests} orang</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {guest.souvenirPickedUp ? (
+                        <span className="flex items-center gap-1 text-success text-xs font-body font-medium">
+                          <CheckCircle2 className="h-4 w-4" /> Sudah
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => navigate(`/souvenir-scan/${guest.id}`)}
+                          className="text-xs font-body font-medium text-primary hover:underline"
+                        >
+                          Proses
+                        </button>
+                      )}
+                      <button
+                        onClick={() => navigate(`/guest-qr/${guest.id}`)}
+                        className="p-1.5 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
+                      >
+                        <QrCode className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              {allGuests.filter((g) => g.status === "hadir").length === 0 && (
+                <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada tamu yang hadir</p>
+              )}
+            </div>
           </div>
         </div>
       </main>

@@ -48,47 +48,47 @@ const GuestQR = () => {
         animate={{ opacity: 1, y: 0 }}
         className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
       >
-        <div className="flex items-center gap-3 max-w-lg mx-auto">
+        <div className="flex items-center gap-3 max-w-lg md:max-w-2xl mx-auto">
           <button onClick={() => navigate(-1)} className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="font-display text-lg font-bold text-foreground">QR Code Tamu</h1>
+          <h1 className="font-display text-lg md:text-xl font-bold text-foreground">QR Code Tamu</h1>
         </div>
       </motion.header>
 
-      <main className="max-w-lg mx-auto px-5 py-8 flex flex-col items-center">
+      <main className="max-w-lg md:max-w-xl mx-auto px-5 py-8 flex flex-col items-center">
         {loading ? (
           <p className="text-muted-foreground font-body text-sm">Memuat...</p>
         ) : !guest ? (
           <p className="text-destructive font-body text-sm">Tamu tidak ditemukan</p>
         ) : (
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full space-y-6">
-            <div className="rounded-2xl bg-card p-6 shadow-elevated text-center space-y-4">
-              <h2 className="font-display text-xl font-bold text-card-foreground">{guest.name}</h2>
-              <p className="text-xs font-body text-muted-foreground">
+            <div className="rounded-2xl bg-card p-6 md:p-8 shadow-elevated text-center space-y-4">
+              <h2 className="font-display text-xl md:text-2xl font-bold text-card-foreground">{guest.name}</h2>
+              <p className="text-xs md:text-sm font-body text-muted-foreground">
                 {categoryLabels[guest.category]} · {statusLabels[guest.status]} · {guest.numberOfGuests} orang
               </p>
 
-              <div className="inline-block bg-background rounded-2xl p-4 shadow-card">
-                <QRCodeSVG value={qrValue} size={200} level="H" />
+              <div className="inline-block bg-background rounded-2xl p-4 md:p-6 shadow-card">
+                <QRCodeSVG value={qrValue} size={200} level="H" className="md:w-[250px] md:h-[250px]" />
               </div>
 
-              <p className="text-[11px] font-body text-muted-foreground">
+              <p className="text-[11px] md:text-xs font-body text-muted-foreground">
                 Tunjukkan QR ini di counter souvenir
               </p>
 
               {guest.souvenirPickedUp ? (
-                <div className="flex items-center justify-center gap-2 text-success font-body font-semibold text-sm">
+                <div className="flex items-center justify-center gap-2 text-success font-body font-semibold text-sm md:text-base">
                   <CheckCircle2 className="h-5 w-5" />
                   Souvenir sudah diambil
                 </div>
               ) : guest.status === "hadir" ? (
-                <div className="flex items-center justify-center gap-2 text-primary font-body font-semibold text-sm">
+                <div className="flex items-center justify-center gap-2 text-primary font-body font-semibold text-sm md:text-base">
                   <Gift className="h-5 w-5" />
                   Souvenir belum diambil
                 </div>
               ) : (
-                <div className="text-xs font-body text-muted-foreground">
+                <div className="text-xs md:text-sm font-body text-muted-foreground">
                   Tamu harus hadir terlebih dahulu untuk mengambil souvenir
                 </div>
               )}

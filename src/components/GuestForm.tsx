@@ -68,7 +68,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
   };
 
   const inputClass =
-    "w-full rounded-xl bg-card px-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
+    "w-full rounded-xl bg-card px-4 py-3 text-sm md:text-base font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
 
   return (
     <AnimatePresence>
@@ -86,7 +86,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-background p-5 pb-8 max-h-[90vh] overflow-y-auto"
+            className="fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-background p-5 pb-8 max-h-[90vh] overflow-y-auto md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:bottom-4 md:rounded-2xl md:max-w-lg md:w-full md:shadow-elevated"
           >
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-display text-xl font-bold text-foreground">
@@ -99,7 +99,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                   Nama Tamu *
                 </label>
                 <input
@@ -114,7 +114,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
               </div>
 
               <div>
-                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                   Jenis Kelamin
                 </label>
                 <div className="flex gap-2">
@@ -123,7 +123,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
                       key={g}
                       type="button"
                       onClick={() => setGender(g)}
-                      className={`flex-1 rounded-xl py-2.5 text-xs font-body font-medium transition-all ${
+                      className={`flex-1 rounded-xl py-2.5 text-xs md:text-sm font-body font-medium transition-all ${
                         gender === g
                           ? "gradient-gold text-primary-foreground shadow-card"
                           : "bg-card text-muted-foreground"
@@ -137,7 +137,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                  <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                     Jumlah Tamu
                   </label>
                   <div className="flex items-center gap-2">
@@ -160,7 +160,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
                 </div>
 
                 <div>
-                  <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                  <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                     Nominal Amplop (Rp)
                   </label>
                   <input
@@ -175,7 +175,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
               </div>
 
               <div>
-                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                   Alamat
                 </label>
                 <input
@@ -189,7 +189,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
               </div>
 
               <div>
-                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                   Status Kehadiran
                 </label>
                 <div className="flex gap-2">
@@ -198,7 +198,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
                       key={s}
                       type="button"
                       onClick={() => setStatus(s)}
-                      className={`flex-1 rounded-xl py-2.5 text-xs font-body font-medium transition-all ${
+                      className={`flex-1 rounded-xl py-2.5 text-xs md:text-sm font-body font-medium transition-all ${
                         status === s
                           ? "gradient-gold text-primary-foreground shadow-card"
                           : "bg-card text-muted-foreground"
@@ -211,7 +211,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
               </div>
 
               <div>
-                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">
                   Catatan
                 </label>
                 <textarea
@@ -226,7 +226,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
 
               <button
                 type="submit"
-                className="w-full gradient-gold text-primary-foreground font-body font-semibold py-3.5 rounded-xl shadow-elevated hover:opacity-90 transition-opacity text-sm"
+                className="w-full gradient-gold text-primary-foreground font-body font-semibold py-3.5 rounded-xl shadow-elevated hover:opacity-90 transition-opacity text-sm md:text-base"
               >
                 {guest ? "Simpan Perubahan" : "Tambah Tamu"}
               </button>

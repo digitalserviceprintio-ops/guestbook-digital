@@ -59,16 +59,16 @@ const Index = () => {
         animate={{ opacity: 1, y: 0 }}
         className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
       >
-        <div className="flex items-center justify-between max-w-lg mx-auto">
+        <div className="flex items-center justify-between max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl gradient-gold flex items-center justify-center shadow-card">
-              <BookOpen className="h-4 w-4 text-primary-foreground" />
+            <div className="h-9 w-9 md:h-10 md:w-10 rounded-xl gradient-gold flex items-center justify-center shadow-card">
+              <BookOpen className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="font-display text-lg font-bold text-foreground leading-tight">
+              <h1 className="font-display text-lg md:text-xl font-bold text-foreground leading-tight">
                 Buku Tamu
               </h1>
-              <p className="text-[11px] font-body text-muted-foreground">
+              <p className="text-[11px] md:text-xs font-body text-muted-foreground">
                 Manajemen Undangan
               </p>
             </div>
@@ -100,9 +100,9 @@ const Index = () => {
       </motion.header>
 
       {/* Content */}
-      <main className="max-w-lg mx-auto px-5 py-5 pb-24 space-y-5">
+      <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 py-5 pb-24 space-y-5">
         {/* Category Tabs */}
-        <div className="flex rounded-xl bg-card p-1 shadow-card">
+        <div className="flex rounded-xl bg-card p-1 shadow-card max-w-md">
           {categoryTabs.map((tab) => (
             <button
               key={tab.value}
@@ -126,7 +126,7 @@ const Index = () => {
         <StatsCards {...stats} />
 
         <div>
-          <h2 className="font-display text-lg font-bold text-foreground mb-3">
+          <h2 className="font-display text-lg md:text-xl font-bold text-foreground mb-3">
             Tamu {categoryLabels[activeCategory]}
           </h2>
           <GuestList
@@ -151,7 +151,7 @@ const Index = () => {
           setEditingGuest(null);
           setFormOpen(true);
         }}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full gradient-gold shadow-elevated flex items-center justify-center z-30 hover:opacity-90 transition-opacity"
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 h-14 w-14 rounded-full gradient-gold shadow-elevated flex items-center justify-center z-30 hover:opacity-90 transition-opacity"
       >
         <Plus className="h-6 w-6 text-primary-foreground" />
       </motion.button>

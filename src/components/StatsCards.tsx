@@ -22,7 +22,7 @@ export function StatsCards({ total, hadir, tidakHadir, belum, totalTamu, totalAm
   const values = { total, hadir, tidakHadir, belum };
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
       {cards.map((card, i) => (
         <motion.div
           key={card.key}
