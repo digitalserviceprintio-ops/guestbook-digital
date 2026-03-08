@@ -89,6 +89,7 @@ export type Database = {
       wedding_settings: {
         Row: {
           akad_time: string
+          background_music: Json | null
           bride_name: string
           closing_text: string
           created_at: string
@@ -107,6 +108,7 @@ export type Database = {
         }
         Insert: {
           akad_time?: string
+          background_music?: Json | null
           bride_name?: string
           closing_text?: string
           created_at?: string
@@ -125,6 +127,7 @@ export type Database = {
         }
         Update: {
           akad_time?: string
+          background_music?: Json | null
           bride_name?: string
           closing_text?: string
           created_at?: string
