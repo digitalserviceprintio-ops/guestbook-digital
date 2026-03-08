@@ -176,7 +176,27 @@ const Report = () => {
           ))}
         </motion.div>
 
-        {/* Summary Stats */}
+        {/* Gender Filter */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.025 }} className="flex rounded-xl bg-card p-1 shadow-card">
+          {([
+            { value: "semua" as GenderFilter, label: "Semua JK" },
+            { value: "laki_laki" as GenderFilter, label: "Laki-laki" },
+            { value: "perempuan" as GenderFilter, label: "Perempuan" },
+          ]).map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setGenderFilter(tab.value)}
+              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-body font-medium transition-all ${
+                genderFilter === tab.value
+                  ? "gradient-navy text-primary-foreground shadow-card"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </motion.div>
+
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
           <h2 className="font-display text-base font-bold text-foreground mb-3">
             Ringkasan {activeFilter === "semua" ? "Keseluruhan" : categoryLabels[activeFilter]}
