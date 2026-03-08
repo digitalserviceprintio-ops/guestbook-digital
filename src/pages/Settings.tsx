@@ -231,33 +231,26 @@ const Settings = () => {
               {/* Preset songs */}
               {[
                 {
-                  category: "Instrumental Piano/Akustik",
+                  category: "Piano Klasik Romantis",
                   songs: [
-                    { title: "Instrumental Piano Romantis", url: "" },
-                    { title: "Akustik Guitar Wedding", url: "" },
+                    { title: "Chopin - Nocturne Op.9 No.2", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fchopin-nocturne-op9-no2.mp3" },
+                    { title: "Liszt - Liebestraum (Dreams of Love)", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fliszt-liebestraum.ogg" },
+                    { title: "Debussy - Clair de Lune", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fclair-de-lune.opus" },
                   ],
                 },
                 {
-                  category: "Lagu Romantis Indonesia",
+                  category: "Instrumental Lembut & Meditatif",
                   songs: [
-                    { title: "Menikahimu - Kahitna", url: "" },
-                    { title: "Janji Suci - Yovie & Nuno", url: "" },
-                    { title: "Teman Hidup - Tulus", url: "" },
+                    { title: "Satie - Gymnopédie No.1 (Piano)", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fgymnopedie-no1.ogg" },
+                    { title: "Satie - Gymnopédie No.1 (Orkestra)", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fgymnopedie-no1-alt.ogg" },
+                    { title: "Schumann - Träumerei (Dreaming)", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fschumann-dreaming.ogg" },
                   ],
                 },
                 {
-                  category: "Lagu Romantis Barat",
+                  category: "Klasik Wedding Ceremony",
                   songs: [
-                    { title: "Perfect - Ed Sheeran", url: "" },
-                    { title: "All of Me - John Legend", url: "" },
-                    { title: "I'm Yours - Jason Mraz", url: "" },
-                  ],
-                },
-                {
-                  category: "Musik Islami",
-                  songs: [
-                    { title: "Barakallahu Lakuma - Maher Zain", url: "" },
-                    { title: "Kupinang Kau dengan Bismillah - Ungu", url: "" },
+                    { title: "Pachelbel - Canon in D", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fpachelbel-canon-d.ogg" },
+                    { title: "Schubert - Ave Maria", url: "https://mnsffutlebpjmbfmmnns.supabase.co/storage/v1/object/public/wedding-photos/music%2Fschubert-ave-maria.ogg" },
                   ],
                 },
               ].map((cat) => (
