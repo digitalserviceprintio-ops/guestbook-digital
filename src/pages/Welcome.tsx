@@ -3,11 +3,14 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Heart, MapPin, Calendar, Clock } from "lucide-react";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
+import { useTokenAuth } from "@/hooks/useTokenAuth";
+import { LoginModal } from "@/components/LoginModal";
 import defaultHero from "@/assets/wedding-hero.jpg";
 
 const Welcome = () => {
   const navigate = useNavigate();
   const { settings, loading } = useWeddingSettings();
+  const { isAuthenticated } = useTokenAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const images = settings.heroImages && settings.heroImages.length > 0
@@ -143,18 +146,15 @@ const Welcome = () => {
               RSVP Sudah Ditutup
             </div>
           )}
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="w-full bg-card text-card-foreground font-body font-medium py-3.5 rounded-xl shadow-card hover:bg-secondary transition-colors text-sm md:text-base"
-          >
-            Buku Tamu & Dashboard
-          </button>
         </motion.div>
 
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} className="text-center text-[11px] md:text-xs font-body text-muted-foreground">
           {settings.closingText}
         </motion.p>
       </main>
+
+      {/* Floating Login Button (only if not authenticated) */}
+      {!isAuthenticated && <LoginModal />}
     </div>
   );
 };

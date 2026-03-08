@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
 import { GuestList } from "@/components/GuestList";
@@ -35,6 +36,7 @@ const Index = () => {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { logout, tokenLabel } = useTokenAuth();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const IDLE_TIMEOUT = 20000; // 20 seconds
 
@@ -123,6 +125,13 @@ const Index = () => {
               title="Pengaturan"
             >
               <Settings className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => { logout(); navigate("/"); }}
+              className="p-2.5 rounded-xl bg-destructive/10 hover:bg-destructive/20 transition-colors text-destructive"
+              title="Logout"
+            >
+              <LogOut className="h-4 w-4" />
             </button>
           </div>
         </div>
