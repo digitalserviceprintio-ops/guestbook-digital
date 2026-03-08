@@ -102,6 +102,7 @@ export type Database = {
           invitation_text: string
           resepsi_time: string
           rsvp_open: boolean
+          spreadsheet_webhook_url: string | null
           updated_at: string
           venue_address: string
           venue_name: string
@@ -121,6 +122,7 @@ export type Database = {
           invitation_text?: string
           resepsi_time?: string
           rsvp_open?: boolean
+          spreadsheet_webhook_url?: string | null
           updated_at?: string
           venue_address?: string
           venue_name?: string
@@ -140,6 +142,7 @@ export type Database = {
           invitation_text?: string
           resepsi_time?: string
           rsvp_open?: boolean
+          spreadsheet_webhook_url?: string | null
           updated_at?: string
           venue_address?: string
           venue_name?: string
