@@ -26,6 +26,7 @@ export function useGuests() {
       (data || []).map((g) => ({
         id: g.id,
         name: g.name,
+        gender: (g.gender || "laki_laki") as "laki_laki" | "perempuan",
         numberOfGuests: g.number_of_guests,
         address: g.address || "",
         envelopeAmount: g.envelope_amount || 0,
