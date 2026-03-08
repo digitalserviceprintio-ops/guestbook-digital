@@ -92,6 +92,7 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal mengupdate tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
+        syncGuestToSpreadsheet("update", { id, ...data });
       }
     },
     [toast, fetchGuests]
