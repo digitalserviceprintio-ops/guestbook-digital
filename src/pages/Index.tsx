@@ -34,6 +34,7 @@ const Index = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleEdit = (guest: Guest) => {
     setEditingGuest(guest);
