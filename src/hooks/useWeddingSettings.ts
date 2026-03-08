@@ -15,6 +15,7 @@ export interface WeddingSettings {
   invitationText: string;
   closingText: string;
   heroImageUrl: string;
+  heroImages: string[];
   rsvpOpen: boolean;
 }
 
@@ -31,6 +32,7 @@ const defaultSettings: WeddingSettings = {
   invitationText: "Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami.",
   closingText: "Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir.",
   heroImageUrl: "",
+  heroImages: [],
   rsvpOpen: true,
 };
 
@@ -47,6 +49,8 @@ export function useWeddingSettings() {
       .single();
 
     if (!error && data) {
+      const rawImages = (data as any).hero_images;
+      const heroImages: string[] = Array.isArray(rawImages) ? rawImages : [];
       setSettings({
         id: data.id,
         groomName: data.groom_name,
@@ -60,6 +64,7 @@ export function useWeddingSettings() {
         invitationText: data.invitation_text,
         closingText: data.closing_text,
         heroImageUrl: data.hero_image_url || "",
+        heroImages,
         rsvpOpen: data.rsvp_open,
       });
     }
@@ -84,6 +89,7 @@ export function useWeddingSettings() {
       if (updates.invitationText !== undefined) dbUpdates.invitation_text = updates.invitationText;
       if (updates.closingText !== undefined) dbUpdates.closing_text = updates.closingText;
       if (updates.heroImageUrl !== undefined) dbUpdates.hero_image_url = updates.heroImageUrl;
+      if (updates.heroImages !== undefined) dbUpdates.hero_images = updates.heroImages;
       if (updates.rsvpOpen !== undefined) dbUpdates.rsvp_open = updates.rsvpOpen;
 
       const { error } = await supabase
