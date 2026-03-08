@@ -28,6 +28,8 @@ export function useGuests() {
         name: g.name,
         phone: g.phone || "",
         numberOfGuests: g.number_of_guests,
+        address: g.address || "",
+        envelopeAmount: g.envelope_amount || 0,
         status: g.status as AttendanceStatus,
         notes: g.notes || "",
         createdAt: new Date(g.created_at),
@@ -58,6 +60,8 @@ export function useGuests() {
         name: guest.name,
         phone: guest.phone,
         number_of_guests: guest.numberOfGuests,
+        address: guest.address,
+        envelope_amount: guest.envelopeAmount,
         status: guest.status,
         notes: guest.notes,
       });
@@ -77,6 +81,8 @@ export function useGuests() {
       if (data.name !== undefined) updateData.name = data.name;
       if (data.phone !== undefined) updateData.phone = data.phone;
       if (data.numberOfGuests !== undefined) updateData.number_of_guests = data.numberOfGuests;
+      if (data.address !== undefined) updateData.address = data.address;
+      if (data.envelopeAmount !== undefined) updateData.envelope_amount = data.envelopeAmount;
       if (data.status !== undefined) updateData.status = data.status;
       if (data.notes !== undefined) updateData.notes = data.notes;
 
@@ -121,7 +127,8 @@ export function useGuests() {
     const tidakHadir = guests.filter((g) => g.status === "tidak_hadir").length;
     const belum = guests.filter((g) => g.status === "belum_konfirmasi").length;
     const totalTamu = guests.reduce((sum, g) => sum + g.numberOfGuests, 0);
-    return { total, hadir, tidakHadir, belum, totalTamu };
+    const totalAmplop = guests.reduce((sum, g) => sum + g.envelopeAmount, 0);
+    return { total, hadir, tidakHadir, belum, totalTamu, totalAmplop };
   }, [guests]);
 
   return {

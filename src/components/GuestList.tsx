@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Guest, AttendanceStatus, statusLabels } from "@/types/guest";
-import { Search, Filter, Pencil, Trash2, Phone } from "lucide-react";
+import { Guest, AttendanceStatus, statusLabels, formatRupiah } from "@/types/guest";
+import { Search, Pencil, Trash2, Phone, MapPin, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
@@ -97,7 +97,7 @@ export function GuestList({
                       {statusLabels[guest.status]}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground font-body">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground font-body">
                     {guest.phone && (
                       <span className="flex items-center gap-1">
                         <Phone className="h-3 w-3" />
@@ -105,9 +105,21 @@ export function GuestList({
                       </span>
                     )}
                     <span>{guest.numberOfGuests} orang</span>
+                    {guest.envelopeAmount > 0 && (
+                      <span className="flex items-center gap-1 text-primary font-medium">
+                        <Banknote className="h-3 w-3" />
+                        {formatRupiah(guest.envelopeAmount)}
+                      </span>
+                    )}
                   </div>
+                  {guest.address && (
+                    <p className="text-xs text-muted-foreground mt-0.5 font-body flex items-center gap-1">
+                      <MapPin className="h-3 w-3 shrink-0" />
+                      {guest.address}
+                    </p>
+                  )}
                   {guest.notes && (
-                    <p className="text-xs text-muted-foreground mt-1 font-body italic">
+                    <p className="text-xs text-muted-foreground mt-0.5 font-body italic">
                       {guest.notes}
                     </p>
                   )}

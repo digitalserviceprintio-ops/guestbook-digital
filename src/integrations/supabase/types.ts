@@ -16,7 +16,9 @@ export type Database = {
     Tables: {
       guests: {
         Row: {
+          address: string | null
           created_at: string
+          envelope_amount: number | null
           id: string
           name: string
           notes: string | null
@@ -26,7 +28,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          address?: string | null
           created_at?: string
+          envelope_amount?: number | null
           id?: string
           name: string
           notes?: string | null
@@ -36,7 +40,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          address?: string | null
           created_at?: string
+          envelope_amount?: number | null
           id?: string
           name?: string
           notes?: string | null

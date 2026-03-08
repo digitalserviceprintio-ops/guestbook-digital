@@ -17,6 +17,8 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
+  const [address, setAddress] = useState("");
+  const [envelopeAmount, setEnvelopeAmount] = useState("");
   const [status, setStatus] = useState<AttendanceStatus>("belum_konfirmasi");
   const [notes, setNotes] = useState("");
 
@@ -25,12 +27,16 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
       setName(guest.name);
       setPhone(guest.phone);
       setNumberOfGuests(guest.numberOfGuests);
+      setAddress(guest.address);
+      setEnvelopeAmount(guest.envelopeAmount ? guest.envelopeAmount.toString() : "");
       setStatus(guest.status);
       setNotes(guest.notes);
     } else {
       setName("");
       setPhone("");
       setNumberOfGuests(1);
+      setAddress("");
+      setEnvelopeAmount("");
       setStatus("belum_konfirmasi");
       setNotes("");
     }
@@ -40,13 +46,26 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
     e.preventDefault();
     if (!name.trim()) return;
 
+    const data = {
+      name: name.trim(),
+      phone,
+      numberOfGuests,
+      address,
+      envelopeAmount: parseInt(envelopeAmount) || 0,
+      status,
+      notes,
+    };
+
     if (guest && onUpdate) {
-      onUpdate(guest.id, { name: name.trim(), phone, numberOfGuests, status, notes });
+      onUpdate(guest.id, data);
     } else {
-      onSave({ name: name.trim(), phone, numberOfGuests, status, notes });
+      onSave(data);
     }
     onClose();
   };
+
+  const inputClass =
+    "w-full rounded-xl bg-card px-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
 
   return (
     <AnimatePresence>
@@ -87,45 +106,75 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
                   placeholder="Masukkan nama tamu"
                   required
                   maxLength={100}
-                  className="w-full rounded-xl bg-card px-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring"
+                  className={inputClass}
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                    Jumlah Tamu
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setNumberOfGuests(Math.max(1, numberOfGuests - 1))}
+                      className="h-10 w-10 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors shrink-0"
+                    >
+                      −
+                    </button>
+                    <span className="text-lg font-display font-bold w-6 text-center text-foreground">{numberOfGuests}</span>
+                    <button
+                      type="button"
+                      onClick={() => setNumberOfGuests(Math.min(20, numberOfGuests + 1))}
+                      className="h-10 w-10 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors shrink-0"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                    Nomor HP
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="08xxx"
+                    maxLength={20}
+                    className={inputClass}
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
-                  Nomor HP
+                  Alamat
                 </label>
                 <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="08xxxxxxxxxx"
-                  maxLength={20}
-                  className="w-full rounded-xl bg-card px-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Masukkan alamat tamu"
+                  maxLength={200}
+                  className={inputClass}
                 />
               </div>
 
               <div>
                 <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
-                  Jumlah Tamu
+                  Nominal Amplop (Rp)
                 </label>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setNumberOfGuests(Math.max(1, numberOfGuests - 1))}
-                    className="h-10 w-10 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors"
-                  >
-                    −
-                  </button>
-                  <span className="text-lg font-display font-bold w-8 text-center text-foreground">{numberOfGuests}</span>
-                  <button
-                    type="button"
-                    onClick={() => setNumberOfGuests(Math.min(20, numberOfGuests + 1))}
-                    className="h-10 w-10 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
+                <input
+                  type="number"
+                  value={envelopeAmount}
+                  onChange={(e) => setEnvelopeAmount(e.target.value)}
+                  placeholder="0"
+                  min={0}
+                  className={inputClass}
+                />
               </div>
 
               <div>
@@ -160,7 +209,7 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
                   placeholder="Catatan tambahan..."
                   rows={2}
                   maxLength={500}
-                  className="w-full rounded-xl bg-card px-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring resize-none"
+                  className={`${inputClass} resize-none`}
                 />
               </div>
 
