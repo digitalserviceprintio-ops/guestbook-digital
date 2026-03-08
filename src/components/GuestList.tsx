@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Guest, AttendanceStatus, statusLabels } from "@/types/guest";
-import { Search, Filter, Pencil, Trash2, Phone } from "lucide-react";
+import { Guest, AttendanceStatus, statusLabels, formatRupiah } from "@/types/guest";
+import { Search, Pencil, Trash2, Phone, MapPin, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
