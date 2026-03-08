@@ -45,7 +45,7 @@ const Report = () => {
       >
         <div className="flex items-center gap-3 max-w-lg mx-auto">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
             className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground"
           >
             <ArrowLeft className="h-5 w-5" />
