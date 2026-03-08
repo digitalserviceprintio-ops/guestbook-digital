@@ -10,7 +10,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const { settings, loading, updateSettings } = useWeddingSettings();
   const { toast } = useToast();
-
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState(settings);
   const [saving, setSaving] = useState(false);
 
