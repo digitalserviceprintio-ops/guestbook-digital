@@ -20,6 +20,7 @@ export type Database = {
           category: string
           created_at: string
           envelope_amount: number | null
+          gender: string
           id: string
           name: string
           notes: string | null
@@ -33,6 +34,7 @@ export type Database = {
           category?: string
           created_at?: string
           envelope_amount?: number | null
+          gender?: string
           id?: string
           name: string
           notes?: string | null
@@ -46,6 +48,7 @@ export type Database = {
           category?: string
           created_at?: string
           envelope_amount?: number | null
+          gender?: string
           id?: string
           name?: string
           notes?: string | null

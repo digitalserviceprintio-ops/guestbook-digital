@@ -24,6 +24,7 @@ const GuestQR = () => {
           setGuest({
             id: data.id,
             name: data.name,
+            gender: (data.gender || "laki_laki") as Guest["gender"],
             numberOfGuests: data.number_of_guests,
             address: data.address || "",
             envelopeAmount: data.envelope_amount || 0,

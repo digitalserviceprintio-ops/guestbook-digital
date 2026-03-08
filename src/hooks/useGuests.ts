@@ -26,6 +26,7 @@ export function useGuests() {
       (data || []).map((g) => ({
         id: g.id,
         name: g.name,
+        gender: (g.gender || "laki_laki") as "laki_laki" | "perempuan",
         numberOfGuests: g.number_of_guests,
         address: g.address || "",
         envelopeAmount: g.envelope_amount || 0,
@@ -54,6 +55,7 @@ export function useGuests() {
     async (guest: Omit<Guest, "id" | "createdAt">) => {
       const { error } = await supabase.from("guests").insert({
         name: guest.name,
+        gender: guest.gender,
         number_of_guests: guest.numberOfGuests,
         address: guest.address,
         envelope_amount: guest.envelopeAmount,
@@ -74,6 +76,7 @@ export function useGuests() {
     async (id: string, data: Partial<Guest>) => {
       const updateData: Record<string, unknown> = {};
       if (data.name !== undefined) updateData.name = data.name;
+      if (data.gender !== undefined) updateData.gender = data.gender;
       if (data.numberOfGuests !== undefined) updateData.number_of_guests = data.numberOfGuests;
       if (data.address !== undefined) updateData.address = data.address;
       if (data.envelopeAmount !== undefined) updateData.envelope_amount = data.envelopeAmount;

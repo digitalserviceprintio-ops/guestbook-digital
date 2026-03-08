@@ -1,9 +1,11 @@
 export type AttendanceStatus = "hadir" | "tidak_hadir" | "belum_konfirmasi";
 export type GuestCategory = "pengantin" | "orang_tua";
+export type Gender = "laki_laki" | "perempuan";
 
 export interface Guest {
   id: string;
   name: string;
+  gender: Gender;
   numberOfGuests: number;
   address: string;
   envelopeAmount: number;
@@ -13,6 +15,11 @@ export interface Guest {
   souvenirPickedUp: boolean;
   createdAt: Date;
 }
+
+export const genderLabels: Record<Gender, string> = {
+  laki_laki: "Laki-laki",
+  perempuan: "Perempuan",
+};
 
 export const statusLabels: Record<AttendanceStatus, string> = {
   hadir: "Hadir",

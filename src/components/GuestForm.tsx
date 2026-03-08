@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Guest, AttendanceStatus, GuestCategory, statusLabels } from "@/types/guest";
+import { Guest, AttendanceStatus, GuestCategory, Gender, statusLabels, genderLabels } from "@/types/guest";
 import { X } from "lucide-react";
 
 interface GuestFormProps {
@@ -16,6 +16,7 @@ const statusOptions: AttendanceStatus[] = ["belum_konfirmasi", "hadir", "tidak_h
 
 export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: GuestFormProps) {
   const [name, setName] = useState("");
+  const [gender, setGender] = useState<Gender>("laki_laki");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [address, setAddress] = useState("");
   const [envelopeAmount, setEnvelopeAmount] = useState("");
@@ -25,6 +26,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
   useEffect(() => {
     if (guest) {
       setName(guest.name);
+      setGender(guest.gender);
       setNumberOfGuests(guest.numberOfGuests);
       setAddress(guest.address);
       setEnvelopeAmount(guest.envelopeAmount ? guest.envelopeAmount.toString() : "");
@@ -32,6 +34,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
       setNotes(guest.notes);
     } else {
       setName("");
+      setGender("laki_laki");
       setNumberOfGuests(1);
       setAddress("");
       setEnvelopeAmount("");
@@ -46,6 +49,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
 
     const data = {
       name: name.trim(),
+      gender,
       numberOfGuests,
       address,
       envelopeAmount: parseInt(envelopeAmount) || 0,
@@ -107,6 +111,28 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
                   maxLength={100}
                   className={inputClass}
                 />
+              </div>
+
+              <div>
+                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                  Jenis Kelamin
+                </label>
+                <div className="flex gap-2">
+                  {(["laki_laki", "perempuan"] as Gender[]).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setGender(g)}
+                      className={`flex-1 rounded-xl py-2.5 text-xs font-body font-medium transition-all ${
+                        gender === g
+                          ? "gradient-gold text-primary-foreground shadow-card"
+                          : "bg-card text-muted-foreground"
+                      }`}
+                    >
+                      {genderLabels[g]}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
