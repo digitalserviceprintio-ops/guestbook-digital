@@ -11,6 +11,7 @@ interface GuestListProps {
   onSearchChange: (s: string) => void;
   onEdit: (guest: Guest) => void;
   onDelete: (id: string) => void;
+  onShowQR?: (guest: Guest) => void;
 }
 
 const filterOptions: { value: AttendanceStatus | "all"; label: string }[] = [
