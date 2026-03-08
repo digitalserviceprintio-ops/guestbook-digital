@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +35,25 @@ const Index = () => {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const IDLE_TIMEOUT = 20000; // 20 seconds
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      navigate("/");
+    }, IDLE_TIMEOUT);
+  }, [navigate]);
+
+  useEffect(() => {
+    resetTimer();
+    const events = ["mousedown", "mousemove", "keydown", "touchstart", "scroll"];
+    events.forEach((e) => window.addEventListener(e, resetTimer));
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      events.forEach((e) => window.removeEventListener(e, resetTimer));
+    };
+  }, [resetTimer]);
 
   const handleEdit = (guest: Guest) => {
     setEditingGuest(guest);
@@ -74,6 +93,16 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setEditingGuest(null);
+                setFormOpen(true);
+              }}
+              className="flex items-center gap-1.5 gradient-gold text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Tambah Tamu</span>
+            </button>
             <button
               onClick={() => navigate("/souvenir")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
@@ -142,19 +171,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* FAB */}
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.4, type: "spring" }}
-        onClick={() => {
-          setEditingGuest(null);
-          setFormOpen(true);
-        }}
-        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 h-14 w-14 rounded-full gradient-gold shadow-elevated flex items-center justify-center z-30 hover:opacity-90 transition-opacity"
-      >
-        <Plus className="h-6 w-6 text-primary-foreground" />
-      </motion.button>
 
       {/* Form Sheet */}
       <GuestForm
