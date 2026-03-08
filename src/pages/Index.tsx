@@ -36,7 +36,7 @@ const Index = () => {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { logout, tokenLabel } = useTokenAuth();
+  const { logout, fullLogout, tokenLabel } = useTokenAuth();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const IDLE_TIMEOUT = 20000; // 20 seconds
 
