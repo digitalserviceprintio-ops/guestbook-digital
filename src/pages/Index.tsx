@@ -111,6 +111,13 @@ const Index = () => {
               <FileBarChart className="h-4 w-4" />
             </button>
             <button
+              onClick={() => navigate("/backup")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Backup & Export"
+            >
+              <HardDrive className="h-4 w-4" />
+            </button>
+            <button
               onClick={() => navigate("/settings")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
               title="Pengaturan"
