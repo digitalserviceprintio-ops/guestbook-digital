@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { Guest, AttendanceStatus } from "@/types/guest";
+import { Guest, AttendanceStatus, GuestCategory } from "@/types/guest";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -8,9 +8,9 @@ export function useGuests() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<AttendanceStatus | "all">("all");
   const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<GuestCategory>("pengantin");
   const { toast } = useToast();
 
-  // Fetch guests from database
   const fetchGuests = useCallback(async () => {
     const { data, error } = await supabase
       .from("guests")
@@ -26,11 +26,11 @@ export function useGuests() {
       (data || []).map((g) => ({
         id: g.id,
         name: g.name,
-        phone: g.phone || "",
         numberOfGuests: g.number_of_guests,
         address: g.address || "",
         envelopeAmount: g.envelope_amount || 0,
         status: g.status as AttendanceStatus,
+        category: g.category as GuestCategory,
         notes: g.notes || "",
         createdAt: new Date(g.created_at),
       }))
@@ -40,32 +40,26 @@ export function useGuests() {
 
   useEffect(() => {
     fetchGuests();
-
-    // Realtime subscription
     const channel = supabase
       .channel("guests-changes")
       .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, () => {
         fetchGuests();
       })
       .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [fetchGuests]);
 
   const addGuest = useCallback(
     async (guest: Omit<Guest, "id" | "createdAt">) => {
       const { error } = await supabase.from("guests").insert({
         name: guest.name,
-        phone: guest.phone,
         number_of_guests: guest.numberOfGuests,
         address: guest.address,
         envelope_amount: guest.envelopeAmount,
         status: guest.status,
+        category: guest.category,
         notes: guest.notes,
       });
-
       if (error) {
         toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
       } else {
@@ -79,15 +73,14 @@ export function useGuests() {
     async (id: string, data: Partial<Guest>) => {
       const updateData: Record<string, unknown> = {};
       if (data.name !== undefined) updateData.name = data.name;
-      if (data.phone !== undefined) updateData.phone = data.phone;
       if (data.numberOfGuests !== undefined) updateData.number_of_guests = data.numberOfGuests;
       if (data.address !== undefined) updateData.address = data.address;
       if (data.envelopeAmount !== undefined) updateData.envelope_amount = data.envelopeAmount;
       if (data.status !== undefined) updateData.status = data.status;
+      if (data.category !== undefined) updateData.category = data.category;
       if (data.notes !== undefined) updateData.notes = data.notes;
 
       const { error } = await supabase.from("guests").update(updateData).eq("id", id);
-
       if (error) {
         toast({ title: "Error", description: "Gagal mengupdate tamu.", variant: "destructive" });
       } else {
@@ -100,7 +93,6 @@ export function useGuests() {
   const deleteGuest = useCallback(
     async (id: string) => {
       const { error } = await supabase.from("guests").delete().eq("id", id);
-
       if (error) {
         toast({ title: "Error", description: "Gagal menghapus tamu.", variant: "destructive" });
       } else {
@@ -110,35 +102,56 @@ export function useGuests() {
     [toast, fetchGuests]
   );
 
+  const categoryGuests = useMemo(() => {
+    return guests.filter((g) => g.category === activeCategory);
+  }, [guests, activeCategory]);
+
   const filteredGuests = useMemo(() => {
-    return guests.filter((g) => {
+    return categoryGuests.filter((g) => {
       const matchesFilter = filter === "all" || g.status === filter;
       const matchesSearch =
         search === "" ||
         g.name.toLowerCase().includes(search.toLowerCase()) ||
-        g.phone.includes(search);
+        g.address.toLowerCase().includes(search.toLowerCase());
       return matchesFilter && matchesSearch;
     });
-  }, [guests, filter, search]);
+  }, [categoryGuests, filter, search]);
 
-  const stats = useMemo(() => {
+  const statsForCategory = useCallback(
+    (cat: GuestCategory) => {
+      const catGuests = guests.filter((g) => g.category === cat);
+      const total = catGuests.length;
+      const hadir = catGuests.filter((g) => g.status === "hadir").length;
+      const tidakHadir = catGuests.filter((g) => g.status === "tidak_hadir").length;
+      const belum = catGuests.filter((g) => g.status === "belum_konfirmasi").length;
+      const totalTamu = catGuests.reduce((sum, g) => sum + g.numberOfGuests, 0);
+      const totalAmplop = catGuests.reduce((sum, g) => sum + g.envelopeAmount, 0);
+      return { total, hadir, tidakHadir, belum, totalTamu, totalAmplop };
+    },
+    [guests]
+  );
+
+  const stats = useMemo(() => statsForCategory(activeCategory), [statsForCategory, activeCategory]);
+
+  const globalStats = useMemo(() => {
     const total = guests.length;
-    const hadir = guests.filter((g) => g.status === "hadir").length;
-    const tidakHadir = guests.filter((g) => g.status === "tidak_hadir").length;
-    const belum = guests.filter((g) => g.status === "belum_konfirmasi").length;
     const totalTamu = guests.reduce((sum, g) => sum + g.numberOfGuests, 0);
     const totalAmplop = guests.reduce((sum, g) => sum + g.envelopeAmount, 0);
-    return { total, hadir, tidakHadir, belum, totalTamu, totalAmplop };
+    return { total, totalTamu, totalAmplop };
   }, [guests]);
 
   return {
     guests: filteredGuests,
     allGuests: guests,
+    categoryGuests,
     stats,
+    globalStats,
     filter,
     setFilter,
     search,
     setSearch,
+    activeCategory,
+    setActiveCategory,
     addGuest,
     updateGuest,
     deleteGuest,

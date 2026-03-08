@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Guest, AttendanceStatus, statusLabels } from "@/types/guest";
+import { Guest, AttendanceStatus, GuestCategory, statusLabels } from "@/types/guest";
 import { X } from "lucide-react";
 
 interface GuestFormProps {
   open: boolean;
   guest?: Guest | null;
+  category: GuestCategory;
   onClose: () => void;
   onSave: (data: Omit<Guest, "id" | "createdAt">) => void;
   onUpdate?: (id: string, data: Partial<Guest>) => void;
@@ -13,9 +14,8 @@ interface GuestFormProps {
 
 const statusOptions: AttendanceStatus[] = ["belum_konfirmasi", "hadir", "tidak_hadir"];
 
-export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormProps) {
+export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: GuestFormProps) {
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [address, setAddress] = useState("");
   const [envelopeAmount, setEnvelopeAmount] = useState("");
@@ -25,7 +25,6 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
   useEffect(() => {
     if (guest) {
       setName(guest.name);
-      setPhone(guest.phone);
       setNumberOfGuests(guest.numberOfGuests);
       setAddress(guest.address);
       setEnvelopeAmount(guest.envelopeAmount ? guest.envelopeAmount.toString() : "");
@@ -33,7 +32,6 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
       setNotes(guest.notes);
     } else {
       setName("");
-      setPhone("");
       setNumberOfGuests(1);
       setAddress("");
       setEnvelopeAmount("");
@@ -48,11 +46,11 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
 
     const data = {
       name: name.trim(),
-      phone,
       numberOfGuests,
       address,
       envelopeAmount: parseInt(envelopeAmount) || 0,
       status,
+      category: guest ? guest.category : category,
       notes,
     };
 
@@ -136,14 +134,14 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
 
                 <div>
                   <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
-                    Nomor HP
+                    Nominal Amplop (Rp)
                   </label>
                   <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="08xxx"
-                    maxLength={20}
+                    type="number"
+                    value={envelopeAmount}
+                    onChange={(e) => setEnvelopeAmount(e.target.value)}
+                    placeholder="0"
+                    min={0}
                     className={inputClass}
                   />
                 </div>
@@ -159,20 +157,6 @@ export function GuestForm({ open, guest, onClose, onSave, onUpdate }: GuestFormP
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Masukkan alamat tamu"
                   maxLength={200}
-                  className={inputClass}
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
-                  Nominal Amplop (Rp)
-                </label>
-                <input
-                  type="number"
-                  value={envelopeAmount}
-                  onChange={(e) => setEnvelopeAmount(e.target.value)}
-                  placeholder="0"
-                  min={0}
                   className={inputClass}
                 />
               </div>

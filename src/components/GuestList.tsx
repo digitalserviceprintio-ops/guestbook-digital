@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Guest, AttendanceStatus, statusLabels, formatRupiah } from "@/types/guest";
-import { Search, Pencil, Trash2, Phone, MapPin, Banknote } from "lucide-react";
+import { Search, Pencil, Trash2, MapPin, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
@@ -37,19 +37,17 @@ export function GuestList({
 }: GuestListProps) {
   return (
     <div className="space-y-3">
-      {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Cari nama atau nomor HP..."
+          placeholder="Cari nama atau alamat..."
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           className="w-full rounded-xl bg-card pl-10 pr-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground shadow-card border-0 outline-none focus:ring-2 focus:ring-ring"
         />
       </div>
 
-      {/* Filter pills */}
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
         {filterOptions.map((opt) => (
           <button
@@ -66,7 +64,6 @@ export function GuestList({
         ))}
       </div>
 
-      {/* List */}
       <div className="space-y-2">
         <AnimatePresence mode="popLayout">
           {guests.length === 0 && (
@@ -98,12 +95,6 @@ export function GuestList({
                     </Badge>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground font-body">
-                    {guest.phone && (
-                      <span className="flex items-center gap-1">
-                        <Phone className="h-3 w-3" />
-                        {guest.phone}
-                      </span>
-                    )}
                     <span>{guest.numberOfGuests} orang</span>
                     {guest.envelopeAmount > 0 && (
                       <span className="flex items-center gap-1 text-primary font-medium">

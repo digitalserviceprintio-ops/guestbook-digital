@@ -17,37 +17,37 @@ export type Database = {
       guests: {
         Row: {
           address: string | null
+          category: string
           created_at: string
           envelope_amount: number | null
           id: string
           name: string
           notes: string | null
           number_of_guests: number
-          phone: string | null
           status: string
           updated_at: string
         }
         Insert: {
           address?: string | null
+          category?: string
           created_at?: string
           envelope_amount?: number | null
           id?: string
           name: string
           notes?: string | null
           number_of_guests?: number
-          phone?: string | null
           status?: string
           updated_at?: string
         }
         Update: {
           address?: string | null
+          category?: string
           created_at?: string
           envelope_amount?: number | null
           id?: string
           name?: string
           notes?: string | null
           number_of_guests?: number
-          phone?: string | null
           status?: string
           updated_at?: string
         }

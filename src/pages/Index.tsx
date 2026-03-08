@@ -1,23 +1,31 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, Download } from "lucide-react";
-import { exportGuestsToCSV } from "@/lib/exportCSV";
+import { Plus, BookOpen, Download, Heart, Users2 } from "lucide-react";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
 import { GuestList } from "@/components/GuestList";
 import { GuestForm } from "@/components/GuestForm";
-import { Guest } from "@/types/guest";
+import { Guest, GuestCategory, categoryLabels } from "@/types/guest";
 import { useToast } from "@/hooks/use-toast";
+import { exportGuestsToCSV } from "@/lib/exportCSV";
+
+const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[] = [
+  { value: "pengantin", label: "Pengantin", icon: Heart },
+  { value: "orang_tua", label: "Orang Tua", icon: Users2 },
+];
 
 const Index = () => {
   const {
     guests,
     allGuests,
     stats,
+    globalStats,
     filter,
     setFilter,
     search,
     setSearch,
+    activeCategory,
+    setActiveCategory,
     addGuest,
     updateGuest,
     deleteGuest,
@@ -80,11 +88,34 @@ const Index = () => {
       </motion.header>
 
       {/* Content */}
-      <main className="max-w-lg mx-auto px-5 py-5 pb-24 space-y-6">
+      <main className="max-w-lg mx-auto px-5 py-5 pb-24 space-y-5">
+        {/* Category Tabs */}
+        <div className="flex rounded-xl bg-card p-1 shadow-card">
+          {categoryTabs.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => {
+                setActiveCategory(tab.value);
+                setFilter("all");
+                setSearch("");
+              }}
+              className={`flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-body font-medium transition-all ${
+                activeCategory === tab.value
+                  ? "gradient-gold text-primary-foreground shadow-card"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <tab.icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         <StatsCards {...stats} />
+
         <div>
           <h2 className="font-display text-lg font-bold text-foreground mb-3">
-            Daftar Tamu
+            Tamu {categoryLabels[activeCategory]}
           </h2>
           <GuestList
             guests={guests}
@@ -116,6 +147,7 @@ const Index = () => {
       <GuestForm
         open={formOpen}
         guest={editingGuest}
+        category={activeCategory}
         onClose={handleCloseForm}
         onSave={(data) => {
           addGuest(data);
