@@ -80,9 +80,18 @@ const RSVP = () => {
     );
   }
 
+  const navigateBack = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-md mx-auto px-5 py-10 space-y-6">
+      {/* Back Button */}
+      <div className="max-w-md mx-auto px-5 pt-5">
+        <button onClick={() => navigateBack("/")} className="flex items-center gap-1.5 text-sm font-body text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-4 w-4" />
+          Kembali
+        </button>
+      </div>
+      <div className="max-w-md mx-auto px-5 py-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-2">
           <p className="text-xs font-body text-muted-foreground tracking-widest uppercase">Konfirmasi Kehadiran</p>
           <h1 className="font-display text-2xl font-bold text-foreground">
