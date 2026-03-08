@@ -21,29 +21,31 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <TokenAuthProvider>
-          <AppVersionNotification />
-          <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/rsvp" element={<RSVP />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/laporan" element={<ProtectedRoute><Report /></ProtectedRoute>} />
-            <Route path="/souvenir" element={<ProtectedRoute><SouvenirCounter /></ProtectedRoute>} />
-            <Route path="/guest-qr/:id" element={<ProtectedRoute><GuestQR /></ProtectedRoute>} />
-            <Route path="/souvenir-scan/:id" element={<SouvenirScan />} />
-            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </TokenAuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <TokenAuthProvider>
+            <AppVersionNotification />
+            <Routes>
+              <Route path="/" element={<Welcome />} />
+              <Route path="/rsvp" element={<RSVP />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/laporan" element={<ProtectedRoute><Report /></ProtectedRoute>} />
+              <Route path="/souvenir" element={<ProtectedRoute><SouvenirCounter /></ProtectedRoute>} />
+              <Route path="/guest-qr/:id" element={<ProtectedRoute><GuestQR /></ProtectedRoute>} />
+              <Route path="/souvenir-scan/:id" element={<SouvenirScan />} />
+              <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </TokenAuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
