@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen } from "lucide-react";
+import { Plus, BookOpen, Download } from "lucide-react";
+import { exportGuestsToCSV } from "@/lib/exportCSV";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
 import { GuestList } from "@/components/GuestList";
