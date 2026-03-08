@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2, Sheet, HelpCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useToast } from "@/hooks/use-toast";
-import { syncAllGuestsToSpreadsheet } from "@/lib/syncSpreadsheet";
 
 const Settings = () => {
   const navigate = useNavigate();
