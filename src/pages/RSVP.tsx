@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const RSVP = () => {
   const { toast } = useToast();
