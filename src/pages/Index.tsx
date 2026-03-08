@@ -10,6 +10,7 @@ import { GuestList } from "@/components/GuestList";
 import { GuestForm } from "@/components/GuestForm";
 import { Guest, GuestCategory, categoryLabels } from "@/types/guest";
 import { useToast } from "@/hooks/use-toast";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[] = [
   { value: "pengantin", label: "Pengantin", icon: Heart },

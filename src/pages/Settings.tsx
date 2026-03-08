@@ -332,6 +332,10 @@ const Settings = () => {
             </motion.div>
 
 
+
+            {/* Notification Settings */}
+            <NotificationSettings />
+
             {/* Cara Penggunaan */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
               <h2 className="font-display text-base md:text-lg font-bold text-card-foreground flex items-center gap-2">
