@@ -328,8 +328,59 @@ const Settings = () => {
             </motion.div>
 
 
+            {/* Cara Penggunaan */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
+              <h2 className="font-display text-base md:text-lg font-bold text-card-foreground flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                Cara Penggunaan Aplikasi
+              </h2>
+              <div className="space-y-2 text-xs md:text-sm font-body text-muted-foreground">
+                <p><span className="font-semibold text-card-foreground">1. Pengaturan Awal:</span> Isi data pengantin, tanggal, lokasi, dan upload foto di halaman ini lalu klik Simpan.</p>
+                <p><span className="font-semibold text-card-foreground">2. Tambah Tamu:</span> Buka Dashboard → klik tombol (+) untuk menambahkan tamu undangan.</p>
+                <p><span className="font-semibold text-card-foreground">3. RSVP Online:</span> Bagikan link RSVP kepada tamu. Tamu mengisi konfirmasi kehadiran secara online.</p>
+                <p><span className="font-semibold text-card-foreground">4. QR Code & Souvenir:</span> Setiap tamu memiliki QR Code. Scan QR di counter souvenir untuk mencatat pengambilan.</p>
+                <p><span className="font-semibold text-card-foreground">5. Laporan:</span> Lihat statistik kehadiran, download data dalam format Excel/CSV/JSON di halaman Laporan & Backup.</p>
+                <p><span className="font-semibold text-card-foreground">6. Install Aplikasi:</span> Aplikasi bisa di-install di HP atau laptop melalui browser → "Add to Home Screen" atau ikon install di address bar.</p>
+              </div>
+            </motion.div>
+
+            {/* Helpdesk */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.26 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
+              <h2 className="font-display text-base md:text-lg font-bold text-card-foreground flex items-center gap-2">
+                <Headphones className="h-5 w-5 text-primary" />
+                Helpdesk & Dukungan
+              </h2>
+              <p className="text-xs md:text-sm font-body text-muted-foreground">
+                Butuh bantuan? Hubungi tim support kami:
+              </p>
+              <div className="space-y-2">
+                <a
+                  href="https://wa.me/6282186371356?text=Halo%20MicroData2R%2C%20saya%20butuh%20bantuan%20untuk%20aplikasi%20Buku%20Tamu."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center gap-3 rounded-xl bg-[hsl(142,70%,45%)] text-white font-body font-semibold py-3 px-4 hover:opacity-90 transition-opacity text-sm"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  <div>
+                    <p>WhatsApp - MicroData2R</p>
+                    <p className="text-[11px] font-normal opacity-80">+62 821-8637-1356</p>
+                  </div>
+                </a>
+                <a
+                  href="tel:+6282186371356"
+                  className="w-full flex items-center gap-3 rounded-xl bg-secondary text-secondary-foreground font-body font-semibold py-3 px-4 hover:opacity-90 transition-opacity text-sm"
+                >
+                  <Phone className="h-5 w-5" />
+                  <div>
+                    <p>Telepon Langsung</p>
+                    <p className="text-[11px] font-normal text-muted-foreground">+62 821-8637-1356</p>
+                  </div>
+                </a>
+              </div>
+            </motion.div>
+
             {/* Reset Data */}
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
               <h2 className="font-display text-base md:text-lg font-bold text-destructive">Reset Data</h2>
               <p className="text-xs md:text-sm font-body text-muted-foreground">Hapus semua data tamu dan reset souvenir. Pengaturan acara tidak akan dihapus.</p>
               <button
