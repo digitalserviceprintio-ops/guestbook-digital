@@ -55,6 +55,7 @@ export function useGuests() {
     async (guest: Omit<Guest, "id" | "createdAt">) => {
       const { error } = await supabase.from("guests").insert({
         name: guest.name,
+        gender: guest.gender,
         number_of_guests: guest.numberOfGuests,
         address: guest.address,
         envelope_amount: guest.envelopeAmount,
