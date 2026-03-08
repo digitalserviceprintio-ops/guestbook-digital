@@ -59,6 +59,7 @@ export function useWeddingSettings() {
     if (!error && data) {
       const rawImages = (data as any).hero_images;
       const heroImages: string[] = Array.isArray(rawImages) ? rawImages : [];
+      const rawMusic = (data as any).background_music;
       setSettings({
         id: data.id,
         groomName: data.groom_name,
@@ -73,6 +74,7 @@ export function useWeddingSettings() {
         closingText: data.closing_text,
         heroImageUrl: data.hero_image_url || "",
         heroImages,
+        backgroundMusic: rawMusic && typeof rawMusic === "object" && !Array.isArray(rawMusic) ? rawMusic as BackgroundMusic : null,
         rsvpOpen: data.rsvp_open,
       });
     }
