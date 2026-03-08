@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2, BookOpen, Headphones, MessageCircle, Phone, Download, Info } from "lucide-react";
+import { NotificationSettings } from "@/components/NotificationSettings";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
@@ -330,6 +331,10 @@ const Settings = () => {
               )}
             </motion.div>
 
+
+
+            {/* Notification Settings */}
+            <NotificationSettings />
 
             {/* Cara Penggunaan */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive, Bell } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
@@ -10,6 +10,7 @@ import { GuestList } from "@/components/GuestList";
 import { GuestForm } from "@/components/GuestForm";
 import { Guest, GuestCategory, categoryLabels } from "@/types/guest";
 import { useToast } from "@/hooks/use-toast";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[] = [
   { value: "pengantin", label: "Pengantin", icon: Heart },
@@ -39,6 +40,7 @@ const Index = () => {
   const navigate = useNavigate();
   const { logout, fullLogout, tokenLabel } = useTokenAuth();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { prefs, permissionState, requestPermission } = usePushNotifications();
   const IDLE_TIMEOUT = 20000; // 20 seconds
 
   const resetTimer = useCallback(() => {
@@ -98,6 +100,23 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            <button
+              onClick={async () => {
+                if (permissionState === "granted" && prefs.enabled) {
+                  navigate("/settings");
+                } else {
+                  await requestPermission();
+                }
+              }}
+              className={`p-2.5 rounded-xl shadow-card hover:bg-secondary transition-colors ${
+                prefs.enabled && permissionState === "granted"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-card text-muted-foreground"
+              }`}
+              title="Notifikasi"
+            >
+              <Bell className="h-4 w-4" />
+            </button>
             <button
               onClick={() => navigate("/souvenir")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
