@@ -56,6 +56,60 @@ export type Database = {
         }
         Relationships: []
       }
+      wedding_settings: {
+        Row: {
+          akad_time: string
+          bride_name: string
+          closing_text: string
+          created_at: string
+          end_time: string
+          event_date: string
+          groom_name: string
+          hero_image_url: string | null
+          id: string
+          invitation_text: string
+          resepsi_time: string
+          rsvp_open: boolean
+          updated_at: string
+          venue_address: string
+          venue_name: string
+        }
+        Insert: {
+          akad_time?: string
+          bride_name?: string
+          closing_text?: string
+          created_at?: string
+          end_time?: string
+          event_date?: string
+          groom_name?: string
+          hero_image_url?: string | null
+          id?: string
+          invitation_text?: string
+          resepsi_time?: string
+          rsvp_open?: boolean
+          updated_at?: string
+          venue_address?: string
+          venue_name?: string
+        }
+        Update: {
+          akad_time?: string
+          bride_name?: string
+          closing_text?: string
+          created_at?: string
+          end_time?: string
+          event_date?: string
+          groom_name?: string
+          hero_image_url?: string | null
+          id?: string
+          invitation_text?: string
+          resepsi_time?: string
+          rsvp_open?: boolean
+          updated_at?: string
+          venue_address?: string
+          venue_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
