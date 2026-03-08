@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { Guest, AttendanceStatus, GuestCategory } from "@/types/guest";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { syncGuestToSpreadsheet } from "@/lib/syncSpreadsheet";
 
 export function useGuests() {
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -67,6 +68,8 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
+        // Sync to spreadsheet (non-blocking)
+        syncGuestToSpreadsheet("add", { id: "", ...guest });
       }
     },
     [toast, fetchGuests]
@@ -89,6 +92,7 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal mengupdate tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
+        syncGuestToSpreadsheet("update", { id, ...data });
       }
     },
     [toast, fetchGuests]
@@ -101,6 +105,7 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal menghapus tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
+        syncGuestToSpreadsheet("delete", { id, name: "" });
       }
     },
     [toast, fetchGuests]

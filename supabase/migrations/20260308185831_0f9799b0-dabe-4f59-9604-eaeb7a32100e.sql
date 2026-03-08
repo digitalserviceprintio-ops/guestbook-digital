@@ -1,0 +1,1 @@
+ALTER TABLE public.wedding_settings ADD COLUMN spreadsheet_webhook_url text DEFAULT '';

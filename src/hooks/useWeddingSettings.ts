@@ -23,6 +23,7 @@ export interface WeddingSettings {
   heroImageUrl: string;
   heroImages: string[];
   backgroundMusic: BackgroundMusic | null;
+  spreadsheetWebhookUrl: string;
   rsvpOpen: boolean;
 }
 
@@ -41,6 +42,7 @@ const defaultSettings: WeddingSettings = {
   heroImageUrl: "",
   heroImages: [],
   backgroundMusic: null,
+  spreadsheetWebhookUrl: "",
   rsvpOpen: true,
 };
 
@@ -75,6 +77,7 @@ export function useWeddingSettings() {
         heroImageUrl: data.hero_image_url || "",
         heroImages,
         backgroundMusic: rawMusic && typeof rawMusic === "object" && !Array.isArray(rawMusic) ? rawMusic as BackgroundMusic : null,
+        spreadsheetWebhookUrl: (data as any).spreadsheet_webhook_url || "",
         rsvpOpen: data.rsvp_open,
       });
     }
@@ -101,6 +104,7 @@ export function useWeddingSettings() {
       if (updates.heroImageUrl !== undefined) dbUpdates.hero_image_url = updates.heroImageUrl;
       if (updates.heroImages !== undefined) dbUpdates.hero_images = updates.heroImages;
       if (updates.backgroundMusic !== undefined) dbUpdates.background_music = updates.backgroundMusic;
+      if (updates.spreadsheetWebhookUrl !== undefined) dbUpdates.spreadsheet_webhook_url = updates.spreadsheetWebhookUrl;
       if (updates.rsvpOpen !== undefined) dbUpdates.rsvp_open = updates.rsvpOpen;
 
       const { error } = await supabase

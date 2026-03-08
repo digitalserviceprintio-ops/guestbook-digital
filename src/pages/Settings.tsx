@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2, Sheet, HelpCircle, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useToast } from "@/hooks/use-toast";
+import { syncAllGuestsToSpreadsheet } from "@/lib/syncSpreadsheet";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -332,6 +333,126 @@ const Settings = () => {
                   </p>
                 </div>
               )}
+            </motion.div>
+
+            {/* Spreadsheet Integration */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.23 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
+              <h2 className="font-display text-base md:text-lg font-bold text-card-foreground flex items-center gap-2">
+                <Sheet className="h-5 w-5 text-green-600" />
+                Integrasi Google Sheets
+              </h2>
+              <p className="text-xs md:text-sm font-body text-muted-foreground">
+                Sinkronisasi data tamu otomatis ke Google Spreadsheet setiap ada perubahan data.
+              </p>
+
+              <div className="space-y-2">
+                <label className="text-xs md:text-sm font-body font-medium text-muted-foreground block">URL Webhook Google Apps Script</label>
+                <input
+                  value={form.spreadsheetWebhookUrl}
+                  onChange={(e) => setForm({ ...form, spreadsheetWebhookUrl: e.target.value })}
+                  placeholder="https://script.google.com/macros/s/xxxxx/exec"
+                  className={inputClass}
+                />
+              </div>
+
+              {form.spreadsheetWebhookUrl && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    toast({ title: "Sinkronisasi...", description: "Mengirim semua data tamu ke spreadsheet." });
+                    const { data } = await supabase.from("guests").select("*").order("created_at", { ascending: false });
+                    if (data) {
+                      const guests = data.map((g: any) => ({
+                        id: g.id, name: g.name, gender: g.gender,
+                        numberOfGuests: g.number_of_guests, address: g.address || "",
+                        envelopeAmount: g.envelope_amount || 0, status: g.status,
+                        category: g.category, notes: g.notes || "",
+                        souvenirPickedUp: g.souvenir_picked_up, createdAt: new Date(g.created_at),
+                      }));
+                      await syncAllGuestsToSpreadsheet(guests as any);
+                      toast({ title: "Terkirim", description: "Data tamu telah dikirim ke spreadsheet." });
+                    }
+                  }}
+                  className="flex items-center gap-2 bg-green-600 text-white font-body font-semibold px-4 py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Sync Semua Data Sekarang
+                </button>
+              )}
+
+              {/* Setup Guide */}
+              <details className="text-xs font-body text-muted-foreground">
+                <summary className="cursor-pointer flex items-center gap-1 font-semibold text-foreground">
+                  <HelpCircle className="h-3.5 w-3.5" />
+                  Cara Setup Google Apps Script
+                </summary>
+                <ol className="mt-2 space-y-1.5 pl-4 list-decimal">
+                  <li>Buka <strong>Google Sheets</strong> baru</li>
+                  <li>Buat header di baris 1: <code>ID, Nama, Gender, Jumlah Tamu, Alamat, Amplop, Status, Kategori, Catatan, Souvenir, Aksi, Timestamp</code></li>
+                  <li>Klik <strong>Extensions → Apps Script</strong></li>
+                  <li>Hapus kode yang ada, lalu paste kode berikut:</li>
+                </ol>
+                <pre className="mt-2 bg-secondary rounded-lg p-3 text-[10px] overflow-x-auto whitespace-pre leading-relaxed">{`function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+
+  if (data.action === "sync_all") {
+    // Clear all data except header
+    if (sheet.getLastRow() > 1) {
+      sheet.getRange(2, 1, sheet.getLastRow() - 1, 12).clear();
+    }
+    data.guests.forEach(function(g) {
+      sheet.appendRow([
+        g.id, g.name, g.gender, g.numberOfGuests,
+        g.address, g.envelopeAmount, g.status,
+        g.category, g.notes, g.souvenirPickedUp,
+        "sync_all", data.timestamp
+      ]);
+    });
+  } else if (data.action === "add") {
+    var g = data.guest;
+    sheet.appendRow([
+      g.id, g.name, g.gender, g.numberOfGuests,
+      g.address, g.envelopeAmount, g.status,
+      g.category, g.notes, g.souvenirPickedUp,
+      "add", data.timestamp
+    ]);
+  } else if (data.action === "update") {
+    var g = data.guest;
+    var rows = sheet.getDataRange().getValues();
+    for (var i = 1; i < rows.length; i++) {
+      if (rows[i][0] === g.id) {
+        sheet.getRange(i+1,1,1,12).setValues([[
+          g.id, g.name, g.gender, g.numberOfGuests,
+          g.address, g.envelopeAmount, g.status,
+          g.category, g.notes, g.souvenirPickedUp,
+          "update", data.timestamp
+        ]]);
+        break;
+      }
+    }
+  } else if (data.action === "delete") {
+    var rows = sheet.getDataRange().getValues();
+    for (var i = 1; i < rows.length; i++) {
+      if (rows[i][0] === data.guest.id) {
+        sheet.deleteRow(i + 1);
+        break;
+      }
+    }
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({status:"ok"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}`}</pre>
+                <ol className="mt-2 space-y-1.5 pl-4 list-decimal" start={5}>
+                  <li>Klik <strong>Deploy → New deployment</strong></li>
+                  <li>Pilih type: <strong>Web app</strong></li>
+                  <li>Set "Who has access" ke <strong>Anyone</strong></li>
+                  <li>Klik <strong>Deploy</strong>, salin URL-nya</li>
+                  <li>Paste URL di field di atas, lalu <strong>Simpan</strong></li>
+                </ol>
+              </details>
             </motion.div>
 
             {/* Reset Data */}
