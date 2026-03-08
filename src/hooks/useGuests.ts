@@ -28,6 +28,8 @@ export function useGuests() {
         name: g.name,
         phone: g.phone || "",
         numberOfGuests: g.number_of_guests,
+        address: g.address || "",
+        envelopeAmount: g.envelope_amount || 0,
         status: g.status as AttendanceStatus,
         notes: g.notes || "",
         createdAt: new Date(g.created_at),
