@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const RSVP = () => {
   const { toast } = useToast();
   const { settings, loading: settingsLoading } = useWeddingSettings();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [status, setStatus] = useState<"hadir" | "tidak_hadir">("hadir");
@@ -40,7 +41,7 @@ const RSVP = () => {
   };
 
   const inputClass =
-    "w-full rounded-xl bg-card px-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
+    "w-full rounded-xl bg-card px-4 py-3 text-sm md:text-base font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
 
   if (settingsLoading) {
     return (
@@ -53,10 +54,10 @@ const RSVP = () => {
   if (!settings.rsvpOpen) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-5">
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm w-full rounded-2xl bg-card p-8 shadow-elevated text-center space-y-4">
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm md:max-w-md w-full rounded-2xl bg-card p-8 shadow-elevated text-center space-y-4">
           <XCircle className="h-16 w-16 text-muted-foreground mx-auto" />
           <h2 className="font-display text-2xl font-bold text-card-foreground">RSVP Ditutup</h2>
-          <p className="text-sm font-body text-muted-foreground">
+          <p className="text-sm md:text-base font-body text-muted-foreground">
             Mohon maaf, periode konfirmasi kehadiran sudah ditutup.
           </p>
         </motion.div>
@@ -67,10 +68,10 @@ const RSVP = () => {
   if (submitted) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-5">
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm w-full rounded-2xl bg-card p-8 shadow-elevated text-center space-y-4">
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm md:max-w-md w-full rounded-2xl bg-card p-8 shadow-elevated text-center space-y-4">
           <CheckCircle2 className="h-16 w-16 text-success mx-auto" />
           <h2 className="font-display text-2xl font-bold text-card-foreground">Terima Kasih!</h2>
-          <p className="text-sm font-body text-muted-foreground">
+          <p className="text-sm md:text-base font-body text-muted-foreground">
             {status === "hadir"
               ? `Konfirmasi kehadiran Anda (${numberOfGuests} orang) telah kami terima. Sampai jumpa di hari bahagia kami!`
               : "Terima kasih atas konfirmasinya. Semoga kita bisa bertemu di lain kesempatan."}
@@ -80,39 +81,37 @@ const RSVP = () => {
     );
   }
 
-  const navigateBack = useNavigate();
-
   return (
     <div className="min-h-screen bg-background">
       {/* Back Button */}
-      <div className="max-w-md mx-auto px-5 pt-5">
-        <button onClick={() => navigateBack("/")} className="flex items-center gap-1.5 text-sm font-body text-muted-foreground hover:text-foreground transition-colors">
+      <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto px-5 pt-5">
+        <button onClick={() => navigate("/")} className="flex items-center gap-1.5 text-sm font-body text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="h-4 w-4" />
           Kembali
         </button>
       </div>
-      <div className="max-w-md mx-auto px-5 py-6 space-y-6">
+      <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto px-5 py-6 space-y-6">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center space-y-2">
-          <p className="text-xs font-body text-muted-foreground tracking-widest uppercase">Konfirmasi Kehadiran</p>
-          <h1 className="font-display text-2xl font-bold text-foreground">
+          <p className="text-xs md:text-sm font-body text-muted-foreground tracking-widest uppercase">Konfirmasi Kehadiran</p>
+          <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground">
             {settings.groomName} & {settings.brideName}
           </h1>
-          <p className="text-sm font-body text-muted-foreground">Mohon konfirmasi kehadiran Anda</p>
+          <p className="text-sm md:text-base font-body text-muted-foreground">Mohon konfirmasi kehadiran Anda</p>
         </motion.div>
 
-        <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} onSubmit={handleSubmit} className="space-y-4">
+        <motion.form initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto">
           <div>
-            <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Nama Lengkap *</label>
+            <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Nama Lengkap *</label>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Masukkan nama Anda" required maxLength={100} className={inputClass} />
           </div>
 
           <div>
-            <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Konfirmasi Kehadiran</label>
+            <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Konfirmasi Kehadiran</label>
             <div className="flex gap-2">
-              <button type="button" onClick={() => setStatus("hadir")} className={`flex-1 rounded-xl py-3 text-sm font-body font-medium transition-all ${status === "hadir" ? "gradient-gold text-primary-foreground shadow-card" : "bg-card text-muted-foreground"}`}>
+              <button type="button" onClick={() => setStatus("hadir")} className={`flex-1 rounded-xl py-3 text-sm md:text-base font-body font-medium transition-all ${status === "hadir" ? "gradient-gold text-primary-foreground shadow-card" : "bg-card text-muted-foreground"}`}>
                 Ya, Saya Hadir
               </button>
-              <button type="button" onClick={() => setStatus("tidak_hadir")} className={`flex-1 rounded-xl py-3 text-sm font-body font-medium transition-all ${status === "tidak_hadir" ? "bg-destructive text-destructive-foreground shadow-card" : "bg-card text-muted-foreground"}`}>
+              <button type="button" onClick={() => setStatus("tidak_hadir")} className={`flex-1 rounded-xl py-3 text-sm md:text-base font-body font-medium transition-all ${status === "tidak_hadir" ? "bg-destructive text-destructive-foreground shadow-card" : "bg-card text-muted-foreground"}`}>
                 Tidak Hadir
               </button>
             </div>
@@ -120,26 +119,26 @@ const RSVP = () => {
 
           {status === "hadir" && (
             <div>
-              <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Jumlah Tamu</label>
+              <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Jumlah Tamu</label>
               <div className="flex items-center gap-3">
-                <button type="button" onClick={() => setNumberOfGuests(Math.max(1, numberOfGuests - 1))} className="h-10 w-10 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors">−</button>
+                <button type="button" onClick={() => setNumberOfGuests(Math.max(1, numberOfGuests - 1))} className="h-10 w-10 md:h-11 md:w-11 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors">−</button>
                 <span className="text-lg font-display font-bold text-foreground w-6 text-center">{numberOfGuests}</span>
-                <button type="button" onClick={() => setNumberOfGuests(Math.min(10, numberOfGuests + 1))} className="h-10 w-10 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors">+</button>
+                <button type="button" onClick={() => setNumberOfGuests(Math.min(10, numberOfGuests + 1))} className="h-10 w-10 md:h-11 md:w-11 rounded-xl bg-card text-card-foreground font-body font-bold text-lg flex items-center justify-center hover:bg-secondary transition-colors">+</button>
               </div>
             </div>
           )}
 
           <div>
-            <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Alamat</label>
+            <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Alamat</label>
             <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Alamat Anda" maxLength={200} className={inputClass} />
           </div>
 
           <div>
-            <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Ucapan & Doa</label>
+            <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Ucapan & Doa</label>
             <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Tuliskan ucapan untuk pengantin..." rows={3} maxLength={500} className={`${inputClass} resize-none`} />
           </div>
 
-          <button type="submit" disabled={submitting} className="w-full gradient-gold text-primary-foreground font-body font-semibold py-3.5 rounded-xl shadow-elevated hover:opacity-90 transition-opacity text-sm disabled:opacity-50">
+          <button type="submit" disabled={submitting} className="w-full gradient-gold text-primary-foreground font-body font-semibold py-3.5 rounded-xl shadow-elevated hover:opacity-90 transition-opacity text-sm md:text-base disabled:opacity-50">
             {submitting ? "Mengirim..." : "Kirim Konfirmasi"}
           </button>
         </motion.form>

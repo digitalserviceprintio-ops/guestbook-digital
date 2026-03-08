@@ -39,40 +39,41 @@ export function GuestList({
 }: GuestListProps) {
   return (
     <div className="space-y-3">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Cari nama atau alamat..."
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full rounded-xl bg-card pl-10 pr-4 py-3 text-sm font-body text-card-foreground placeholder:text-muted-foreground shadow-card border-0 outline-none focus:ring-2 focus:ring-ring"
-        />
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Cari nama atau alamat..."
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="w-full rounded-xl bg-card pl-10 pr-4 py-3 text-sm md:text-base font-body text-card-foreground placeholder:text-muted-foreground shadow-card border-0 outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide shrink-0">
+          {filterOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => onFilterChange(opt.value)}
+              className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs md:text-sm font-body font-medium transition-all ${
+                filter === opt.value
+                  ? "gradient-gold text-primary-foreground shadow-card"
+                  : "bg-card text-muted-foreground"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-        {filterOptions.map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => onFilterChange(opt.value)}
-            className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-body font-medium transition-all ${
-              filter === opt.value
-                ? "gradient-gold text-primary-foreground shadow-card"
-                : "bg-card text-muted-foreground"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-2">
+      <div className="space-y-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-3 md:space-y-0">
         <AnimatePresence mode="popLayout">
           {guests.length === 0 && (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center text-sm text-muted-foreground py-8 font-body"
+              className="text-center text-sm text-muted-foreground py-8 font-body md:col-span-full"
             >
               Belum ada tamu yang terdaftar
             </motion.p>

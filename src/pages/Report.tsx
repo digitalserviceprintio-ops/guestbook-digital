@@ -51,6 +51,7 @@ const Report = () => {
     }
 
     const filterLabel = activeFilter === "semua" ? "Semua Kategori" : categoryLabels[activeFilter];
+    const genderLabel = genderFilter === "semua" ? "Semua" : genderFilter === "laki_laki" ? "Laki-laki" : "Perempuan";
 
     const rows = filteredGuests.map((g, i) =>
       `<tr style="background:${i % 2 === 0 ? '#fff' : '#f8f9fa'}">
@@ -80,7 +81,7 @@ const Report = () => {
         @media print{body{padding:15px}@page{margin:15mm}}
       </style></head><body>
       <h1>Rekap Laporan Buku Tamu</h1>
-      <h2>Filter: ${filterLabel} — Dicetak: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</h2>
+      <h2>Filter: ${filterLabel} · JK: ${genderLabel} — Dicetak: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</h2>
       <div class="stats">
         <div class="stat-box"><div class="label">Total Undangan</div><div class="value">${stats.total}</div></div>
         <div class="stat-box"><div class="label">Hadir</div><div class="value" style="color:#22a86b">${stats.hadir}</div></div>
@@ -131,24 +132,24 @@ const Report = () => {
         animate={{ opacity: 1, y: 0 }}
         className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
       >
-        <div className="flex items-center justify-between max-w-lg mx-auto">
+        <div className="flex items-center justify-between max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto">
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/dashboard")} className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
               <ArrowLeft className="h-5 w-5" />
             </button>
-            <h1 className="font-display text-lg font-bold text-foreground">Laporan</h1>
+            <h1 className="font-display text-lg md:text-xl font-bold text-foreground">Laporan</h1>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 gradient-navy text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs"
+              className="flex items-center gap-1.5 gradient-navy text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
             >
               <Printer className="h-4 w-4" />
               Cetak
             </button>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 gradient-gold text-accent-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs"
+              className="flex items-center gap-1.5 gradient-gold text-accent-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs md:text-sm"
             >
               <FileSpreadsheet className="h-4 w-4" />
               Excel
@@ -157,51 +158,55 @@ const Report = () => {
         </div>
       </motion.header>
 
-      <main className="max-w-lg mx-auto px-5 py-5 pb-10 space-y-5">
-        {/* Category Filter */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex rounded-xl bg-card p-1 shadow-card">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => setActiveFilter(tab.value)}
-              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-xs font-body font-medium transition-all ${
-                activeFilter === tab.value
-                  ? "gradient-gold text-accent-foreground shadow-card"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <tab.icon className="h-3.5 w-3.5" />
-              {tab.label}
-            </button>
-          ))}
-        </motion.div>
+      <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 py-5 pb-10 space-y-5">
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          {/* Category Filter */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex rounded-xl bg-card p-1 shadow-card flex-1">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => setActiveFilter(tab.value)}
+                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2.5 text-xs md:text-sm font-body font-medium transition-all ${
+                  activeFilter === tab.value
+                    ? "gradient-gold text-accent-foreground shadow-card"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <tab.icon className="h-3.5 w-3.5" />
+                {tab.label}
+              </button>
+            ))}
+          </motion.div>
 
-        {/* Gender Filter */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.025 }} className="flex rounded-xl bg-card p-1 shadow-card">
-          {([
-            { value: "semua" as GenderFilter, label: "Semua JK" },
-            { value: "laki_laki" as GenderFilter, label: "Laki-laki" },
-            { value: "perempuan" as GenderFilter, label: "Perempuan" },
-          ]).map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => setGenderFilter(tab.value)}
-              className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-body font-medium transition-all ${
-                genderFilter === tab.value
-                  ? "gradient-navy text-primary-foreground shadow-card"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </motion.div>
+          {/* Gender Filter */}
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.025 }} className="flex rounded-xl bg-card p-1 shadow-card flex-1 sm:max-w-xs">
+            {([
+              { value: "semua" as GenderFilter, label: "Semua JK" },
+              { value: "laki_laki" as GenderFilter, label: "Laki-laki" },
+              { value: "perempuan" as GenderFilter, label: "Perempuan" },
+            ]).map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => setGenderFilter(tab.value)}
+                className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs md:text-sm font-body font-medium transition-all ${
+                  genderFilter === tab.value
+                    ? "gradient-navy text-primary-foreground shadow-card"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </motion.div>
+        </div>
 
+        {/* Summary Stats */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-          <h2 className="font-display text-base font-bold text-foreground mb-3">
+          <h2 className="font-display text-base md:text-lg font-bold text-foreground mb-3">
             Ringkasan {activeFilter === "semua" ? "Keseluruhan" : categoryLabels[activeFilter]}
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <SummaryCard icon={Users} label="Total Undangan" value={stats.total.toString()} />
             <SummaryCard icon={UserCheck} label="Hadir" value={stats.hadir.toString()} color="text-success" />
             <SummaryCard icon={UserX} label="Tidak Hadir" value={stats.tidakHadir.toString()} color="text-destructive" />
@@ -209,12 +214,12 @@ const Report = () => {
           </div>
           <div className="grid grid-cols-2 gap-3 mt-3">
             <div className="rounded-xl gradient-navy p-4 shadow-elevated">
-              <p className="text-[10px] font-body text-primary-foreground/80">Total Tamu</p>
-              <p className="text-2xl font-display font-bold text-primary-foreground">{stats.totalTamu}</p>
+              <p className="text-[10px] md:text-xs font-body text-primary-foreground/80">Total Tamu</p>
+              <p className="text-2xl md:text-3xl font-display font-bold text-primary-foreground">{stats.totalTamu}</p>
             </div>
             <div className="rounded-xl gradient-gold p-4 shadow-elevated">
-              <p className="text-[10px] font-body text-accent-foreground/80">Total Amplop</p>
-              <p className="text-lg font-display font-bold text-accent-foreground">{formatRupiah(stats.totalAmplop)}</p>
+              <p className="text-[10px] md:text-xs font-body text-accent-foreground/80">Total Amplop</p>
+              <p className="text-lg md:text-xl font-display font-bold text-accent-foreground">{formatRupiah(stats.totalAmplop)}</p>
             </div>
           </div>
         </motion.div>
@@ -226,10 +231,10 @@ const Report = () => {
             <Row label="Perempuan" value={stats.perempuan} />
             <div className="border-t border-border pt-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-body text-muted-foreground flex items-center gap-1.5">
+                <span className="text-xs md:text-sm font-body text-muted-foreground flex items-center gap-1.5">
                   <Gift className="h-3.5 w-3.5" /> Souvenir Diambil
                 </span>
-                <span className="text-sm font-body font-semibold text-success">{stats.souvenirPickedUp} / {stats.hadir}</span>
+                <span className="text-sm md:text-base font-body font-semibold text-success">{stats.souvenirPickedUp} / {stats.hadir}</span>
               </div>
             </div>
           </div>
@@ -241,74 +246,110 @@ const Report = () => {
             onClick={() => setShowDetail(!showDetail)}
             className="flex items-center justify-between w-full mb-3"
           >
-            <h2 className="font-display text-base font-bold text-foreground">Detail Tamu</h2>
+            <h2 className="font-display text-base md:text-lg font-bold text-foreground">Detail Tamu</h2>
             {showDetail ? <ChevronUp className="h-5 w-5 text-muted-foreground" /> : <ChevronDown className="h-5 w-5 text-muted-foreground" />}
           </button>
 
           {showDetail && (
-            <div className="space-y-2">
-              {filteredGuests.length === 0 ? (
-                <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
-              ) : (
-                <>
-                  {/* Table Header */}
-                  <div className="rounded-xl bg-primary px-3 py-2.5 grid grid-cols-12 gap-1 text-[10px] font-body font-semibold text-primary-foreground">
-                    <div className="col-span-1">No</div>
-                    <div className="col-span-3">Nama</div>
-                    <div className="col-span-1">JK</div>
-                    <div className="col-span-1 text-center">Org</div>
-                    <div className="col-span-2">Status</div>
-                    <div className="col-span-2 text-right">Amplop</div>
-                    <div className="col-span-2 text-center">Souvenir</div>
-                  </div>
-
-                  {filteredGuests.map((guest, idx) => (
-                    <div
-                      key={guest.id}
-                      className={`rounded-xl px-3 py-2.5 grid grid-cols-12 gap-1 text-[10px] font-body ${
-                        idx % 2 === 0 ? "bg-card" : "bg-muted"
-                      }`}
-                    >
-                      <div className="col-span-1 text-muted-foreground">{idx + 1}</div>
-                      <div className="col-span-3 font-medium text-card-foreground truncate">{guest.name}</div>
-                      <div className="col-span-1 text-muted-foreground">{guest.gender === "laki_laki" ? "L" : "P"}</div>
-                      <div className="col-span-1 text-center text-muted-foreground">{guest.numberOfGuests}</div>
-                      <div className="col-span-2">
-                        <span className={`${
-                          guest.status === "hadir" ? "text-success" :
-                          guest.status === "tidak_hadir" ? "text-destructive" : "text-pending"
-                        } font-medium`}>
-                          {statusLabels[guest.status]}
-                        </span>
-                      </div>
-                      <div className="col-span-2 text-right text-muted-foreground">
-                        {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
-                      </div>
-                      <div className="col-span-2 text-center">
-                        {guest.souvenirPickedUp ? (
-                          <span className="text-success font-medium">✓</span>
-                        ) : guest.status === "hadir" ? (
-                          <span className="text-warning font-medium">Belum</span>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
+            <>
+              {/* Mobile card view */}
+              <div className="space-y-2 md:hidden">
+                {filteredGuests.length === 0 ? (
+                  <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
+                ) : (
+                  filteredGuests.map((guest, idx) => (
+                    <div key={guest.id} className={`rounded-xl p-3 ${idx % 2 === 0 ? "bg-card" : "bg-muted"}`}>
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-body font-semibold text-sm text-card-foreground">{idx + 1}. {guest.name}</p>
+                          <p className="text-[11px] font-body text-muted-foreground mt-0.5">
+                            {guest.gender === "laki_laki" ? "L" : "P"} · {guest.numberOfGuests} org · <span className={`font-medium ${
+                              guest.status === "hadir" ? "text-success" :
+                              guest.status === "tidak_hadir" ? "text-destructive" : "text-pending"
+                            }`}>{statusLabels[guest.status]}</span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs font-body text-muted-foreground">
+                            {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
+                          </p>
+                          <p className="text-[10px] font-body mt-0.5">
+                            {guest.souvenirPickedUp ? (
+                              <span className="text-success font-medium">Souvenir ✓</span>
+                            ) : guest.status === "hadir" ? (
+                              <span className="text-warning font-medium">Souvenir: Belum</span>
+                            ) : null}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  ))
+                )}
+              </div>
 
-                  {/* Table Footer / Summary */}
-                  <div className="rounded-xl bg-primary px-3 py-2.5 grid grid-cols-12 gap-1 text-[10px] font-body font-bold text-primary-foreground">
-                    <div className="col-span-1"></div>
-                    <div className="col-span-3">Total</div>
-                    <div className="col-span-1"></div>
-                    <div className="col-span-1 text-center">{stats.totalTamu}</div>
-                    <div className="col-span-2">{stats.hadir} hadir</div>
-                    <div className="col-span-2 text-right">{formatRupiah(stats.totalAmplop)}</div>
-                    <div className="col-span-2 text-center">{stats.souvenirPickedUp}/{stats.hadir}</div>
-                  </div>
-                </>
-              )}
-            </div>
+              {/* Desktop table view */}
+              <div className="hidden md:block space-y-2">
+                {filteredGuests.length === 0 ? (
+                  <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
+                ) : (
+                  <>
+                    <div className="rounded-xl bg-primary px-4 py-3 grid grid-cols-12 gap-2 text-xs font-body font-semibold text-primary-foreground">
+                      <div className="col-span-1">No</div>
+                      <div className="col-span-3">Nama</div>
+                      <div className="col-span-1 text-center">JK</div>
+                      <div className="col-span-1 text-center">Org</div>
+                      <div className="col-span-2">Status</div>
+                      <div className="col-span-2 text-right">Amplop</div>
+                      <div className="col-span-2 text-center">Souvenir</div>
+                    </div>
+
+                    {filteredGuests.map((guest, idx) => (
+                      <div
+                        key={guest.id}
+                        className={`rounded-xl px-4 py-3 grid grid-cols-12 gap-2 text-xs font-body ${
+                          idx % 2 === 0 ? "bg-card" : "bg-muted"
+                        }`}
+                      >
+                        <div className="col-span-1 text-muted-foreground">{idx + 1}</div>
+                        <div className="col-span-3 font-medium text-card-foreground truncate">{guest.name}</div>
+                        <div className="col-span-1 text-center text-muted-foreground">{guest.gender === "laki_laki" ? "L" : "P"}</div>
+                        <div className="col-span-1 text-center text-muted-foreground">{guest.numberOfGuests}</div>
+                        <div className="col-span-2">
+                          <span className={`${
+                            guest.status === "hadir" ? "text-success" :
+                            guest.status === "tidak_hadir" ? "text-destructive" : "text-pending"
+                          } font-medium`}>
+                            {statusLabels[guest.status]}
+                          </span>
+                        </div>
+                        <div className="col-span-2 text-right text-muted-foreground">
+                          {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
+                        </div>
+                        <div className="col-span-2 text-center">
+                          {guest.souvenirPickedUp ? (
+                            <span className="text-success font-medium">✓</span>
+                          ) : guest.status === "hadir" ? (
+                            <span className="text-warning font-medium">Belum</span>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+
+                    <div className="rounded-xl bg-primary px-4 py-3 grid grid-cols-12 gap-2 text-xs font-body font-bold text-primary-foreground">
+                      <div className="col-span-1"></div>
+                      <div className="col-span-3">Total</div>
+                      <div className="col-span-1"></div>
+                      <div className="col-span-1 text-center">{stats.totalTamu}</div>
+                      <div className="col-span-2">{stats.hadir} hadir</div>
+                      <div className="col-span-2 text-right">{formatRupiah(stats.totalAmplop)}</div>
+                      <div className="col-span-2 text-center">{stats.souvenirPickedUp}/{stats.hadir}</div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </>
           )}
         </motion.div>
       </main>
@@ -321,9 +362,9 @@ function SummaryCard({ icon: Icon, label, value, color }: { icon: any; label: st
     <div className="rounded-xl bg-card p-3.5 shadow-card">
       <div className="flex items-center gap-2 mb-1">
         <Icon className={`h-4 w-4 ${color || "text-accent"}`} />
-        <span className="text-[11px] font-body text-muted-foreground">{label}</span>
+        <span className="text-[11px] md:text-xs font-body text-muted-foreground">{label}</span>
       </div>
-      <p className="text-xl font-display font-bold text-card-foreground">{value}</p>
+      <p className="text-xl md:text-2xl font-display font-bold text-card-foreground">{value}</p>
     </div>
   );
 }
@@ -331,8 +372,8 @@ function SummaryCard({ icon: Icon, label, value, color }: { icon: any; label: st
 function Row({ label, value, color }: { label: string; value: number; color?: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-xs font-body text-muted-foreground">{label}</span>
-      <span className={`text-sm font-body font-semibold ${color || "text-card-foreground"}`}>{value}</span>
+      <span className="text-xs md:text-sm font-body text-muted-foreground">{label}</span>
+      <span className={`text-sm md:text-base font-body font-semibold ${color || "text-card-foreground"}`}>{value}</span>
     </div>
   );
 }
