@@ -135,13 +135,22 @@ const Report = () => {
             </button>
             <h1 className="font-display text-lg font-bold text-foreground">Laporan</h1>
           </div>
-          <button
-            onClick={handleExport}
-            className="flex items-center gap-1.5 gradient-gold text-accent-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs"
-          >
-            <FileSpreadsheet className="h-4 w-4" />
-            Excel
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-1.5 gradient-navy text-primary-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs"
+            >
+              <Printer className="h-4 w-4" />
+              Cetak
+            </button>
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1.5 gradient-gold text-accent-foreground font-body font-semibold px-3.5 py-2 rounded-xl shadow-card hover:opacity-90 transition-opacity text-xs"
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Excel
+            </button>
+          </div>
         </div>
       </motion.header>
 
