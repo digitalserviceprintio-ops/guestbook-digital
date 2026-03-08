@@ -73,18 +73,13 @@ const Index = () => {
               </p>
             </div>
           </div>
-          {allGuests.length > 0 && (
-            <button
-              onClick={() => {
-                exportGuestsToCSV(allGuests);
-                toast({ title: "Berhasil", description: "Data tamu berhasil diekspor ke CSV." });
-              }}
-              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
-              title="Ekspor CSV"
-            >
-              <Download className="h-4 w-4" />
-            </button>
-          )}
+          <button
+            onClick={() => navigate("/laporan")}
+            className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+            title="Laporan"
+          >
+            <FileBarChart className="h-4 w-4" />
+          </button>
         </div>
       </motion.header>
 
