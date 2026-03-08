@@ -60,6 +60,8 @@ export function useGuests() {
         name: guest.name,
         phone: guest.phone,
         number_of_guests: guest.numberOfGuests,
+        address: guest.address,
+        envelope_amount: guest.envelopeAmount,
         status: guest.status,
         notes: guest.notes,
       });
