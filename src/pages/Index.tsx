@@ -170,6 +170,22 @@ const Index = () => {
         </div>
       </main>
 
+      {/* Floating Add Button */}
+      <motion.button
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => {
+          setEditingGuest(null);
+          setFormOpen(true);
+        }}
+        className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full gradient-gold shadow-elevated flex items-center justify-center text-primary-foreground hover:opacity-90 transition-opacity"
+      >
+        <Plus className="h-6 w-6" />
+      </motion.button>
+
 
       {/* Form Sheet */}
       <GuestForm
