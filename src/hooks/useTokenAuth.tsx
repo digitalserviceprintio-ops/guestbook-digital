@@ -64,16 +64,27 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
       .update({ last_used_at: new Date().toISOString() } as any)
       .eq("token", token.trim());
 
-    sessionStorage.setItem("access_token", token.trim());
-    sessionStorage.setItem("access_token_label", data.label);
+    localStorage.setItem("access_token", token.trim());
+    localStorage.setItem("access_token_label", data.label);
     setIsAuthenticated(true);
     setTokenLabel(data.label);
     return true;
   };
 
+  const quickLogin = async (): Promise<boolean> => {
+    const saved = localStorage.getItem("access_token");
+    if (!saved) return false;
+    return login(saved);
+  };
+
   const logout = () => {
-    sessionStorage.removeItem("access_token");
-    sessionStorage.removeItem("access_token_label");
+    // Keep token in localStorage for quick re-login
+    setIsAuthenticated(false);
+  };
+
+  const fullLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("access_token_label");
     setIsAuthenticated(false);
     setTokenLabel("");
   };
