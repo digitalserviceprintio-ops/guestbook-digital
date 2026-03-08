@@ -73,13 +73,22 @@ const Index = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => navigate("/laporan")}
-            className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
-            title="Laporan"
-          >
-            <FileBarChart className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/souvenir")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Souvenir"
+            >
+              <Gift className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => navigate("/laporan")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Laporan"
+            >
+              <FileBarChart className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </motion.header>
 
