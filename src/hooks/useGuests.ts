@@ -81,6 +81,8 @@ export function useGuests() {
       if (data.name !== undefined) updateData.name = data.name;
       if (data.phone !== undefined) updateData.phone = data.phone;
       if (data.numberOfGuests !== undefined) updateData.number_of_guests = data.numberOfGuests;
+      if (data.address !== undefined) updateData.address = data.address;
+      if (data.envelopeAmount !== undefined) updateData.envelope_amount = data.envelopeAmount;
       if (data.status !== undefined) updateData.status = data.status;
       if (data.notes !== undefined) updateData.notes = data.notes;
 
