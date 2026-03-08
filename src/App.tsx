@@ -13,6 +13,7 @@ import SouvenirCounter from "./pages/SouvenirCounter";
 import SouvenirScan from "./pages/SouvenirScan";
 import RSVP from "./pages/RSVP";
 import Settings from "./pages/Settings";
+import Backup from "./pages/Backup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
