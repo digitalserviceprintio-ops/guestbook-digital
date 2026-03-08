@@ -1,62 +1,101 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Guest, AttendanceStatus } from "@/types/guest";
-
-const STORAGE_KEY = "guest-book-data";
-
-function loadGuests(): Guest[] {
-  try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (data) {
-      return JSON.parse(data).map((g: any) => ({
-        ...g,
-        createdAt: new Date(g.createdAt),
-      }));
-    }
-  } catch {}
-  return [];
-}
-
-function saveGuests(guests: Guest[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(guests));
-}
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export function useGuests() {
-  const [guests, setGuests] = useState<Guest[]>(loadGuests);
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<AttendanceStatus | "all">("all");
   const [search, setSearch] = useState("");
+  const { toast } = useToast();
 
-  const updateGuests = useCallback((updater: (prev: Guest[]) => Guest[]) => {
-    setGuests((prev) => {
-      const next = updater(prev);
-      saveGuests(next);
-      return next;
-    });
-  }, []);
+  // Fetch guests from database
+  const fetchGuests = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("guests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      toast({ title: "Error", description: "Gagal memuat data tamu.", variant: "destructive" });
+      return;
+    }
+
+    setGuests(
+      (data || []).map((g) => ({
+        id: g.id,
+        name: g.name,
+        phone: g.phone || "",
+        numberOfGuests: g.number_of_guests,
+        status: g.status as AttendanceStatus,
+        notes: g.notes || "",
+        createdAt: new Date(g.created_at),
+      }))
+    );
+    setLoading(false);
+  }, [toast]);
+
+  useEffect(() => {
+    fetchGuests();
+
+    // Realtime subscription
+    const channel = supabase
+      .channel("guests-changes")
+      .on("postgres_changes", { event: "*", schema: "public", table: "guests" }, () => {
+        fetchGuests();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchGuests]);
 
   const addGuest = useCallback(
-    (guest: Omit<Guest, "id" | "createdAt">) => {
-      updateGuests((prev) => [
-        ...prev,
-        { ...guest, id: crypto.randomUUID(), createdAt: new Date() },
-      ]);
+    async (guest: Omit<Guest, "id" | "createdAt">) => {
+      const { error } = await supabase.from("guests").insert({
+        name: guest.name,
+        phone: guest.phone,
+        number_of_guests: guest.numberOfGuests,
+        status: guest.status,
+        notes: guest.notes,
+      });
+
+      if (error) {
+        toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
+      }
     },
-    [updateGuests]
+    [toast]
   );
 
   const updateGuest = useCallback(
-    (id: string, data: Partial<Guest>) => {
-      updateGuests((prev) =>
-        prev.map((g) => (g.id === id ? { ...g, ...data } : g))
-      );
+    async (id: string, data: Partial<Guest>) => {
+      const updateData: Record<string, unknown> = {};
+      if (data.name !== undefined) updateData.name = data.name;
+      if (data.phone !== undefined) updateData.phone = data.phone;
+      if (data.numberOfGuests !== undefined) updateData.number_of_guests = data.numberOfGuests;
+      if (data.status !== undefined) updateData.status = data.status;
+      if (data.notes !== undefined) updateData.notes = data.notes;
+
+      const { error } = await supabase.from("guests").update(updateData).eq("id", id);
+
+      if (error) {
+        toast({ title: "Error", description: "Gagal mengupdate tamu.", variant: "destructive" });
+      }
     },
-    [updateGuests]
+    [toast]
   );
 
   const deleteGuest = useCallback(
-    (id: string) => {
-      updateGuests((prev) => prev.filter((g) => g.id !== id));
+    async (id: string) => {
+      const { error } = await supabase.from("guests").delete().eq("id", id);
+
+      if (error) {
+        toast({ title: "Error", description: "Gagal menghapus tamu.", variant: "destructive" });
+      }
     },
-    [updateGuests]
+    [toast]
   );
 
   const filteredGuests = useMemo(() => {
@@ -90,5 +129,6 @@ export function useGuests() {
     addGuest,
     updateGuest,
     deleteGuest,
+    loading,
   };
 }
