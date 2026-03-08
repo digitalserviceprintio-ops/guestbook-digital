@@ -16,6 +16,7 @@ const statusOptions: AttendanceStatus[] = ["belum_konfirmasi", "hadir", "tidak_h
 
 export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: GuestFormProps) {
   const [name, setName] = useState("");
+  const [gender, setGender] = useState<Gender>("laki_laki");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [address, setAddress] = useState("");
   const [envelopeAmount, setEnvelopeAmount] = useState("");
