@@ -122,6 +122,39 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_subscriptions: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          enabled: boolean
+          id: string
+          notify_checkin: boolean
+          notify_reminder: boolean
+          notify_rsvp: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          enabled?: boolean
+          id?: string
+          notify_checkin?: boolean
+          notify_reminder?: boolean
+          notify_rsvp?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          enabled?: boolean
+          id?: string
+          notify_checkin?: boolean
+          notify_reminder?: boolean
+          notify_rsvp?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       token_devices: {
         Row: {
           created_at: string | null
