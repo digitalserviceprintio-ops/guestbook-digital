@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
 import { GuestList } from "@/components/GuestList";
