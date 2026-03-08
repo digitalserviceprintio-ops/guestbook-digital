@@ -77,6 +77,7 @@ export function useWeddingSettings() {
         heroImageUrl: data.hero_image_url || "",
         heroImages,
         backgroundMusic: rawMusic && typeof rawMusic === "object" && !Array.isArray(rawMusic) ? rawMusic as BackgroundMusic : null,
+        spreadsheetWebhookUrl: (data as any).spreadsheet_webhook_url || "",
         rsvpOpen: data.rsvp_open,
       });
     }
