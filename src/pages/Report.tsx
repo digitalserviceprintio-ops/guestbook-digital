@@ -41,6 +41,80 @@ const Report = () => {
     toast({ title: "Berhasil", description: "Laporan berhasil diekspor ke Excel." });
   };
 
+  const handlePrint = () => {
+    if (filteredGuests.length === 0) {
+      toast({ title: "Data kosong", description: "Tidak ada data untuk dicetak.", variant: "destructive" });
+      return;
+    }
+
+    const filterLabel = activeFilter === "semua" ? "Semua Kategori" : categoryLabels[activeFilter];
+
+    const rows = filteredGuests.map((g, i) =>
+      `<tr style="background:${i % 2 === 0 ? '#fff' : '#f8f9fa'}">
+        <td style="padding:6px 8px;border:1px solid #dee2e6;text-align:center">${i + 1}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6">${g.name}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6;text-align:center">${g.gender === "laki_laki" ? "L" : "P"}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6;text-align:center">${g.numberOfGuests}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6">${g.address || "-"}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6;text-align:center">${statusLabels[g.status]}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6;text-align:right">${g.envelopeAmount > 0 ? formatRupiah(g.envelopeAmount) : "-"}</td>
+        <td style="padding:6px 8px;border:1px solid #dee2e6;text-align:center">${g.souvenirPickedUp ? "✓" : g.status === "hadir" ? "Belum" : "-"}</td>
+      </tr>`
+    ).join("");
+
+    const html = `<!DOCTYPE html><html><head><title>Rekap Laporan Buku Tamu</title>
+      <style>
+        body{font-family:'Segoe UI',Arial,sans-serif;padding:30px;color:#1a2744}
+        h1{font-size:20px;margin-bottom:4px}
+        h2{font-size:14px;color:#666;font-weight:normal;margin-bottom:20px}
+        table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:20px}
+        th{background:#1a2744;color:#fff;padding:8px;border:1px solid #1a2744;text-align:left}
+        .stats{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+        .stat-box{background:#f8f9fa;border-radius:8px;padding:12px 16px;min-width:120px}
+        .stat-box .label{font-size:10px;color:#666;margin-bottom:2px}
+        .stat-box .value{font-size:18px;font-weight:bold}
+        .footer{margin-top:30px;display:flex;justify-content:space-between;font-size:11px;color:#666}
+        @media print{body{padding:15px}@page{margin:15mm}}
+      </style></head><body>
+      <h1>Rekap Laporan Buku Tamu</h1>
+      <h2>Filter: ${filterLabel} — Dicetak: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</h2>
+      <div class="stats">
+        <div class="stat-box"><div class="label">Total Undangan</div><div class="value">${stats.total}</div></div>
+        <div class="stat-box"><div class="label">Hadir</div><div class="value" style="color:#22a86b">${stats.hadir}</div></div>
+        <div class="stat-box"><div class="label">Tidak Hadir</div><div class="value" style="color:#dc3545">${stats.tidakHadir}</div></div>
+        <div class="stat-box"><div class="label">Belum Konfirmasi</div><div class="value" style="color:#6b8ab5">${stats.belum}</div></div>
+        <div class="stat-box"><div class="label">Total Tamu</div><div class="value">${stats.totalTamu}</div></div>
+        <div class="stat-box"><div class="label">Total Amplop</div><div class="value" style="color:#e8650a">${formatRupiah(stats.totalAmplop)}</div></div>
+      </div>
+      <table>
+        <thead><tr>
+          <th style="text-align:center">No</th><th>Nama</th><th style="text-align:center">JK</th>
+          <th style="text-align:center">Jml</th><th>Alamat</th><th style="text-align:center">Status</th>
+          <th style="text-align:right">Amplop</th><th style="text-align:center">Souvenir</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr style="background:#1a2744;color:#fff;font-weight:bold">
+          <td style="padding:8px;border:1px solid #1a2744"></td>
+          <td style="padding:8px;border:1px solid #1a2744">Total: ${stats.total} undangan</td>
+          <td style="padding:8px;border:1px solid #1a2744;text-align:center">L:${stats.lakiLaki} P:${stats.perempuan}</td>
+          <td style="padding:8px;border:1px solid #1a2744;text-align:center">${stats.totalTamu}</td>
+          <td style="padding:8px;border:1px solid #1a2744"></td>
+          <td style="padding:8px;border:1px solid #1a2744;text-align:center">${stats.hadir} hadir</td>
+          <td style="padding:8px;border:1px solid #1a2744;text-align:right">${formatRupiah(stats.totalAmplop)}</td>
+          <td style="padding:8px;border:1px solid #1a2744;text-align:center">${stats.souvenirPickedUp}/${stats.hadir}</td>
+        </tr></tfoot>
+      </table>
+      <div class="footer"><span>Buku Tamu Digital</span><span>Halaman 1</span></div>
+      <script>window.onload=function(){window.print()}<\/script>
+    </body></html>`;
+
+    const win = window.open("", "_blank");
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    }
+  };
+
   const filterTabs: { value: FilterCategory; label: string; icon: typeof Users }[] = [
     { value: "semua", label: "Semua", icon: Users },
     { value: "pengantin", label: "Pengantin", icon: Heart },
