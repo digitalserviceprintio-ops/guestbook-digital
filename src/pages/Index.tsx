@@ -101,6 +101,23 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <button
+              onClick={async () => {
+                if (permissionState === "granted" && prefs.enabled) {
+                  navigate("/settings");
+                } else {
+                  await requestPermission();
+                }
+              }}
+              className={`p-2.5 rounded-xl shadow-card hover:bg-secondary transition-colors ${
+                prefs.enabled && permissionState === "granted"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-card text-muted-foreground"
+              }`}
+              title="Notifikasi"
+            >
+              <Bell className="h-4 w-4" />
+            </button>
+            <button
               onClick={() => navigate("/souvenir")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
               title="Souvenir"
