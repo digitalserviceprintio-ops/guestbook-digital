@@ -2,6 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+export interface BackgroundMusic {
+  title: string;
+  url: string;
+  category: string;
+}
+
 export interface WeddingSettings {
   id: string;
   groomName: string;
@@ -16,6 +22,7 @@ export interface WeddingSettings {
   closingText: string;
   heroImageUrl: string;
   heroImages: string[];
+  backgroundMusic: BackgroundMusic | null;
   rsvpOpen: boolean;
 }
 
@@ -33,6 +40,7 @@ const defaultSettings: WeddingSettings = {
   closingText: "Merupakan suatu kehormatan dan kebahagiaan apabila Bapak/Ibu/Saudara/i berkenan hadir.",
   heroImageUrl: "",
   heroImages: [],
+  backgroundMusic: null,
   rsvpOpen: true,
 };
 
@@ -51,6 +59,7 @@ export function useWeddingSettings() {
     if (!error && data) {
       const rawImages = (data as any).hero_images;
       const heroImages: string[] = Array.isArray(rawImages) ? rawImages : [];
+      const rawMusic = (data as any).background_music;
       setSettings({
         id: data.id,
         groomName: data.groom_name,
@@ -65,6 +74,7 @@ export function useWeddingSettings() {
         closingText: data.closing_text,
         heroImageUrl: data.hero_image_url || "",
         heroImages,
+        backgroundMusic: rawMusic && typeof rawMusic === "object" && !Array.isArray(rawMusic) ? rawMusic as BackgroundMusic : null,
         rsvpOpen: data.rsvp_open,
       });
     }
@@ -90,6 +100,7 @@ export function useWeddingSettings() {
       if (updates.closingText !== undefined) dbUpdates.closing_text = updates.closingText;
       if (updates.heroImageUrl !== undefined) dbUpdates.hero_image_url = updates.heroImageUrl;
       if (updates.heroImages !== undefined) dbUpdates.hero_images = updates.heroImages;
+      if (updates.backgroundMusic !== undefined) dbUpdates.background_music = updates.backgroundMusic;
       if (updates.rsvpOpen !== undefined) dbUpdates.rsvp_open = updates.rsvpOpen;
 
       const { error } = await supabase

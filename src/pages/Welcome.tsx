@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Heart, MapPin, Calendar, Clock } from "lucide-react";
+import { Heart, MapPin, Calendar, Clock, Volume2, VolumeX, LogIn } from "lucide-react";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { LoginModal } from "@/components/LoginModal";
-import { LogIn } from "lucide-react";
 import defaultHero from "@/assets/wedding-hero.jpg";
 
 const Welcome = () => {
@@ -14,6 +13,8 @@ const Welcome = () => {
   const { isAuthenticated, hasSavedToken, quickLogin, tokenLabel } = useTokenAuth();
   const [quickLoading, setQuickLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const images = settings.heroImages && settings.heroImages.length > 0
     ? settings.heroImages
@@ -27,6 +28,32 @@ const Welcome = () => {
     }, 4000);
     return () => clearInterval(interval);
   }, [images.length]);
+
+  // Background music
+  const musicUrl = settings.backgroundMusic?.url;
+
+  useEffect(() => {
+    if (!musicUrl) return;
+    const audio = new Audio(musicUrl);
+    audio.loop = true;
+    audio.volume = 0.3;
+    audioRef.current = audio;
+    return () => {
+      audio.pause();
+      audio.src = "";
+    };
+  }, [musicUrl]);
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicPlaying) {
+      audio.pause();
+    } else {
+      audio.play().catch(() => {});
+    }
+    setMusicPlaying(!musicPlaying);
+  };
 
   if (loading) {
     return (
@@ -155,7 +182,21 @@ const Welcome = () => {
         </motion.p>
       </main>
 
-      {/* Floating buttons */}
+      {/* Music toggle button */}
+      {musicUrl && (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.5, type: "spring" }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleMusic}
+          className="fixed top-5 right-5 z-40 h-10 w-10 rounded-full bg-background/80 backdrop-blur-sm shadow-elevated flex items-center justify-center text-foreground border border-border"
+        >
+          {musicPlaying ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+        </motion.button>
+      )}
+
+      {/* Floating login buttons */}
       {isAuthenticated ? (
         <motion.button
           initial={{ scale: 0 }}
