@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2, BookOpen, Headphones, MessageCircle, Phone, Download } from "lucide-react";
+import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus, Music, Link2, Trash2, BookOpen, Headphones, MessageCircle, Phone, Download, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
+import { useAppVersion } from "@/hooks/useAppVersion";
 import { useToast } from "@/hooks/use-toast";
+import { format } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -398,11 +401,63 @@ const Settings = () => {
                 Hapus Semua Data Tamu
               </button>
             </motion.div>
+
+            {/* App Version Info */}
+            <AppVersionCard />
           </div>
         </div>
       </main>
     </div>
   );
 };
+
+function AppVersionCard() {
+  const { latestVersion, loading } = useAppVersion();
+
+  if (loading || !latestVersion) return null;
+
+  const typeLabels: Record<string, string> = {
+    feature: "✨ Fitur Baru",
+    fix: "🐛 Perbaikan",
+    improvement: "⚡ Peningkatan",
+    maintenance: "🔧 Pemeliharaan",
+  };
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-2xl bg-card p-5 shadow-elevated space-y-3">
+      <h2 className="font-display text-base md:text-lg font-bold text-card-foreground flex items-center gap-2">
+        <Info className="h-5 w-5 text-primary" />
+        Versi Aplikasi
+      </h2>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-lg font-display font-bold text-primary">v{latestVersion.version}</p>
+          <p className="text-xs font-body text-muted-foreground">
+            {format(new Date(latestVersion.published_at), "d MMMM yyyy, HH:mm", { locale: idLocale })}
+          </p>
+        </div>
+        {latestVersion.is_maintenance && (
+          <span className="px-2.5 py-1 rounded-full bg-warning/20 text-warning text-[10px] font-body font-semibold">
+            Maintenance
+          </span>
+        )}
+      </div>
+      <div>
+        <p className="text-sm font-body font-semibold text-card-foreground">{latestVersion.title}</p>
+        <p className="text-xs font-body text-muted-foreground mt-0.5">{latestVersion.description}</p>
+      </div>
+      {latestVersion.changelog.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-[10px] font-body font-semibold text-muted-foreground uppercase tracking-wide">Changelog</p>
+          {latestVersion.changelog.map((item: any, idx: number) => (
+            <p key={idx} className="text-xs font-body text-muted-foreground">
+              {typeLabels[item.type] || "📌"} {item.text}
+            </p>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+}
 
 export default Settings;

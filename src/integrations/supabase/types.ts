@@ -41,6 +41,42 @@ export type Database = {
         }
         Relationships: []
       }
+      app_versions: {
+        Row: {
+          changelog: Json
+          created_at: string
+          description: string
+          id: string
+          is_maintenance: boolean
+          maintenance_message: string | null
+          published_at: string
+          title: string
+          version: string
+        }
+        Insert: {
+          changelog?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          is_maintenance?: boolean
+          maintenance_message?: string | null
+          published_at?: string
+          title?: string
+          version: string
+        }
+        Update: {
+          changelog?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          is_maintenance?: boolean
+          maintenance_message?: string | null
+          published_at?: string
+          title?: string
+          version?: string
+        }
+        Relationships: []
+      }
       guests: {
         Row: {
           address: string | null

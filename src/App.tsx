@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TokenAuthProvider } from "@/hooks/useTokenAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AppVersionNotification } from "@/components/AppVersionNotification";
 import Welcome from "./pages/Welcome";
 import Index from "./pages/Index";
 import Report from "./pages/Report";
@@ -25,6 +26,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <TokenAuthProvider>
+          <AppVersionNotification />
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/rsvp" element={<RSVP />} />
