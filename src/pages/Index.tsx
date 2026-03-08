@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
