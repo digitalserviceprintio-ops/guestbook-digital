@@ -182,7 +182,21 @@ const Welcome = () => {
         </motion.p>
       </main>
 
-      {/* Floating buttons */}
+      {/* Music toggle button */}
+      {musicUrl && (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.5, type: "spring" }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleMusic}
+          className="fixed top-5 right-5 z-40 h-10 w-10 rounded-full bg-background/80 backdrop-blur-sm shadow-elevated flex items-center justify-center text-foreground border border-border"
+        >
+          {musicPlaying ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+        </motion.button>
+      )}
+
+      {/* Floating login buttons */}
       {isAuthenticated ? (
         <motion.button
           initial={{ scale: 0 }}
