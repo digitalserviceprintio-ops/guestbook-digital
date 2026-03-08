@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, FileSpreadsheet, Users, UserCheck, UserX, Clock, Banknote, Heart, Users2, Gift, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, FileSpreadsheet, Users, UserCheck, UserX, Clock, Banknote, Heart, Users2, Gift, ChevronDown, ChevronUp, Printer } from "lucide-react";
 import { useGuests } from "@/hooks/useGuests";
 import { Guest, formatRupiah, categoryLabels, statusLabels, genderLabels } from "@/types/guest";
 import { exportGuestsToExcel } from "@/lib/exportExcel";
