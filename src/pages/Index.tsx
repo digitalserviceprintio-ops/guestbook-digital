@@ -50,18 +50,32 @@ const Index = () => {
         animate={{ opacity: 1, y: 0 }}
         className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
       >
-        <div className="flex items-center gap-3 max-w-lg mx-auto">
-          <div className="h-9 w-9 rounded-xl gradient-gold flex items-center justify-center shadow-card">
-            <BookOpen className="h-4 w-4 text-primary-foreground" />
+        <div className="flex items-center justify-between max-w-lg mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl gradient-gold flex items-center justify-center shadow-card">
+              <BookOpen className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="font-display text-lg font-bold text-foreground leading-tight">
+                Buku Tamu
+              </h1>
+              <p className="text-[11px] font-body text-muted-foreground">
+                Manajemen Undangan
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-display text-lg font-bold text-foreground leading-tight">
-              Buku Tamu
-            </h1>
-            <p className="text-[11px] font-body text-muted-foreground">
-              Manajemen Undangan
-            </p>
-          </div>
+          {allGuests.length > 0 && (
+            <button
+              onClick={() => {
+                exportGuestsToCSV(allGuests);
+                toast({ title: "Berhasil", description: "Data tamu berhasil diekspor ke CSV." });
+              }}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Ekspor CSV"
+            >
+              <Download className="h-4 w-4" />
+            </button>
+          )}
         </div>
       </motion.header>
 
