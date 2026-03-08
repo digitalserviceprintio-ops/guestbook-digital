@@ -42,6 +42,7 @@ const defaultSettings: WeddingSettings = {
   heroImageUrl: "",
   heroImages: [],
   backgroundMusic: null,
+  spreadsheetWebhookUrl: "",
   rsvpOpen: true,
 };
 
