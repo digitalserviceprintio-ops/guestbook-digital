@@ -1,7 +1,7 @@
-import { Guest, statusLabels, formatRupiah } from "@/types/guest";
+import { Guest, formatRupiah } from "@/types/guest";
 
 export function exportGuestsToCSV(guests: Guest[]) {
-  const headers = ["No", "Nama", "Jumlah Tamu", "Alamat", "Nominal Amplop", "Nomor HP", "Status", "Catatan"];
+  const headers = ["No", "Nama", "Jumlah Tamu", "Alamat", "Nominal Amplop", "Kategori", "Status", "Catatan"];
   
   const rows = guests.map((g, i) => [
     i + 1,
@@ -9,8 +9,8 @@ export function exportGuestsToCSV(guests: Guest[]) {
     g.numberOfGuests,
     g.address,
     g.envelopeAmount,
-    g.phone,
-    statusLabels[g.status],
+    g.category === "pengantin" ? "Pengantin" : "Orang Tua",
+    g.status === "hadir" ? "Hadir" : g.status === "tidak_hadir" ? "Tidak Hadir" : "Belum Konfirmasi",
     g.notes,
   ]);
 
