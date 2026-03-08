@@ -26,6 +26,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
   useEffect(() => {
     if (guest) {
       setName(guest.name);
+      setGender(guest.gender);
       setNumberOfGuests(guest.numberOfGuests);
       setAddress(guest.address);
       setEnvelopeAmount(guest.envelopeAmount ? guest.envelopeAmount.toString() : "");
@@ -33,6 +34,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
       setNotes(guest.notes);
     } else {
       setName("");
+      setGender("laki_laki");
       setNumberOfGuests(1);
       setAddress("");
       setEnvelopeAmount("");
