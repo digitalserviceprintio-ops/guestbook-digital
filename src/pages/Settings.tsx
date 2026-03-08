@@ -404,6 +404,7 @@ const Settings = () => {
 
             {/* App Version Info */}
             <AppVersionCard />
+            <DeveloperCard />
           </div>
         </div>
       </main>
