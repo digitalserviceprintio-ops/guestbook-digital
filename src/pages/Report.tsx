@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
 type FilterCategory = "semua" | "pengantin" | "orang_tua";
+type GenderFilter = "semua" | "laki_laki" | "perempuan";
 
 const Report = () => {
   const { allGuests } = useGuests();
