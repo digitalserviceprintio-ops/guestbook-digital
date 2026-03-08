@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -43,6 +43,13 @@ const RSVP = () => {
   const inputClass =
     "w-full rounded-xl bg-card px-4 py-3 text-sm md:text-base font-body text-card-foreground placeholder:text-muted-foreground border-0 outline-none focus:ring-2 focus:ring-ring";
 
+  useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => navigate("/"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [submitted, navigate]);
+
   if (settingsLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -76,6 +83,7 @@ const RSVP = () => {
               ? `Konfirmasi kehadiran Anda (${numberOfGuests} orang) telah kami terima. Sampai jumpa di hari bahagia kami!`
               : "Terima kasih atas konfirmasinya. Semoga kita bisa bertemu di lain kesempatan."}
           </p>
+          <p className="text-xs font-body text-muted-foreground/60">Kembali ke halaman utama dalam 3 detik...</p>
         </motion.div>
       </div>
     );
