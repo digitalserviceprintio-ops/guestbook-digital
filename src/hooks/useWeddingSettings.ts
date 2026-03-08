@@ -23,6 +23,7 @@ export interface WeddingSettings {
   heroImageUrl: string;
   heroImages: string[];
   backgroundMusic: BackgroundMusic | null;
+  spreadsheetWebhookUrl: string;
   rsvpOpen: boolean;
 }
 
