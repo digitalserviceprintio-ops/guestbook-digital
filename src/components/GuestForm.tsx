@@ -113,6 +113,28 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
                 />
               </div>
 
+              <div>
+                <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
+                  Jenis Kelamin
+                </label>
+                <div className="flex gap-2">
+                  {(["laki_laki", "perempuan"] as Gender[]).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setGender(g)}
+                      className={`flex-1 rounded-xl py-2.5 text-xs font-body font-medium transition-all ${
+                        gender === g
+                          ? "gradient-gold text-primary-foreground shadow-card"
+                          : "bg-card text-muted-foreground"
+                      }`}
+                    >
+                      {genderLabels[g]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">
