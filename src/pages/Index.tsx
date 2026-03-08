@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
