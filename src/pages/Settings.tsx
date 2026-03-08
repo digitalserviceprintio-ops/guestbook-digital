@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Image, ToggleLeft, ToggleRight } from "lucide-react";
+import { ArrowLeft, Save, Image, Upload, ToggleLeft, ToggleRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useToast } from "@/hooks/use-toast";
 
@@ -9,7 +10,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const { settings, loading, updateSettings } = useWeddingSettings();
   const { toast } = useToast();
-
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState(settings);
   const [saving, setSaving] = useState(false);
 
@@ -130,21 +131,60 @@ const Settings = () => {
         {/* Hero Image */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="space-y-3">
           <h2 className="font-display text-base font-bold text-foreground">Foto Pengantin</h2>
-          <div>
-            <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">URL Foto (kosongkan untuk foto default)</label>
-            <div className="flex gap-2">
+          <div className="space-y-3">
+            {/* Upload */}
+            <div>
+              <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Upload Foto</label>
+              <label className={`flex items-center justify-center gap-2 rounded-xl bg-card py-3 px-4 shadow-card cursor-pointer hover:bg-secondary transition-colors text-sm font-body font-medium text-muted-foreground ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+                <Upload className="h-4 w-4" />
+                {uploading ? "Mengupload..." : "Pilih Foto dari Perangkat"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setUploading(true);
+                    const ext = file.name.split(".").pop();
+                    const path = `hero-${Date.now()}.${ext}`;
+                    const { error } = await supabase.storage.from("wedding-photos").upload(path, file, { upsert: true });
+                    if (error) {
+                      toast({ title: "Gagal upload", description: error.message, variant: "destructive" });
+                    } else {
+                      const { data: urlData } = supabase.storage.from("wedding-photos").getPublicUrl(path);
+                      setForm({ ...form, heroImageUrl: urlData.publicUrl });
+                      toast({ title: "Berhasil", description: "Foto berhasil diupload. Jangan lupa klik Simpan." });
+                    }
+                    setUploading(false);
+                  }}
+                />
+              </label>
+            </div>
+
+            {/* URL */}
+            <div>
+              <label className="text-xs font-body font-medium text-muted-foreground mb-1 block">Atau masukkan URL foto</label>
               <input
                 value={form.heroImageUrl}
                 onChange={(e) => setForm({ ...form, heroImageUrl: e.target.value })}
                 placeholder="https://..."
                 className={inputClass}
               />
-              <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-                <Image className="h-5 w-5 text-muted-foreground" />
-              </div>
             </div>
+
+            {/* Preview */}
             {form.heroImageUrl && (
-              <img src={form.heroImageUrl} alt="Preview" className="mt-2 rounded-xl h-32 w-full object-cover" />
+              <div className="relative">
+                <img src={form.heroImageUrl} alt="Preview" className="rounded-xl h-40 w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, heroImageUrl: "" })}
+                  className="absolute top-2 right-2 bg-destructive text-destructive-foreground text-xs font-body font-medium px-2 py-1 rounded-lg"
+                >
+                  Hapus
+                </button>
+              </div>
             )}
           </div>
         </motion.div>
