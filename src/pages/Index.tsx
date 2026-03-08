@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2 } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGuests } from "@/hooks/useGuests";
 import { StatsCards } from "@/components/StatsCards";
@@ -73,13 +73,22 @@ const Index = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => navigate("/laporan")}
-            className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
-            title="Laporan"
-          >
-            <FileBarChart className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/souvenir")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Souvenir"
+            >
+              <Gift className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => navigate("/laporan")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Laporan"
+            >
+              <FileBarChart className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </motion.header>
 
@@ -121,6 +130,7 @@ const Index = () => {
             onSearchChange={setSearch}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onShowQR={(guest) => navigate(`/guest-qr/${guest.id}`)}
           />
         </div>
       </main>

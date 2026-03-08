@@ -52,6 +52,7 @@ export function GuestForm({ open, guest, category, onClose, onSave, onUpdate }: 
       status,
       category: guest ? guest.category : category,
       notes,
+      souvenirPickedUp: guest ? guest.souvenirPickedUp : false,
     };
 
     if (guest && onUpdate) {

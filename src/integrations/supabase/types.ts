@@ -24,6 +24,7 @@ export type Database = {
           name: string
           notes: string | null
           number_of_guests: number
+          souvenir_picked_up: boolean
           status: string
           updated_at: string
         }
@@ -36,6 +37,7 @@ export type Database = {
           name: string
           notes?: string | null
           number_of_guests?: number
+          souvenir_picked_up?: boolean
           status?: string
           updated_at?: string
         }
@@ -48,6 +50,7 @@ export type Database = {
           name?: string
           notes?: string | null
           number_of_guests?: number
+          souvenir_picked_up?: boolean
           status?: string
           updated_at?: string
         }

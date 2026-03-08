@@ -1,0 +1,1 @@
+ALTER TABLE public.guests ADD COLUMN souvenir_picked_up boolean NOT NULL DEFAULT false;

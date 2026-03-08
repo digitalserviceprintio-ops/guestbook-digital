@@ -10,6 +10,7 @@ export interface Guest {
   status: AttendanceStatus;
   category: GuestCategory;
   notes: string;
+  souvenirPickedUp: boolean;
   createdAt: Date;
 }
 

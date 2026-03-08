@@ -32,6 +32,7 @@ export function useGuests() {
         status: g.status as AttendanceStatus,
         category: g.category as GuestCategory,
         notes: g.notes || "",
+        souvenirPickedUp: g.souvenir_picked_up ?? false,
         createdAt: new Date(g.created_at),
       }))
     );
