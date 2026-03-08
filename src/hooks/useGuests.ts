@@ -68,6 +68,8 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
+        // Sync to spreadsheet (non-blocking)
+        syncGuestToSpreadsheet("add", { id: "", ...guest });
       }
     },
     [toast, fetchGuests]
