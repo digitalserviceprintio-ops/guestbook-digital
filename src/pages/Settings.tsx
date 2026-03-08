@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Image, Upload, ToggleLeft, ToggleRight } from "lucide-react";
+import { ArrowLeft, Save, Upload, ToggleLeft, ToggleRight, X, ImagePlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
@@ -133,15 +133,36 @@ const Settings = () => {
           </div>
 
           <div className="space-y-6">
-            {/* Hero Image */}
+            {/* Hero Images (3-5 photos) */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="space-y-3">
               <h2 className="font-display text-base md:text-lg font-bold text-foreground">Foto Pengantin</h2>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Upload Foto</label>
-                  <label className={`flex items-center justify-center gap-2 rounded-xl bg-card py-3 px-4 shadow-card cursor-pointer hover:bg-secondary transition-colors text-sm font-body font-medium text-muted-foreground ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                    <Upload className="h-4 w-4" />
-                    {uploading ? "Mengupload..." : "Pilih Foto dari Perangkat"}
+              <p className="text-xs md:text-sm font-body text-muted-foreground">Upload 3-5 foto untuk carousel di halaman utama.</p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {(form.heroImages || []).map((url, idx) => (
+                  <div key={idx} className="relative group">
+                    <img src={url} alt={`Foto ${idx + 1}`} className="rounded-xl h-28 md:h-36 w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = [...(form.heroImages || [])];
+                        updated.splice(idx, 1);
+                        setForm({ ...form, heroImages: updated });
+                      }}
+                      className="absolute top-1.5 right-1.5 bg-destructive text-destructive-foreground p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                    <span className="absolute bottom-1.5 left-1.5 bg-foreground/60 text-background text-[10px] font-body font-medium px-1.5 py-0.5 rounded">{idx + 1}</span>
+                  </div>
+                ))}
+
+                {(form.heroImages || []).length < 5 && (
+                  <label className={`flex flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border h-28 md:h-36 cursor-pointer hover:bg-secondary/50 transition-colors ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
+                    <ImagePlus className="h-6 w-6 text-muted-foreground" />
+                    <span className="text-[10px] font-body text-muted-foreground">
+                      {uploading ? "Uploading..." : `Foto ${(form.heroImages || []).length + 1}`}
+                    </span>
                     <input
                       type="file"
                       accept="image/*"
@@ -157,36 +178,21 @@ const Settings = () => {
                           toast({ title: "Gagal upload", description: error.message, variant: "destructive" });
                         } else {
                           const { data: urlData } = supabase.storage.from("wedding-photos").getPublicUrl(path);
-                          setForm({ ...form, heroImageUrl: urlData.publicUrl });
+                          const current = form.heroImages || [];
+                          setForm({ ...form, heroImages: [...current, urlData.publicUrl] });
                           toast({ title: "Berhasil", description: "Foto berhasil diupload. Jangan lupa klik Simpan." });
                         }
                         setUploading(false);
+                        e.target.value = "";
                       }}
                     />
                   </label>
-                </div>
-                <div>
-                  <label className="text-xs md:text-sm font-body font-medium text-muted-foreground mb-1 block">Atau masukkan URL foto</label>
-                  <input
-                    value={form.heroImageUrl}
-                    onChange={(e) => setForm({ ...form, heroImageUrl: e.target.value })}
-                    placeholder="https://..."
-                    className={inputClass}
-                  />
-                </div>
-                {form.heroImageUrl && (
-                  <div className="relative">
-                    <img src={form.heroImageUrl} alt="Preview" className="rounded-xl h-40 md:h-52 w-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => setForm({ ...form, heroImageUrl: "" })}
-                      className="absolute top-2 right-2 bg-destructive text-destructive-foreground text-xs font-body font-medium px-2 py-1 rounded-lg"
-                    >
-                      Hapus
-                    </button>
-                  </div>
                 )}
               </div>
+
+              {(form.heroImages || []).length < 3 && (
+                <p className="text-[11px] font-body text-warning">Minimal 3 foto diperlukan untuk carousel.</p>
+              )}
             </motion.div>
 
             {/* Invitation Text */}

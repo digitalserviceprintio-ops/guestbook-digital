@@ -69,6 +69,7 @@ export type Database = {
           event_date: string
           groom_name: string
           hero_image_url: string | null
+          hero_images: Json | null
           id: string
           invitation_text: string
           resepsi_time: string
@@ -86,6 +87,7 @@ export type Database = {
           event_date?: string
           groom_name?: string
           hero_image_url?: string | null
+          hero_images?: Json | null
           id?: string
           invitation_text?: string
           resepsi_time?: string
@@ -103,6 +105,7 @@ export type Database = {
           event_date?: string
           groom_name?: string
           hero_image_url?: string | null
+          hero_images?: Json | null
           id?: string
           invitation_text?: string
           resepsi_time?: string
