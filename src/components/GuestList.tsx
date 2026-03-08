@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Guest, AttendanceStatus, statusLabels, formatRupiah, genderLabels } from "@/types/guest";
-import { Search, Pencil, Trash2, MapPin, Banknote, QrCode } from "lucide-react";
+import { Search, Pencil, Trash2, MapPin, Banknote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
@@ -11,7 +11,7 @@ interface GuestListProps {
   onSearchChange: (s: string) => void;
   onEdit: (guest: Guest) => void;
   onDelete: (id: string) => void;
-  onShowQR?: (guest: Guest) => void;
+  
 }
 
 const filterOptions: { value: AttendanceStatus | "all"; label: string }[] = [
@@ -35,7 +35,6 @@ export function GuestList({
   onSearchChange,
   onEdit,
   onDelete,
-  onShowQR,
 }: GuestListProps) {
   return (
     <div className="space-y-3">
@@ -119,14 +118,6 @@ export function GuestList({
                   )}
                 </div>
                 <div className="flex gap-1 shrink-0">
-                  {onShowQR && guest.status === "hadir" && (
-                    <button
-                      onClick={() => onShowQR(guest)}
-                      className="p-2 rounded-lg hover:bg-secondary transition-colors text-primary"
-                    >
-                      <QrCode className="h-4 w-4" />
-                    </button>
-                  )}
                   <button
                     onClick={() => onEdit(guest)}
                     className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
