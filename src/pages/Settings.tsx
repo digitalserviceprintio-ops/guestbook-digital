@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useToast } from "@/hooks/use-toast";
+import { syncAllGuestsToSpreadsheet } from "@/lib/syncSpreadsheet";
 
 const Settings = () => {
   const navigate = useNavigate();
