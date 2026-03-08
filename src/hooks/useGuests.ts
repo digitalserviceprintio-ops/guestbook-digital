@@ -127,7 +127,8 @@ export function useGuests() {
     const tidakHadir = guests.filter((g) => g.status === "tidak_hadir").length;
     const belum = guests.filter((g) => g.status === "belum_konfirmasi").length;
     const totalTamu = guests.reduce((sum, g) => sum + g.numberOfGuests, 0);
-    return { total, hadir, tidakHadir, belum, totalTamu };
+    const totalAmplop = guests.reduce((sum, g) => sum + g.envelopeAmount, 0);
+    return { total, hadir, tidakHadir, belum, totalTamu, totalAmplop };
   }, [guests]);
 
   return {
