@@ -1,0 +1,1 @@
+ALTER TABLE public.wedding_settings ADD COLUMN hero_images jsonb DEFAULT '[]'::jsonb;
