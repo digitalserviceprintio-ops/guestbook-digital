@@ -5,12 +5,14 @@ import { Heart, MapPin, Calendar, Clock } from "lucide-react";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { LoginModal } from "@/components/LoginModal";
+import { LogIn } from "lucide-react";
 import defaultHero from "@/assets/wedding-hero.jpg";
 
 const Welcome = () => {
   const navigate = useNavigate();
   const { settings, loading } = useWeddingSettings();
-  const { isAuthenticated } = useTokenAuth();
+  const { isAuthenticated, hasSavedToken, quickLogin, tokenLabel } = useTokenAuth();
+  const [quickLoading, setQuickLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const images = settings.heroImages && settings.heroImages.length > 0
@@ -153,8 +155,29 @@ const Welcome = () => {
         </motion.p>
       </main>
 
-      {/* Floating Login Button (only if not authenticated) */}
-      {!isAuthenticated && <LoginModal />}
+      {/* Floating buttons */}
+      {!isAuthenticated && hasSavedToken ? (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1, type: "spring" }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          disabled={quickLoading}
+          onClick={async () => {
+            setQuickLoading(true);
+            const ok = await quickLogin();
+            if (ok) navigate("/dashboard");
+            setQuickLoading(false);
+          }}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 gradient-navy text-primary-foreground font-body font-semibold px-5 py-3 rounded-full shadow-elevated hover:opacity-90 transition-opacity text-sm disabled:opacity-50"
+        >
+          <LogIn className="h-4 w-4" />
+          {quickLoading ? "Masuk..." : `Masuk Kembali`}
+        </motion.button>
+      ) : !isAuthenticated ? (
+        <LoginModal />
+      ) : null}
     </div>
   );
 };
