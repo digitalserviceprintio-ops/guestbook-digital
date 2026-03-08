@@ -18,13 +18,13 @@ export function LoginModal() {
     setError("");
     setLoading(true);
 
-    const success = await login(token);
-    if (success) {
+    const result = await login(token);
+    if (result.ok) {
       setOpen(false);
       setToken("");
       navigate("/dashboard");
     } else {
-      setError("Token tidak valid atau sudah dinonaktifkan.");
+      setError(result.error || "Token tidak valid atau sudah dinonaktifkan.");
     }
     setLoading(false);
   };

@@ -86,6 +86,39 @@ export type Database = {
         }
         Relationships: []
       }
+      token_devices: {
+        Row: {
+          created_at: string | null
+          device_fingerprint: string
+          device_label: string | null
+          id: string
+          ip_address: string | null
+          last_seen_at: string | null
+          token: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_fingerprint: string
+          device_label?: string | null
+          id?: string
+          ip_address?: string | null
+          last_seen_at?: string | null
+          token: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_fingerprint?: string
+          device_label?: string | null
+          id?: string
+          ip_address?: string | null
+          last_seen_at?: string | null
+          token?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       wedding_settings: {
         Row: {
           akad_time: string
