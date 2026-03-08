@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 const Index = () => {
   const {
     guests,
+    allGuests,
     stats,
     filter,
     setFilter,
