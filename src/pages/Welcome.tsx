@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Heart, MapPin, Calendar, Clock } from "lucide-react";
@@ -7,6 +8,20 @@ import defaultHero from "@/assets/wedding-hero.jpg";
 const Welcome = () => {
   const navigate = useNavigate();
   const { settings, loading } = useWeddingSettings();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const images = settings.heroImages && settings.heroImages.length > 0
+    ? settings.heroImages
+    : (settings.heroImageUrl ? [settings.heroImageUrl] : [defaultHero]);
+
+  // Auto-advance carousel every 4 seconds
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   if (loading) {
     return (
@@ -15,8 +30,6 @@ const Welcome = () => {
       </div>
     );
   }
-
-  const heroImg = settings.heroImageUrl || defaultHero;
 
   const formatDate = (dateStr: string) => {
     try {
@@ -29,9 +42,18 @@ const Welcome = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-hidden">
-      {/* Hero Section */}
+      {/* Hero Section with Carousel */}
       <div className="relative h-[70vh] min-h-[480px] lg:h-[60vh]">
-        <img src={heroImg} alt="Foto Pengantin" className="absolute inset-0 w-full h-full object-cover" />
+        {images.map((img, idx) => (
+          <img
+            key={idx}
+            src={img}
+            alt={`Foto Pengantin ${idx + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              idx === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/20 via-foreground/10 to-background" />
 
         <div className="relative z-10 h-full flex flex-col items-center justify-end pb-10 px-5 text-center">
@@ -46,6 +68,23 @@ const Welcome = () => {
               <div className="h-px w-10 bg-primary-foreground/40" />
             </div>
           </motion.div>
+
+          {/* Carousel dots */}
+          {images.length > 1 && (
+            <div className="flex items-center gap-2 mt-4">
+              {images.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`rounded-full transition-all duration-300 ${
+                    idx === currentSlide
+                      ? "w-6 h-2 bg-primary-foreground"
+                      : "w-2 h-2 bg-primary-foreground/40"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
