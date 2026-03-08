@@ -62,7 +62,7 @@ const SouvenirCounter = () => {
         className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border px-5 py-4"
       >
         <div className="flex items-center gap-3 max-w-lg mx-auto">
-          <button onClick={() => navigate("/")} className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
+          <button onClick={() => navigate("/dashboard")} className="p-2 rounded-xl hover:bg-secondary transition-colors text-muted-foreground">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
