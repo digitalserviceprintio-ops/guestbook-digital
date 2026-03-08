@@ -13,6 +13,7 @@ import SouvenirCounter from "./pages/SouvenirCounter";
 import SouvenirScan from "./pages/SouvenirScan";
 import RSVP from "./pages/RSVP";
 import Settings from "./pages/Settings";
+import Backup from "./pages/Backup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/guest-qr/:id" element={<ProtectedRoute><GuestQR /></ProtectedRoute>} />
             <Route path="/souvenir-scan/:id" element={<SouvenirScan />} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </TokenAuthProvider>
