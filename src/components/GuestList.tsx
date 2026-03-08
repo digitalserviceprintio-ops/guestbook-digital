@@ -35,7 +35,6 @@ export function GuestList({
   onSearchChange,
   onEdit,
   onDelete,
-  onShowQR,
 }: GuestListProps) {
   return (
     <div className="space-y-3">
