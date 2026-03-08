@@ -5,6 +5,7 @@ import { Heart, MapPin, Calendar, Clock } from "lucide-react";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { LoginModal } from "@/components/LoginModal";
+import { LogIn } from "lucide-react";
 import defaultHero from "@/assets/wedding-hero.jpg";
 
 const Welcome = () => {
