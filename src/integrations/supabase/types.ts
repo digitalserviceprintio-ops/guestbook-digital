@@ -17,6 +17,7 @@ export type Database = {
       access_tokens: {
         Row: {
           created_at: string
+          expires_at: string | null
           id: string
           is_active: boolean
           label: string
@@ -25,6 +26,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_active?: boolean
           label?: string
@@ -33,6 +35,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_active?: boolean
           label?: string
