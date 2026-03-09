@@ -145,9 +145,18 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
       return { ok: false, error: deviceResult.error };
     }
 
+    // Set expires_at on first use (6 months from now), update last_used_at
+    const updatePayload: any = { last_used_at: new Date().toISOString() };
+    if (!data.expires_at) {
+      const sixMonths = new Date();
+      sixMonths.setMonth(sixMonths.getMonth() + 6);
+      updatePayload.expires_at = sixMonths.toISOString();
+      expiry = calcExpiry(updatePayload.expires_at);
+    }
+
     await supabase
       .from("access_tokens")
-      .update({ last_used_at: new Date().toISOString() } as any)
+      .update(updatePayload)
       .eq("token", token.trim());
 
     localStorage.setItem("access_token", token.trim());
