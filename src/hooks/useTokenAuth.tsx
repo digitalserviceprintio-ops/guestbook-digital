@@ -135,7 +135,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
 
     if (error || !data) return { ok: false, error: "Token tidak valid atau sudah dinonaktifkan." };
 
-    const expiry = calcExpiry(data.expires_at);
+    let expiry = calcExpiry(data.expires_at);
     if (expiry.isExpired) {
       return { ok: false, error: "Token sudah kadaluarsa. Hubungi admin untuk perpanjangan." };
     }
