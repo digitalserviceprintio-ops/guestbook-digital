@@ -29,6 +29,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <TokenAuthProvider>
+            <TokenExpiryWarning />
             <AppVersionNotification />
             <Routes>
               <Route path="/" element={<Welcome />} />
