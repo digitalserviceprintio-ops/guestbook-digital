@@ -1,0 +1,1 @@
+ALTER TABLE public.access_tokens ADD COLUMN expires_at timestamp with time zone DEFAULT (now() + interval '4 months');
