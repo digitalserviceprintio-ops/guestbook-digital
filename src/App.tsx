@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { TokenAuthProvider } from "@/hooks/useTokenAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AppVersionNotification } from "@/components/AppVersionNotification";
+import { TokenExpiryWarning } from "@/components/TokenExpiryWarning";
 import Welcome from "./pages/Welcome";
 import Index from "./pages/Index";
 import Report from "./pages/Report";
