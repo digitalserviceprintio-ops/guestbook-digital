@@ -42,6 +42,7 @@ const App = () => (
               <Route path="/souvenir-scan/:id" element={<SouvenirScan />} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
+              <Route path="/token-management" element={<ProtectedRoute><TokenManagement /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TokenAuthProvider>
