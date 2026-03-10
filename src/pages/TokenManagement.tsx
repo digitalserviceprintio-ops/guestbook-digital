@@ -66,6 +66,7 @@ const TokenManagement = () => {
   const [selectedToken, setSelectedToken] = useState<string | null>(null);
   const [showDevices, setShowDevices] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [extending, setExtending] = useState<string | null>(null);
 
   const fetchTokens = async () => {
     const { data } = await supabase
