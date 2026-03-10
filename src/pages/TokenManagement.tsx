@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Key, Smartphone, RefreshCw, Shield, Clock, CheckCircle, XCircle, AlertTriangle, Trash2 } from "lucide-react";
+import { ArrowLeft, Key, Smartphone, RefreshCw, Shield, Clock, CheckCircle, XCircle, AlertTriangle, Trash2, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -66,6 +66,7 @@ const TokenManagement = () => {
   const [selectedToken, setSelectedToken] = useState<string | null>(null);
   const [showDevices, setShowDevices] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [extending, setExtending] = useState<string | null>(null);
 
   const fetchTokens = async () => {
     const { data } = await supabase
@@ -115,6 +116,27 @@ const TokenManagement = () => {
       setDevices(prev => prev.filter(d => d.id !== deviceId));
       toast({ title: "Berhasil", description: "Perangkat dihapus." });
     }
+  };
+
+  const handleExtendToken = async (token: TokenData) => {
+    setExtending(token.token);
+    const baseDate = token.expires_at ? new Date(token.expires_at) : new Date();
+    // If expired, extend from now; otherwise extend from current expiry
+    const fromDate = baseDate < new Date() ? new Date() : baseDate;
+    fromDate.setMonth(fromDate.getMonth() + 6);
+    
+    const { error } = await supabase
+      .from("access_tokens")
+      .update({ expires_at: fromDate.toISOString(), is_active: true } as any)
+      .eq("id", token.id);
+    
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal memperpanjang token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} diperpanjang 6 bulan hingga ${format(fromDate, "dd MMM yyyy", { locale: idLocale })}.` });
+      await fetchTokens();
+    }
+    setExtending(null);
   };
 
   const stats = {
@@ -211,6 +233,16 @@ const TokenManagement = () => {
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1 text-xs"
+                                disabled={extending === token.token}
+                                onClick={() => handleExtendToken(token)}
+                              >
+                                <RotateCcw className={`h-3 w-3 ${extending === token.token ? "animate-spin" : ""}`} />
+                                +6 Bulan
+                              </Button>
                               <Button
                                 variant="outline"
                                 size="sm"

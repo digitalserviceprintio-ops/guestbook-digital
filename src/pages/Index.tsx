@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive, Bell } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive, Bell, Key } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
@@ -137,6 +137,13 @@ const Index = () => {
               title="Backup & Export"
             >
               <HardDrive className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => navigate("/token-management")}
+              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+              title="Manajemen Token"
+            >
+              <Key className="h-4 w-4" />
             </button>
             <button
               onClick={() => navigate("/settings")}
