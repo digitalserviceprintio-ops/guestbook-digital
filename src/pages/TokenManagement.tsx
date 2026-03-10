@@ -237,6 +237,16 @@ const TokenManagement = () => {
                                 variant="outline"
                                 size="sm"
                                 className="gap-1 text-xs"
+                                disabled={extending === token.token}
+                                onClick={() => handleExtendToken(token)}
+                              >
+                                <RotateCcw className={`h-3 w-3 ${extending === token.token ? "animate-spin" : ""}`} />
+                                +6 Bulan
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="gap-1 text-xs"
                                 onClick={() => handleViewDevices(token.token)}
                               >
                                 <Smartphone className="h-3 w-3" />
