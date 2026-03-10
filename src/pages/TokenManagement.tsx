@@ -118,6 +118,27 @@ const TokenManagement = () => {
     }
   };
 
+  const handleExtendToken = async (token: TokenData) => {
+    setExtending(token.token);
+    const baseDate = token.expires_at ? new Date(token.expires_at) : new Date();
+    // If expired, extend from now; otherwise extend from current expiry
+    const fromDate = baseDate < new Date() ? new Date() : baseDate;
+    fromDate.setMonth(fromDate.getMonth() + 6);
+    
+    const { error } = await supabase
+      .from("access_tokens")
+      .update({ expires_at: fromDate.toISOString(), is_active: true } as any)
+      .eq("id", token.id);
+    
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal memperpanjang token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} diperpanjang 6 bulan hingga ${format(fromDate, "dd MMM yyyy", { locale: idLocale })}.` });
+      await fetchTokens();
+    }
+    setExtending(null);
+  };
+
   const stats = {
     total: tokens.length,
     active: tokens.filter(t => t.is_active && (!t.expires_at || new Date(t.expires_at) > new Date())).length,
