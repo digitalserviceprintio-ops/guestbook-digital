@@ -17,6 +17,7 @@ import SouvenirScan from "./pages/SouvenirScan";
 import RSVP from "./pages/RSVP";
 import Settings from "./pages/Settings";
 import Backup from "./pages/Backup";
+import TokenManagement from "./pages/TokenManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/souvenir-scan/:id" element={<SouvenirScan />} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="/backup" element={<ProtectedRoute><Backup /></ProtectedRoute>} />
+              <Route path="/token-management" element={<ProtectedRoute><TokenManagement /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TokenAuthProvider>
