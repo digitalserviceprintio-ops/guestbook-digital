@@ -17,6 +17,7 @@ import SouvenirScan from "./pages/SouvenirScan";
 import RSVP from "./pages/RSVP";
 import Settings from "./pages/Settings";
 import Backup from "./pages/Backup";
+import TokenManagement from "./pages/TokenManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
