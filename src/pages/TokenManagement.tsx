@@ -317,6 +317,14 @@ const TokenManagement = () => {
                                 <Smartphone className="h-3 w-3" />
                                 Perangkat
                               </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive"
+                                onClick={() => handleDeleteToken(token)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
