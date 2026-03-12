@@ -140,6 +140,20 @@ const TokenManagement = () => {
     setExtending(null);
   };
 
+  const handleToggleActive = async (token: TokenData) => {
+    const newStatus = !token.is_active;
+    const { error } = await supabase
+      .from("access_tokens")
+      .update({ is_active: newStatus } as any)
+      .eq("id", token.id);
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal mengubah status token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} ${newStatus ? "diaktifkan" : "dinonaktifkan"}.` });
+      await fetchTokens();
+    }
+  };
+
   const stats = {
     total: tokens.length,
     active: tokens.filter(t => t.is_active && (!t.expires_at || new Date(t.expires_at) > new Date())).length,
