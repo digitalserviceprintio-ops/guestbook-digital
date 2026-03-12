@@ -88,6 +88,7 @@ async function registerDevice(supabase: any, token: string): Promise<{ allowed: 
 export function TokenAuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [tokenLabel, setTokenLabel] = useState("");
+  const [tokenRole, setTokenRole] = useState<TokenRole>("operator");
   const [expiryInfo, setExpiryInfo] = useState<TokenExpiryInfo>(defaultExpiry);
 
   useEffect(() => {
