@@ -428,6 +428,33 @@ const TokenManagement = () => {
                 onChange={(e) => setNewLabel(e.target.value)}
               />
             </div>
+            <div className="space-y-2">
+              <Label className="text-foreground">Role</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={newRole === "operator" ? "default" : "outline"}
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => setNewRole("operator")}
+                >
+                  Operator
+                </Button>
+                <Button
+                  type="button"
+                  variant={newRole === "admin" ? "default" : "outline"}
+                  size="sm"
+                  className="flex-1 gap-1"
+                  onClick={() => setNewRole("admin")}
+                >
+                  <Crown className="h-3 w-3" />
+                  Admin
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Admin dapat mengelola token & pengaturan aplikasi. Operator hanya akses dashboard tamu.
+              </p>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreate(false)}>Batal</Button>
