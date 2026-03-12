@@ -8,9 +8,12 @@ interface TokenExpiryInfo {
   isExpired: boolean;
 }
 
+type TokenRole = "admin" | "operator";
+
 interface TokenAuthContextType {
   isAuthenticated: boolean;
   tokenLabel: string;
+  tokenRole: TokenRole;
   hasSavedToken: boolean;
   expiryInfo: TokenExpiryInfo;
   login: (token: string) => Promise<{ ok: boolean; error?: string }>;
