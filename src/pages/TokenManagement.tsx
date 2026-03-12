@@ -178,6 +178,7 @@ const TokenManagement = () => {
       toast({ title: "Berhasil", description: `Token ${newToken.trim().toUpperCase()} berhasil dibuat.` });
       setNewToken("");
       setNewLabel("");
+      setNewRole("operator");
       setShowCreate(false);
       await fetchTokens();
     }
