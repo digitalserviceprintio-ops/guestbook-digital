@@ -27,6 +27,7 @@ const defaultExpiry: TokenExpiryInfo = { expiresAt: null, daysRemaining: null, i
 const TokenAuthContext = createContext<TokenAuthContextType>({
   isAuthenticated: false,
   tokenLabel: "",
+  tokenRole: "operator",
   hasSavedToken: false,
   expiryInfo: defaultExpiry,
   login: async () => ({ ok: false }),
