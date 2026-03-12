@@ -282,6 +282,12 @@ const TokenManagement = () => {
                           <TableCell className="font-mono text-xs text-foreground">{token.token}</TableCell>
                           <TableCell className="text-foreground">{token.label || "—"}</TableCell>
                           <TableCell>
+                            <Badge variant={token.role === "admin" ? "default" : "secondary"} className="gap-1">
+                              {token.role === "admin" && <Crown className="h-3 w-3" />}
+                              {token.role === "admin" ? "Admin" : "Operator"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
                             <Badge variant={status.variant} className="gap-1">
                               <StatusIcon className="h-3 w-3" />
                               {status.label}
