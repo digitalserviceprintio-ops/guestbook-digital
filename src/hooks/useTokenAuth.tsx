@@ -190,6 +190,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("access_token_label");
     setIsAuthenticated(false);
     setTokenLabel("");
+    setTokenRole("operator");
     setExpiryInfo(defaultExpiry);
   };
 
