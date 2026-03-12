@@ -265,6 +265,7 @@ const TokenManagement = () => {
                     <TableRow>
                       <TableHead className="min-w-[120px]">Token</TableHead>
                       <TableHead>Label</TableHead>
+                      <TableHead>Role</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Aktif</TableHead>
                       <TableHead>Sisa Waktu</TableHead>
