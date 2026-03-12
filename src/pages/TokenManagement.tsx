@@ -70,7 +70,10 @@ const TokenManagement = () => {
   const [showDevices, setShowDevices] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [extending, setExtending] = useState<string | null>(null);
-
+  const [showCreate, setShowCreate] = useState(false);
+  const [newToken, setNewToken] = useState("");
+  const [newLabel, setNewLabel] = useState("");
+  const [creating, setCreating] = useState(false);
   const fetchTokens = async () => {
     const { data } = await supabase
       .from("access_tokens")
