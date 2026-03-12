@@ -213,6 +213,12 @@ const TokenManagement = () => {
             <Key className="h-5 w-5 text-accent" />
             <h1 className="text-lg font-bold text-foreground font-display">Manajemen Token</h1>
           </div>
+          <div className="ml-auto">
+            <Button size="sm" className="gap-1" onClick={() => setShowCreate(true)}>
+              <Plus className="h-4 w-4" />
+              Buat Token
+            </Button>
+          </div>
         </div>
       </header>
 
