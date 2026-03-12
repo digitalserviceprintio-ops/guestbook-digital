@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
 import { format, differenceInDays, differenceInHours } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 
@@ -139,6 +140,20 @@ const TokenManagement = () => {
     setExtending(null);
   };
 
+  const handleToggleActive = async (token: TokenData) => {
+    const newStatus = !token.is_active;
+    const { error } = await supabase
+      .from("access_tokens")
+      .update({ is_active: newStatus } as any)
+      .eq("id", token.id);
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal mengubah status token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} ${newStatus ? "diaktifkan" : "dinonaktifkan"}.` });
+      await fetchTokens();
+    }
+  };
+
   const stats = {
     total: tokens.length,
     active: tokens.filter(t => t.is_active && (!t.expires_at || new Date(t.expires_at) > new Date())).length,
@@ -204,6 +219,7 @@ const TokenManagement = () => {
                       <TableHead className="min-w-[120px]">Token</TableHead>
                       <TableHead>Label</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Aktif</TableHead>
                       <TableHead>Sisa Waktu</TableHead>
                       <TableHead>Terakhir Dipakai</TableHead>
                       <TableHead className="text-right">Aksi</TableHead>
@@ -221,7 +237,13 @@ const TokenManagement = () => {
                             <Badge variant={status.variant} className="gap-1">
                               <StatusIcon className="h-3 w-3" />
                               {status.label}
-                            </Badge>
+                          </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Switch
+                              checked={token.is_active}
+                              onCheckedChange={() => handleToggleActive(token)}
+                            />
                           </TableCell>
                           <TableCell className="text-muted-foreground text-sm">
                             {getRemainingTime(token.expires_at)}
