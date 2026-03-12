@@ -138,13 +138,15 @@ const Index = () => {
             >
               <HardDrive className="h-4 w-4" />
             </button>
-            <button
-              onClick={() => navigate("/token-management")}
-              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
-              title="Manajemen Token"
-            >
-              <Key className="h-4 w-4" />
-            </button>
+            {tokenRole === "admin" && (
+              <button
+                onClick={() => navigate("/token-management")}
+                className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+                title="Manajemen Token"
+              >
+                <Key className="h-4 w-4" />
+              </button>
+            )}
             <button
               onClick={() => navigate("/settings")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
