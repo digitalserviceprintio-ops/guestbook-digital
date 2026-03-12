@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Key, Smartphone, RefreshCw, Shield, Clock, CheckCircle, XCircle, AlertTriangle, Trash2, RotateCcw } from "lucide-react";
+import { ArrowLeft, Key, Smartphone, RefreshCw, Shield, Clock, CheckCircle, XCircle, AlertTriangle, Trash2, RotateCcw, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -10,6 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { format, differenceInDays, differenceInHours } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 
@@ -68,7 +70,10 @@ const TokenManagement = () => {
   const [showDevices, setShowDevices] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [extending, setExtending] = useState<string | null>(null);
-
+  const [showCreate, setShowCreate] = useState(false);
+  const [newToken, setNewToken] = useState("");
+  const [newLabel, setNewLabel] = useState("");
+  const [creating, setCreating] = useState(false);
   const fetchTokens = async () => {
     const { data } = await supabase
       .from("access_tokens")
@@ -154,6 +159,38 @@ const TokenManagement = () => {
     }
   };
 
+  const handleCreateToken = async () => {
+    if (!newToken.trim()) {
+      toast({ title: "Error", description: "Token tidak boleh kosong.", variant: "destructive" });
+      return;
+    }
+    setCreating(true);
+    const { error } = await supabase.from("access_tokens").insert({
+      token: newToken.trim().toUpperCase(),
+      label: newLabel.trim() || newToken.trim().toUpperCase(),
+    });
+    if (error) {
+      toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada." : "Gagal membuat token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${newToken.trim().toUpperCase()} berhasil dibuat.` });
+      setNewToken("");
+      setNewLabel("");
+      setShowCreate(false);
+      await fetchTokens();
+    }
+    setCreating(false);
+  };
+
+  const handleDeleteToken = async (token: TokenData) => {
+    const { error } = await supabase.from("access_tokens").delete().eq("id", token.id);
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal menghapus token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} dihapus.` });
+      await fetchTokens();
+    }
+  };
+
   const stats = {
     total: tokens.length,
     active: tokens.filter(t => t.is_active && (!t.expires_at || new Date(t.expires_at) > new Date())).length,
@@ -175,6 +212,12 @@ const TokenManagement = () => {
           <div className="flex items-center gap-2">
             <Key className="h-5 w-5 text-accent" />
             <h1 className="text-lg font-bold text-foreground font-display">Manajemen Token</h1>
+          </div>
+          <div className="ml-auto">
+            <Button size="sm" className="gap-1" onClick={() => setShowCreate(true)}>
+              <Plus className="h-4 w-4" />
+              Buat Token
+            </Button>
           </div>
         </div>
       </header>
@@ -274,6 +317,14 @@ const TokenManagement = () => {
                                 <Smartphone className="h-3 w-3" />
                                 Perangkat
                               </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive"
+                                onClick={() => handleDeleteToken(token)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -330,6 +381,48 @@ const TokenManagement = () => {
             >
               <RefreshCw className={`h-4 w-4 ${resetting ? "animate-spin" : ""}`} />
               Reset Semua Perangkat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* Create Token Dialog */}
+      <Dialog open={showCreate} onOpenChange={setShowCreate}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-foreground">
+              <Plus className="h-5 w-5 text-primary" />
+              Buat Token Baru
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Token akan aktif setelah dibuat. Masa berlaku dimulai saat pertama kali digunakan.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-token" className="text-foreground">Kode Token</Label>
+              <Input
+                id="new-token"
+                placeholder="Contoh: ADM-2026-BETA-001"
+                value={newToken}
+                onChange={(e) => setNewToken(e.target.value)}
+                className="font-mono uppercase"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-label" className="text-foreground">Label (opsional)</Label>
+              <Input
+                id="new-label"
+                placeholder="Contoh: Admin Utama"
+                value={newLabel}
+                onChange={(e) => setNewLabel(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCreate(false)}>Batal</Button>
+            <Button disabled={creating || !newToken.trim()} onClick={handleCreateToken} className="gap-1">
+              {creating ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              Buat
             </Button>
           </DialogFooter>
         </DialogContent>
