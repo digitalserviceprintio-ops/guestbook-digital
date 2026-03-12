@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Key, Smartphone, RefreshCw, Shield, Clock, CheckCircle, XCircle, AlertTriangle, Trash2, RotateCcw, Plus } from "lucide-react";
+import { ArrowLeft, Key, Smartphone, RefreshCw, Shield, Clock, CheckCircle, XCircle, AlertTriangle, Trash2, RotateCcw, Plus, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -20,6 +20,7 @@ interface TokenData {
   token: string;
   label: string;
   is_active: boolean;
+  role: string;
   expires_at: string | null;
   last_used_at: string | null;
   created_at: string;
@@ -73,6 +74,7 @@ const TokenManagement = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [newToken, setNewToken] = useState("");
   const [newLabel, setNewLabel] = useState("");
+  const [newRole, setNewRole] = useState<"admin" | "operator">("operator");
   const [creating, setCreating] = useState(false);
   const fetchTokens = async () => {
     const { data } = await supabase
@@ -168,13 +170,15 @@ const TokenManagement = () => {
     const { error } = await supabase.from("access_tokens").insert({
       token: newToken.trim().toUpperCase(),
       label: newLabel.trim() || newToken.trim().toUpperCase(),
-    });
+      role: newRole,
+    } as any);
     if (error) {
       toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada." : "Gagal membuat token.", variant: "destructive" });
     } else {
       toast({ title: "Berhasil", description: `Token ${newToken.trim().toUpperCase()} berhasil dibuat.` });
       setNewToken("");
       setNewLabel("");
+      setNewRole("operator");
       setShowCreate(false);
       await fetchTokens();
     }
@@ -261,6 +265,7 @@ const TokenManagement = () => {
                     <TableRow>
                       <TableHead className="min-w-[120px]">Token</TableHead>
                       <TableHead>Label</TableHead>
+                      <TableHead>Role</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Aktif</TableHead>
                       <TableHead>Sisa Waktu</TableHead>
@@ -276,6 +281,12 @@ const TokenManagement = () => {
                         <TableRow key={token.id}>
                           <TableCell className="font-mono text-xs text-foreground">{token.token}</TableCell>
                           <TableCell className="text-foreground">{token.label || "—"}</TableCell>
+                          <TableCell>
+                            <Badge variant={token.role === "admin" ? "default" : "secondary"} className="gap-1">
+                              {token.role === "admin" && <Crown className="h-3 w-3" />}
+                              {token.role === "admin" ? "Admin" : "Operator"}
+                            </Badge>
+                          </TableCell>
                           <TableCell>
                             <Badge variant={status.variant} className="gap-1">
                               <StatusIcon className="h-3 w-3" />
@@ -416,6 +427,33 @@ const TokenManagement = () => {
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
               />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-foreground">Role</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={newRole === "operator" ? "default" : "outline"}
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => setNewRole("operator")}
+                >
+                  Operator
+                </Button>
+                <Button
+                  type="button"
+                  variant={newRole === "admin" ? "default" : "outline"}
+                  size="sm"
+                  className="flex-1 gap-1"
+                  onClick={() => setNewRole("admin")}
+                >
+                  <Crown className="h-3 w-3" />
+                  Admin
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Admin dapat mengelola token & pengaturan aplikasi. Operator hanya akses dashboard tamu.
+              </p>
             </div>
           </div>
           <DialogFooter>

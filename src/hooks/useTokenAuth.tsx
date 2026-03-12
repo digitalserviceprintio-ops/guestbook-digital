@@ -8,9 +8,12 @@ interface TokenExpiryInfo {
   isExpired: boolean;
 }
 
+type TokenRole = "admin" | "operator";
+
 interface TokenAuthContextType {
   isAuthenticated: boolean;
   tokenLabel: string;
+  tokenRole: TokenRole;
   hasSavedToken: boolean;
   expiryInfo: TokenExpiryInfo;
   login: (token: string) => Promise<{ ok: boolean; error?: string }>;
@@ -24,6 +27,7 @@ const defaultExpiry: TokenExpiryInfo = { expiresAt: null, daysRemaining: null, i
 const TokenAuthContext = createContext<TokenAuthContextType>({
   isAuthenticated: false,
   tokenLabel: "",
+  tokenRole: "operator",
   hasSavedToken: false,
   expiryInfo: defaultExpiry,
   login: async () => ({ ok: false }),
@@ -84,6 +88,7 @@ async function registerDevice(supabase: any, token: string): Promise<{ allowed: 
 export function TokenAuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [tokenLabel, setTokenLabel] = useState("");
+  const [tokenRole, setTokenRole] = useState<TokenRole>("operator");
   const [expiryInfo, setExpiryInfo] = useState<TokenExpiryInfo>(defaultExpiry);
 
   useEffect(() => {
@@ -94,7 +99,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
       import("@/integrations/supabase/client").then(({ supabase }) => {
         supabase
           .from("access_tokens")
-          .select("token, label, is_active, expires_at")
+          .select("token, label, is_active, expires_at, role")
           .eq("token", saved)
           .eq("is_active", true)
           .maybeSingle()
@@ -110,6 +115,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
               if (result.allowed) {
                 setIsAuthenticated(true);
                 setTokenLabel(data.label);
+                setTokenRole(data.role || "operator");
                 setExpiryInfo(expiry);
               } else {
                 localStorage.removeItem("access_token");
@@ -128,7 +134,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
     const { supabase } = await import("@/integrations/supabase/client");
     const { data, error } = await supabase
       .from("access_tokens")
-      .select("token, label, is_active, expires_at")
+      .select("token, label, is_active, expires_at, role")
       .eq("token", token.trim())
       .eq("is_active", true)
       .maybeSingle() as any;
@@ -163,6 +169,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("access_token_label", data.label);
     setIsAuthenticated(true);
     setTokenLabel(data.label);
+    setTokenRole(data.role || "operator");
     setExpiryInfo(expiry);
     return { ok: true };
   };
@@ -183,11 +190,12 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("access_token_label");
     setIsAuthenticated(false);
     setTokenLabel("");
+    setTokenRole("operator");
     setExpiryInfo(defaultExpiry);
   };
 
   return (
-    <TokenAuthContext.Provider value={{ isAuthenticated, tokenLabel, hasSavedToken: !!localStorage.getItem("access_token"), expiryInfo, login, quickLogin, logout, fullLogout }}>
+    <TokenAuthContext.Provider value={{ isAuthenticated, tokenLabel, tokenRole, hasSavedToken: !!localStorage.getItem("access_token"), expiryInfo, login, quickLogin, logout, fullLogout }}>
       {children}
     </TokenAuthContext.Provider>
   );

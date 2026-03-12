@@ -38,7 +38,7 @@ const Index = () => {
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { logout, fullLogout, tokenLabel } = useTokenAuth();
+  const { logout, fullLogout, tokenLabel, tokenRole } = useTokenAuth();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { prefs, permissionState, requestPermission } = usePushNotifications();
   const IDLE_TIMEOUT = 20000; // 20 seconds
@@ -138,13 +138,15 @@ const Index = () => {
             >
               <HardDrive className="h-4 w-4" />
             </button>
-            <button
-              onClick={() => navigate("/token-management")}
-              className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
-              title="Manajemen Token"
-            >
-              <Key className="h-4 w-4" />
-            </button>
+            {tokenRole === "admin" && (
+              <button
+                onClick={() => navigate("/token-management")}
+                className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
+                title="Manajemen Token"
+              >
+                <Key className="h-4 w-4" />
+              </button>
+            )}
             <button
               onClick={() => navigate("/settings")}
               className="p-2.5 rounded-xl bg-card shadow-card hover:bg-secondary transition-colors text-muted-foreground"
