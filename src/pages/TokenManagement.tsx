@@ -159,6 +159,38 @@ const TokenManagement = () => {
     }
   };
 
+  const handleCreateToken = async () => {
+    if (!newToken.trim()) {
+      toast({ title: "Error", description: "Token tidak boleh kosong.", variant: "destructive" });
+      return;
+    }
+    setCreating(true);
+    const { error } = await supabase.from("access_tokens").insert({
+      token: newToken.trim().toUpperCase(),
+      label: newLabel.trim() || newToken.trim().toUpperCase(),
+    });
+    if (error) {
+      toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada." : "Gagal membuat token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${newToken.trim().toUpperCase()} berhasil dibuat.` });
+      setNewToken("");
+      setNewLabel("");
+      setShowCreate(false);
+      await fetchTokens();
+    }
+    setCreating(false);
+  };
+
+  const handleDeleteToken = async (token: TokenData) => {
+    const { error } = await supabase.from("access_tokens").delete().eq("id", token.id);
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal menghapus token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} dihapus.` });
+      await fetchTokens();
+    }
+  };
+
   const stats = {
     total: tokens.length,
     active: tokens.filter(t => t.is_active && (!t.expires_at || new Date(t.expires_at) > new Date())).length,
