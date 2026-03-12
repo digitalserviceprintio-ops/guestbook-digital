@@ -1,0 +1,2 @@
+CREATE POLICY "Anyone can insert access_tokens" ON public.access_tokens FOR INSERT TO public WITH CHECK (true);
+CREATE POLICY "Anyone can delete access_tokens" ON public.access_tokens FOR DELETE TO public USING (true);
