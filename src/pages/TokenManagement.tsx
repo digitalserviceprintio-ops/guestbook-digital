@@ -237,7 +237,13 @@ const TokenManagement = () => {
                             <Badge variant={status.variant} className="gap-1">
                               <StatusIcon className="h-3 w-3" />
                               {status.label}
-                            </Badge>
+                          </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Switch
+                              checked={token.is_active}
+                              onCheckedChange={() => handleToggleActive(token)}
+                            />
                           </TableCell>
                           <TableCell className="text-muted-foreground text-sm">
                             {getRemainingTime(token.expires_at)}
