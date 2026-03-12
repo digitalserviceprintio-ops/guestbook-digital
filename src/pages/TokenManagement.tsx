@@ -219,6 +219,7 @@ const TokenManagement = () => {
                       <TableHead className="min-w-[120px]">Token</TableHead>
                       <TableHead>Label</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Aktif</TableHead>
                       <TableHead>Sisa Waktu</TableHead>
                       <TableHead>Terakhir Dipakai</TableHead>
                       <TableHead className="text-right">Aksi</TableHead>
