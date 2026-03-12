@@ -195,7 +195,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <TokenAuthContext.Provider value={{ isAuthenticated, tokenLabel, hasSavedToken: !!localStorage.getItem("access_token"), expiryInfo, login, quickLogin, logout, fullLogout }}>
+    <TokenAuthContext.Provider value={{ isAuthenticated, tokenLabel, tokenRole, hasSavedToken: !!localStorage.getItem("access_token"), expiryInfo, login, quickLogin, logout, fullLogout }}>
       {children}
     </TokenAuthContext.Provider>
   );
