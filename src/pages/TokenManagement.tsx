@@ -74,6 +74,7 @@ const TokenManagement = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [newToken, setNewToken] = useState("");
   const [newLabel, setNewLabel] = useState("");
+  const [newRole, setNewRole] = useState<"admin" | "operator">("operator");
   const [creating, setCreating] = useState(false);
   const fetchTokens = async () => {
     const { data } = await supabase
