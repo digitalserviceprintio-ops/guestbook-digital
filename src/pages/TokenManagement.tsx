@@ -385,6 +385,48 @@ const TokenManagement = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Create Token Dialog */}
+      <Dialog open={showCreate} onOpenChange={setShowCreate}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-foreground">
+              <Plus className="h-5 w-5 text-primary" />
+              Buat Token Baru
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Token akan aktif setelah dibuat. Masa berlaku dimulai saat pertama kali digunakan.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-token" className="text-foreground">Kode Token</Label>
+              <Input
+                id="new-token"
+                placeholder="Contoh: ADM-2026-BETA-001"
+                value={newToken}
+                onChange={(e) => setNewToken(e.target.value)}
+                className="font-mono uppercase"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-label" className="text-foreground">Label (opsional)</Label>
+              <Input
+                id="new-label"
+                placeholder="Contoh: Admin Utama"
+                value={newLabel}
+                onChange={(e) => setNewLabel(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowCreate(false)}>Batal</Button>
+            <Button disabled={creating || !newToken.trim()} onClick={handleCreateToken} className="gap-1">
+              {creating ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+              Buat
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
