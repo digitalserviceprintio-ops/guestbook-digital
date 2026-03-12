@@ -90,8 +90,8 @@ const Index = () => {
               <BookOpen className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="font-display text-lg md:text-xl font-bold text-foreground leading-tight">
-                Buku Tamu
+                <h1 className="font-display text-lg md:text-xl font-bold text-foreground leading-tight">
+                MD2R Guest Book
               </h1>
               <p className="text-[11px] md:text-xs font-body text-muted-foreground">
                 Manajemen Undangan
