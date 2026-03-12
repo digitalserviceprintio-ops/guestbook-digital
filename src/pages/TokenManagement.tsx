@@ -170,7 +170,8 @@ const TokenManagement = () => {
     const { error } = await supabase.from("access_tokens").insert({
       token: newToken.trim().toUpperCase(),
       label: newLabel.trim() || newToken.trim().toUpperCase(),
-    });
+      role: newRole,
+    } as any);
     if (error) {
       toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada." : "Gagal membuat token.", variant: "destructive" });
     } else {
