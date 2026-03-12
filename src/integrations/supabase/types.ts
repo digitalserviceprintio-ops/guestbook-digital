@@ -22,6 +22,7 @@ export type Database = {
           is_active: boolean
           label: string
           last_used_at: string | null
+          role: string
           token: string
         }
         Insert: {
@@ -31,6 +32,7 @@ export type Database = {
           is_active?: boolean
           label?: string
           last_used_at?: string | null
+          role?: string
           token: string
         }
         Update: {
@@ -40,6 +42,7 @@ export type Database = {
           is_active?: boolean
           label?: string
           last_used_at?: string | null
+          role?: string
           token?: string
         }
         Relationships: []
