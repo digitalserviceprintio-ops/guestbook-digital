@@ -99,7 +99,7 @@ export function TokenAuthProvider({ children }: { children: ReactNode }) {
       import("@/integrations/supabase/client").then(({ supabase }) => {
         supabase
           .from("access_tokens")
-          .select("token, label, is_active, expires_at")
+          .select("token, label, is_active, expires_at, role")
           .eq("token", saved)
           .eq("is_active", true)
           .maybeSingle()
