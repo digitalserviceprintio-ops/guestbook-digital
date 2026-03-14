@@ -18,6 +18,22 @@ const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[
   { value: "orang_tua", label: "Orang Tua", icon: Users2 },
 ];
 
+function FooterVersion() {
+  const { latestVersion } = useAppVersion();
+  return (
+    <footer className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 pb-24 pt-2">
+      <div className="border-t border-border pt-4 flex items-center justify-between">
+        <p className="text-xs font-body text-muted-foreground">© Mikro Data 2R</p>
+        {latestVersion && (
+          <span className="text-[10px] font-body text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+            v{latestVersion.version}
+          </span>
+        )}
+      </div>
+    </footer>
+  );
+}
+
 const Index = () => {
   const {
     guests,
