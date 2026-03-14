@@ -22,13 +22,30 @@ function FooterVersion() {
   const { latestVersion } = useAppVersion();
   return (
     <footer className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 pb-24 pt-2">
-      <div className="border-t border-border pt-4 flex items-center justify-between">
-        <p className="text-xs font-body text-muted-foreground">© Mikro Data 2R</p>
-        {latestVersion && (
-          <span className="text-[10px] font-body text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-            v{latestVersion.version}
-          </span>
-        )}
+      <div className="border-t border-border pt-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-body text-muted-foreground">© Mikro Data 2R</p>
+          {latestVersion && (
+            <span className="text-[10px] font-body text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+              v{latestVersion.version}
+            </span>
+          )}
+        </div>
+        <p className="text-[11px] font-body text-muted-foreground leading-relaxed">
+          Jl. Inpres KM.XI Dusun II B.9 Desa/Kel. Sidomulyo Kec, Air Kumbang Kab. Banyuasin-30966
+        </p>
+        <div className="rounded-xl overflow-hidden border border-border shadow-card">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.5292334954843!2d104.99723007405835!3d-2.950525739707973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b7f0002361837%3A0xe756aa89a7cd332!2sMicro%20Data%202R%20komputer!5e0!3m2!1sid!2sid!4v1773456331273!5m2!1sid!2sid"
+            width="100%"
+            height="200"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Lokasi Mikro Data 2R"
+          />
+        </div>
       </div>
     </footer>
   );
