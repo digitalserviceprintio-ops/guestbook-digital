@@ -34,6 +34,14 @@ function FooterVersion() {
         <p className="text-[11px] font-body text-muted-foreground leading-relaxed">
           Jl. Inpres KM.XI Dusun II B.9 Desa/Kel. Sidomulyo Kec, Air Kumbang Kab. Banyuasin-30966
         </p>
+        <a
+          href="https://wa.me/6282186371356"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-[11px] font-body text-primary hover:underline"
+        >
+          📱 0821-8637-1356 (WhatsApp)
+        </a>
         <div className="rounded-xl overflow-hidden border border-border shadow-card">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.5292334954843!2d104.99723007405835!3d-2.950525739707973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b7f0002361837%3A0xe756aa89a7cd332!2sMicro%20Data%202R%20komputer!5e0!3m2!1sid!2sid!4v1773456331273!5m2!1sid!2sid"
