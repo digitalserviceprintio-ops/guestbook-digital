@@ -296,7 +296,11 @@ const TokenManagement = () => {
                           <TableCell className="font-mono text-xs text-foreground">{token.token}</TableCell>
                           <TableCell className="text-foreground">{token.label || "—"}</TableCell>
                           <TableCell>
-                            <Badge variant={token.role === "admin" ? "default" : "secondary"} className="gap-1">
+                            <Badge
+                              variant={token.role === "admin" ? "default" : "secondary"}
+                              className="gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={() => handleToggleRole(token)}
+                            >
                               {token.role === "admin" && <Crown className="h-3 w-3" />}
                               {token.role === "admin" ? "Admin" : "Operator"}
                             </Badge>
