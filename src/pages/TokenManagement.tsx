@@ -161,6 +161,20 @@ const TokenManagement = () => {
     }
   };
 
+  const handleToggleRole = async (token: TokenData) => {
+    const newRole = token.role === "admin" ? "operator" : "admin";
+    const { error } = await supabase
+      .from("access_tokens")
+      .update({ role: newRole } as any)
+      .eq("id", token.id);
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal mengubah role token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} diubah ke ${newRole === "admin" ? "Admin" : "Operator"}.` });
+      await fetchTokens();
+    }
+  };
+
   const handleCreateToken = async () => {
     if (!newToken.trim()) {
       toast({ title: "Error", description: "Token tidak boleh kosong.", variant: "destructive" });
@@ -282,7 +296,11 @@ const TokenManagement = () => {
                           <TableCell className="font-mono text-xs text-foreground">{token.token}</TableCell>
                           <TableCell className="text-foreground">{token.label || "—"}</TableCell>
                           <TableCell>
-                            <Badge variant={token.role === "admin" ? "default" : "secondary"} className="gap-1">
+                            <Badge
+                              variant={token.role === "admin" ? "default" : "secondary"}
+                              className="gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={() => handleToggleRole(token)}
+                            >
                               {token.role === "admin" && <Crown className="h-3 w-3" />}
                               {token.role === "admin" ? "Admin" : "Operator"}
                             </Badge>
