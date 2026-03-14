@@ -161,6 +161,20 @@ const TokenManagement = () => {
     }
   };
 
+  const handleToggleRole = async (token: TokenData) => {
+    const newRole = token.role === "admin" ? "operator" : "admin";
+    const { error } = await supabase
+      .from("access_tokens")
+      .update({ role: newRole } as any)
+      .eq("id", token.id);
+    if (error) {
+      toast({ title: "Gagal", description: "Gagal mengubah role token.", variant: "destructive" });
+    } else {
+      toast({ title: "Berhasil", description: `Token ${token.token} diubah ke ${newRole === "admin" ? "Admin" : "Operator"}.` });
+      await fetchTokens();
+    }
+  };
+
   const handleCreateToken = async () => {
     if (!newToken.trim()) {
       toast({ title: "Error", description: "Token tidak boleh kosong.", variant: "destructive" });
