@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
+import { useAppVersion } from "@/hooks/useAppVersion";
 import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive, Bell, Key } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,22 @@ const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[
   { value: "pengantin", label: "Pengantin", icon: Heart },
   { value: "orang_tua", label: "Orang Tua", icon: Users2 },
 ];
+
+function FooterVersion() {
+  const { latestVersion } = useAppVersion();
+  return (
+    <footer className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 pb-24 pt-2">
+      <div className="border-t border-border pt-4 flex items-center justify-between">
+        <p className="text-xs font-body text-muted-foreground">© Mikro Data 2R</p>
+        {latestVersion && (
+          <span className="text-[10px] font-body text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+            v{latestVersion.version}
+          </span>
+        )}
+      </div>
+    </footer>
+  );
+}
 
 const Index = () => {
   const {
@@ -91,7 +108,7 @@ const Index = () => {
             </div>
             <div>
                 <h1 className="font-display text-lg md:text-xl font-bold text-foreground leading-tight">
-                MD2R Guest Book
+                Guest Book
               </h1>
               <p className="text-[11px] md:text-xs font-body text-muted-foreground">
                 Manajemen Undangan
@@ -207,6 +224,9 @@ const Index = () => {
           />
         </div>
       </main>
+
+      {/* Footer */}
+      <FooterVersion />
 
       {/* Floating Add Button */}
       <motion.button
