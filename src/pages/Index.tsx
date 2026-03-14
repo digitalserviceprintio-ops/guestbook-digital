@@ -209,6 +209,9 @@ const Index = () => {
         </div>
       </main>
 
+      {/* Footer */}
+      <FooterVersion />
+
       {/* Floating Add Button */}
       <motion.button
         initial={{ scale: 0, rotate: -180 }}
