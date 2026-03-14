@@ -92,7 +92,7 @@ const Index = () => {
             </div>
             <div>
                 <h1 className="font-display text-lg md:text-xl font-bold text-foreground leading-tight">
-                MD2R Guest Book
+                Guest Book
               </h1>
               <p className="text-[11px] md:text-xs font-body text-muted-foreground">
                 Manajemen Undangan
