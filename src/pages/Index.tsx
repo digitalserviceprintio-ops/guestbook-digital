@@ -42,12 +42,6 @@ function FooterVersion() {
         >
           📱 0821-8637-1356 (WhatsApp)
         </a>
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Lokasi Mikro Data 2R"
-          />
-        </div>
       </div>
     </footer>
   );
