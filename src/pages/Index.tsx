@@ -42,18 +42,6 @@ function FooterVersion() {
         >
           📱 0821-8637-1356 (WhatsApp)
         </a>
-        <div className="rounded-xl overflow-hidden border border-border shadow-card">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.5292334954843!2d104.99723007405835!3d-2.950525739707973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b7f0002361837%3A0xe756aa89a7cd332!2sMicro%20Data%202R%20komputer!5e0!3m2!1sid!2sid!4v1773456331273!5m2!1sid!2sid"
-            width="100%"
-            height="200"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Lokasi Mikro Data 2R"
-          />
-        </div>
       </div>
     </footer>
   );
