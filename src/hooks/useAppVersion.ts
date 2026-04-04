@@ -54,9 +54,9 @@ export function useAppVersion() {
   useEffect(() => {
     fetchLatest();
 
-    // Listen for realtime changes
+    const channelName = `app-versions-changes-${Date.now()}`;
     const channel = supabase
-      .channel("app-versions-changes")
+      .channel(channelName)
       .on("postgres_changes", { event: "*", schema: "public", table: "app_versions" }, () => {
         fetchLatest();
       })
