@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Gift, CheckCircle2, ChevronLeft, ChevronRight, Search, Undo2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useGuests } from "@/hooks/useGuests";
-
-import { useGuests } from "@/hooks/useGuests";
+import { toast } from "sonner";
 import { toast } from "sonner";
 
 const ITEMS_PER_PAGE = 20;
