@@ -40,13 +40,22 @@ export function useAppVersion() {
         maintenance_message: data.maintenance_message || "",
         published_at: data.published_at,
       };
-      setLatestVersion(version);
+      setLatestVersion((prev) => {
+        const seenVersion = localStorage.getItem(SEEN_VERSION_KEY);
+        const isNewVersion = seenVersion !== version.version;
+        
+        // If version changed while app is open, always show update
+        if (prev && prev.version !== version.version) {
+          setHasUpdate(true);
+        } else {
+          setHasUpdate(isNewVersion);
+        }
 
-      const seenVersion = localStorage.getItem(SEEN_VERSION_KEY);
-      setHasUpdate(seenVersion !== version.version);
-
-      const dismissedMaintenance = localStorage.getItem(DISMISSED_MAINTENANCE_KEY);
-      setIsMaintenance(version.is_maintenance && dismissedMaintenance !== version.id);
+        const dismissedMaintenance = localStorage.getItem(DISMISSED_MAINTENANCE_KEY);
+        setIsMaintenance(version.is_maintenance && dismissedMaintenance !== version.id);
+        
+        return version;
+      });
     }
     setLoading(false);
   }, []);
