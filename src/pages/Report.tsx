@@ -252,84 +252,41 @@ const Report = () => {
           </button>
 
           {showDetail && (
-            <>
-              {/* Mobile card view */}
-              <div className="space-y-2 lg:hidden">
-                {filteredGuests.length === 0 ? (
-                  <p className="text-center text-xs sm:text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
-                ) : (
-                  filteredGuests.map((guest, idx) => (
-                    <div key={guest.id} className={`rounded-xl p-2.5 sm:p-3 ${idx % 2 === 0 ? "bg-card" : "bg-muted"}`}>
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0 flex-1">
-                          <p className="font-body font-semibold text-xs sm:text-sm text-card-foreground truncate">{idx + 1}. {guest.name}</p>
-                          <p className="text-[10px] sm:text-[11px] font-body text-muted-foreground mt-0.5">
-                            {guest.gender === "laki_laki" ? "L" : "P"} · {guest.numberOfGuests} org · <span className={`font-medium ${
-                              guest.status === "hadir" ? "text-success" :
-                              guest.status === "tidak_hadir" ? "text-destructive" : "text-pending"
-                            }`}>{statusLabels[guest.status]}</span>
-                          </p>
-                          {guest.address && (
-                            <p className="text-[10px] font-body text-muted-foreground mt-0.5 truncate">{guest.address}</p>
-                          )}
-                        </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-[10px] sm:text-xs font-body text-muted-foreground">
-                            {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
-                          </p>
-                          <p className="text-[9px] sm:text-[10px] font-body mt-0.5">
-                            {guest.souvenirPickedUp ? (
-                              <span className="text-success font-medium">Souvenir ✓</span>
-                            ) : guest.status === "hadir" ? (
-                              <span className="text-warning font-medium">Souvenir: Belum</span>
-                            ) : null}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Desktop table view */}
-              <div className="hidden lg:block space-y-2">
-                {filteredGuests.length === 0 ? (
-                  <p className="text-center text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
-                ) : (
-                  <>
-                    <div className="rounded-xl bg-primary px-4 py-3 grid grid-cols-12 gap-2 text-xs font-body font-semibold text-primary-foreground">
-                      <div className="col-span-1">No</div>
-                      <div className="col-span-3">Nama</div>
-                      <div className="col-span-1 text-center">JK</div>
-                      <div className="col-span-1 text-center">Org</div>
-                      <div className="col-span-2">Status</div>
-                      <div className="col-span-2 text-right">Amplop</div>
-                      <div className="col-span-2 text-center">Souvenir</div>
-                    </div>
-
+            <div className="overflow-x-auto rounded-xl border border-border shadow-card">
+              {filteredGuests.length === 0 ? (
+                <p className="text-center text-xs sm:text-sm text-muted-foreground py-6 font-body">Belum ada data tamu</p>
+              ) : (
+                <table className="w-full text-[11px] sm:text-xs md:text-sm font-body border-collapse">
+                  <thead>
+                    <tr className="gradient-navy text-primary-foreground">
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-center font-semibold whitespace-nowrap">No</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-left font-semibold">Nama</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-center font-semibold">JK</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-center font-semibold">Jml</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-left font-semibold hidden sm:table-cell">Alamat</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-center font-semibold">Status</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-right font-semibold">Amplop</th>
+                      <th className="px-2 sm:px-3 py-2 sm:py-2.5 text-center font-semibold">Souvenir</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {filteredGuests.map((guest, idx) => (
-                      <div
-                        key={guest.id}
-                        className={`rounded-xl px-4 py-3 grid grid-cols-12 gap-2 text-xs font-body ${
-                          idx % 2 === 0 ? "bg-card" : "bg-muted"
-                        }`}
-                      >
-                        <div className="col-span-1 text-muted-foreground">{idx + 1}</div>
-                        <div className="col-span-3 font-medium text-card-foreground truncate">{guest.name}</div>
-                        <div className="col-span-1 text-center text-muted-foreground">{guest.gender === "laki_laki" ? "L" : "P"}</div>
-                        <div className="col-span-1 text-center text-muted-foreground">{guest.numberOfGuests}</div>
-                        <div className="col-span-2">
-                          <span className={`${
+                      <tr key={guest.id} className={`${idx % 2 === 0 ? "bg-card" : "bg-muted"} hover:bg-accent/50 transition-colors`}>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-center text-muted-foreground">{idx + 1}</td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 font-medium text-card-foreground max-w-[120px] sm:max-w-none truncate">{guest.name}</td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-center text-muted-foreground">{guest.gender === "laki_laki" ? "L" : "P"}</td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-center text-muted-foreground">{guest.numberOfGuests}</td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-muted-foreground max-w-[150px] truncate hidden sm:table-cell">{guest.address || "-"}</td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-center">
+                          <span className={`font-medium ${
                             guest.status === "hadir" ? "text-success" :
                             guest.status === "tidak_hadir" ? "text-destructive" : "text-pending"
-                          } font-medium`}>
-                            {statusLabels[guest.status]}
-                          </span>
-                        </div>
-                        <div className="col-span-2 text-right text-muted-foreground">
+                          }`}>{statusLabels[guest.status]}</span>
+                        </td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-right text-muted-foreground whitespace-nowrap">
                           {guest.envelopeAmount > 0 ? formatRupiah(guest.envelopeAmount) : "-"}
-                        </div>
-                        <div className="col-span-2 text-center">
+                        </td>
+                        <td className="px-2 sm:px-3 py-1.5 sm:py-2 text-center">
                           {guest.souvenirPickedUp ? (
                             <span className="text-success font-medium">✓</span>
                           ) : guest.status === "hadir" ? (
@@ -337,23 +294,25 @@ const Report = () => {
                           ) : (
                             <span className="text-muted-foreground">-</span>
                           )}
-                        </div>
-                      </div>
+                        </td>
+                      </tr>
                     ))}
-
-                    <div className="rounded-xl bg-primary px-4 py-3 grid grid-cols-12 gap-2 text-xs font-body font-bold text-primary-foreground">
-                      <div className="col-span-1"></div>
-                      <div className="col-span-3">Total</div>
-                      <div className="col-span-1"></div>
-                      <div className="col-span-1 text-center">{stats.totalTamu}</div>
-                      <div className="col-span-2">{stats.hadir} hadir</div>
-                      <div className="col-span-2 text-right">{formatRupiah(stats.totalAmplop)}</div>
-                      <div className="col-span-2 text-center">{stats.souvenirPickedUp}/{stats.hadir}</div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </>
+                  </tbody>
+                  <tfoot>
+                    <tr className="gradient-navy text-primary-foreground font-bold">
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5"></td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5">Total: {stats.total}</td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5 text-center">L:{stats.lakiLaki} P:{stats.perempuan}</td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5 text-center">{stats.totalTamu}</td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5 hidden sm:table-cell"></td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5 text-center">{stats.hadir} hadir</td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5 text-right whitespace-nowrap">{formatRupiah(stats.totalAmplop)}</td>
+                      <td className="px-2 sm:px-3 py-2 sm:py-2.5 text-center">{stats.souvenirPickedUp}/{stats.hadir}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              )}
+            </div>
           )}
         </motion.div>
       </main>
