@@ -1,5 +1,6 @@
+import { useState, useMemo } from "react";
 import { Guest, AttendanceStatus, statusLabels, formatRupiah, genderLabels } from "@/types/guest";
-import { Search, Pencil, Trash2 } from "lucide-react";
+import { Search, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
@@ -25,6 +26,8 @@ const statusColorMap: Record<AttendanceStatus, string> = {
   belum_konfirmasi: "bg-pending text-pending-foreground",
 };
 
+const ITEMS_PER_PAGE = 25;
+
 export function GuestList({
   guests,
   filter,
@@ -34,6 +37,43 @@ export function GuestList({
   onEdit,
   onDelete,
 }: GuestListProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to page 1 when filters change
+  const totalPages = Math.max(1, Math.ceil(guests.length / ITEMS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+
+  const paginatedGuests = useMemo(() => {
+    const start = (safePage - 1) * ITEMS_PER_PAGE;
+    return guests.slice(start, start + ITEMS_PER_PAGE);
+  }, [guests, safePage]);
+
+  // Reset page when search/filter changes
+  const handleFilterChange = (f: AttendanceStatus | "all") => {
+    setCurrentPage(1);
+    onFilterChange(f);
+  };
+  const handleSearchChange = (s: string) => {
+    setCurrentPage(1);
+    onSearchChange(s);
+  };
+
+  const pageNumbers = useMemo(() => {
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (safePage > 3) pages.push("...");
+      for (let i = Math.max(2, safePage - 1); i <= Math.min(totalPages - 1, safePage + 1); i++) {
+        pages.push(i);
+      }
+      if (safePage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+    return pages;
+  }, [totalPages, safePage]);
+
   return (
     <div className="space-y-3">
       {/* Search & Filter */}
@@ -44,7 +84,7 @@ export function GuestList({
             type="text"
             placeholder="Cari nama atau alamat..."
             value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="w-full rounded-xl bg-card pl-10 pr-4 py-3 text-sm md:text-base font-body text-card-foreground placeholder:text-muted-foreground shadow-card border-0 outline-none focus:ring-2 focus:ring-ring"
           />
         </div>
@@ -52,7 +92,7 @@ export function GuestList({
           {filterOptions.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => onFilterChange(opt.value)}
+              onClick={() => handleFilterChange(opt.value)}
               className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs md:text-sm font-body font-medium transition-all ${
                 filter === opt.value
                   ? "gradient-gold text-primary-foreground shadow-card"
@@ -64,6 +104,15 @@ export function GuestList({
           ))}
         </div>
       </div>
+
+      {/* Results info */}
+      {guests.length > 0 && (
+        <div className="flex items-center justify-between px-1">
+          <p className="text-xs font-body text-muted-foreground">
+            Menampilkan {(safePage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(safePage * ITEMS_PER_PAGE, guests.length)} dari {guests.length} tamu
+          </p>
+        </div>
+      )}
 
       {/* Mobile: Card rows / Desktop: Table */}
       {guests.length === 0 ? (
@@ -90,9 +139,9 @@ export function GuestList({
                   </tr>
                 </thead>
                 <tbody>
-                  {guests.map((guest, idx) => (
+                  {paginatedGuests.map((guest, idx) => (
                     <tr key={guest.id} className="border-b border-border/50 hover:bg-secondary/30 transition-colors">
-                      <td className="px-4 py-3 text-muted-foreground">{idx + 1}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{(safePage - 1) * ITEMS_PER_PAGE + idx + 1}</td>
                       <td className="px-4 py-3 font-semibold text-card-foreground whitespace-nowrap">{guest.name}</td>
                       <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{genderLabels[guest.gender]}</td>
                       <td className="px-4 py-3 text-center text-card-foreground">{guest.numberOfGuests}</td>
@@ -137,7 +186,7 @@ export function GuestList({
                   </tr>
                 </thead>
                 <tbody>
-                  {guests.map((guest) => (
+                  {paginatedGuests.map((guest) => (
                     <tr key={guest.id} className="border-b border-border/50">
                       <td className="px-3 py-2.5">
                         <p className="font-semibold text-card-foreground truncate max-w-[120px]">{guest.name}</p>
@@ -170,6 +219,43 @@ export function GuestList({
               </table>
             </div>
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-1 pt-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+                className="p-2 rounded-lg text-muted-foreground hover:bg-secondary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              {pageNumbers.map((p, i) =>
+                p === "..." ? (
+                  <span key={`e${i}`} className="px-2 text-xs text-muted-foreground">…</span>
+                ) : (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p as number)}
+                    className={`min-w-[32px] h-8 rounded-lg text-xs font-body font-medium transition-all ${
+                      safePage === p
+                        ? "gradient-gold text-primary-foreground shadow-card"
+                        : "text-muted-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                )
+              )}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+                className="p-2 rounded-lg text-muted-foreground hover:bg-secondary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
