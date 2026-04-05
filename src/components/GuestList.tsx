@@ -1,5 +1,6 @@
+import { useState, useMemo } from "react";
 import { Guest, AttendanceStatus, statusLabels, formatRupiah, genderLabels } from "@/types/guest";
-import { Search, Pencil, Trash2 } from "lucide-react";
+import { Search, Pencil, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface GuestListProps {
