@@ -17,10 +17,18 @@ export function useGuests() {
   // Get current token from localStorage
   const getCurrentToken = useCallback(() => localStorage.getItem("access_token") || "", []);
   const fetchGuests = useCallback(async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from("guests")
       .select("*")
       .order("created_at", { ascending: false });
+
+    // Operator only sees their own data; admin sees all
+    const currentToken = getCurrentToken();
+    if (isAuthenticated && tokenRole === "operator" && currentToken) {
+      query = query.eq("owner_token", currentToken);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       toast({ title: "Error", description: "Gagal memuat data tamu.", variant: "destructive" });
