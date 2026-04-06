@@ -184,21 +184,17 @@ const TokenManagement = () => {
   };
 
   const handleCreateToken = async () => {
-    if (!newToken.trim()) {
-      toast({ title: "Error", description: "Token tidak boleh kosong.", variant: "destructive" });
-      return;
-    }
     setCreating(true);
+    const generatedToken = generateTokenCode();
     const { error } = await supabase.from("access_tokens").insert({
-      token: newToken.trim().toUpperCase(),
-      label: newLabel.trim() || newToken.trim().toUpperCase(),
+      token: generatedToken,
+      label: newLabel.trim() || generatedToken,
       role: newRole,
     } as any);
     if (error) {
-      toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada." : "Gagal membuat token.", variant: "destructive" });
+      toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada, coba lagi." : "Gagal membuat token.", variant: "destructive" });
     } else {
-      toast({ title: "Berhasil", description: `Token ${newToken.trim().toUpperCase()} berhasil dibuat.` });
-      setNewToken("");
+      toast({ title: "Berhasil", description: `Token ${generatedToken} berhasil dibuat.` });
       setNewLabel("");
       setNewRole("operator");
       setShowCreate(false);
