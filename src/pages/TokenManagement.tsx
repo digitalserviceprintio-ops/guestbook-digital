@@ -72,10 +72,18 @@ const TokenManagement = () => {
   const [resetting, setResetting] = useState(false);
   const [extending, setExtending] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
-  const [newToken, setNewToken] = useState("");
   const [newLabel, setNewLabel] = useState("");
   const [newRole, setNewRole] = useState<"admin" | "operator">("operator");
   const [creating, setCreating] = useState(false);
+
+  const generateTokenCode = () => {
+    const prefix = newRole === "admin" ? "ADM" : "OPR";
+    const year = new Date().getFullYear();
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const rand = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    const num = String(Math.floor(Math.random() * 999) + 1).padStart(3, "0");
+    return `${prefix}-${year}-${rand}-${num}`;
+  };
   const fetchTokens = async () => {
     const { data } = await supabase
       .from("access_tokens")
@@ -176,21 +184,17 @@ const TokenManagement = () => {
   };
 
   const handleCreateToken = async () => {
-    if (!newToken.trim()) {
-      toast({ title: "Error", description: "Token tidak boleh kosong.", variant: "destructive" });
-      return;
-    }
     setCreating(true);
+    const generatedToken = generateTokenCode();
     const { error } = await supabase.from("access_tokens").insert({
-      token: newToken.trim().toUpperCase(),
-      label: newLabel.trim() || newToken.trim().toUpperCase(),
+      token: generatedToken,
+      label: newLabel.trim() || generatedToken,
       role: newRole,
     } as any);
     if (error) {
-      toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada." : "Gagal membuat token.", variant: "destructive" });
+      toast({ title: "Gagal", description: error.message.includes("duplicate") ? "Token sudah ada, coba lagi." : "Gagal membuat token.", variant: "destructive" });
     } else {
-      toast({ title: "Berhasil", description: `Token ${newToken.trim().toUpperCase()} berhasil dibuat.` });
-      setNewToken("");
+      toast({ title: "Berhasil", description: `Token ${generatedToken} berhasil dibuat.` });
       setNewLabel("");
       setNewRole("operator");
       setShowCreate(false);
@@ -423,25 +427,15 @@ const TokenManagement = () => {
               Buat Token Baru
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Token akan aktif setelah dibuat. Masa berlaku dimulai saat pertama kali digunakan.
+              Token akan di-generate otomatis. Masa berlaku dimulai saat pertama kali digunakan. Maks 850 tamu per token.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="new-token" className="text-foreground">Kode Token</Label>
-              <Input
-                id="new-token"
-                placeholder="Contoh: ADM-2026-BETA-001"
-                value={newToken}
-                onChange={(e) => setNewToken(e.target.value)}
-                className="font-mono uppercase"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-label" className="text-foreground">Label (opsional)</Label>
+              <Label htmlFor="new-label" className="text-foreground">Label / Nama Pelanggan</Label>
               <Input
                 id="new-label"
-                placeholder="Contoh: Admin Utama"
+                placeholder="Contoh: Keluarga Budi"
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
               />
@@ -470,15 +464,15 @@ const TokenManagement = () => {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Admin dapat mengelola token & pengaturan aplikasi. Operator hanya akses dashboard tamu.
+                Admin dapat mengelola token & pengaturan aplikasi. Operator hanya akses dashboard tamu (maks 850 tamu).
               </p>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreate(false)}>Batal</Button>
-            <Button disabled={creating || !newToken.trim()} onClick={handleCreateToken} className="gap-1">
+            <Button disabled={creating} onClick={handleCreateToken} className="gap-1">
               {creating ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-              Buat
+              Generate & Buat
             </Button>
           </DialogFooter>
         </DialogContent>

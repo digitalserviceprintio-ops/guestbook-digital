@@ -67,6 +67,24 @@ export function useGuests() {
   const addGuest = useCallback(
     async (guest: Omit<Guest, "id" | "createdAt">) => {
       const currentToken = getCurrentToken();
+
+      // Check 850 guest limit per token
+      if (currentToken) {
+        const { count, error: countError } = await supabase
+          .from("guests")
+          .select("id", { count: "exact", head: true })
+          .eq("owner_token", currentToken);
+
+        if (!countError && count !== null && count >= 850) {
+          toast({
+            title: "Batas tercapai",
+            description: "Token ini sudah mencapai batas maksimal 850 tamu. Hubungi admin untuk token baru.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       const insertData: Record<string, unknown> = {
         name: guest.name,
         gender: guest.gender,
@@ -85,7 +103,6 @@ export function useGuests() {
         toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
       } else {
         await fetchGuests();
-        // Sync to spreadsheet (non-blocking)
         syncGuestToSpreadsheet("add", { id: "", ...guest });
       }
     },
