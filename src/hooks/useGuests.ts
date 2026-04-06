@@ -89,7 +89,7 @@ export function useGuests() {
         syncGuestToSpreadsheet("add", { id: "", ...guest });
       }
     },
-    [toast, fetchGuests]
+    [toast, fetchGuests, getCurrentToken]
   );
 
   const updateGuest = useCallback(
