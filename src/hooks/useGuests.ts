@@ -51,7 +51,7 @@ export function useGuests() {
       }))
     );
     setLoading(false);
-  }, [toast]);
+  }, [toast, tokenRole, isAuthenticated, getCurrentToken]);
 
   useEffect(() => {
     fetchGuests();
