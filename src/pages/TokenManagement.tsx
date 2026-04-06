@@ -72,10 +72,18 @@ const TokenManagement = () => {
   const [resetting, setResetting] = useState(false);
   const [extending, setExtending] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
-  const [newToken, setNewToken] = useState("");
   const [newLabel, setNewLabel] = useState("");
   const [newRole, setNewRole] = useState<"admin" | "operator">("operator");
   const [creating, setCreating] = useState(false);
+
+  const generateTokenCode = () => {
+    const prefix = newRole === "admin" ? "ADM" : "OPR";
+    const year = new Date().getFullYear();
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const rand = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    const num = String(Math.floor(Math.random() * 999) + 1).padStart(3, "0");
+    return `${prefix}-${year}-${rand}-${num}`;
+  };
   const fetchTokens = async () => {
     const { data } = await supabase
       .from("access_tokens")
