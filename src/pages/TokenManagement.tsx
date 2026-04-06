@@ -427,25 +427,15 @@ const TokenManagement = () => {
               Buat Token Baru
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Token akan aktif setelah dibuat. Masa berlaku dimulai saat pertama kali digunakan.
+              Token akan di-generate otomatis. Masa berlaku dimulai saat pertama kali digunakan. Maks 850 tamu per token.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="new-token" className="text-foreground">Kode Token</Label>
-              <Input
-                id="new-token"
-                placeholder="Contoh: ADM-2026-BETA-001"
-                value={newToken}
-                onChange={(e) => setNewToken(e.target.value)}
-                className="font-mono uppercase"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-label" className="text-foreground">Label (opsional)</Label>
+              <Label htmlFor="new-label" className="text-foreground">Label / Nama Pelanggan</Label>
               <Input
                 id="new-label"
-                placeholder="Contoh: Admin Utama"
+                placeholder="Contoh: Keluarga Budi"
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
               />
@@ -474,15 +464,15 @@ const TokenManagement = () => {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Admin dapat mengelola token & pengaturan aplikasi. Operator hanya akses dashboard tamu.
+                Admin dapat mengelola token & pengaturan aplikasi. Operator hanya akses dashboard tamu (maks 850 tamu).
               </p>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreate(false)}>Batal</Button>
-            <Button disabled={creating || !newToken.trim()} onClick={handleCreateToken} className="gap-1">
+            <Button disabled={creating} onClick={handleCreateToken} className="gap-1">
               {creating ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-              Buat
+              Generate & Buat
             </Button>
           </DialogFooter>
         </DialogContent>
