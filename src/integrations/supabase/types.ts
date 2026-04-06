@@ -94,6 +94,7 @@ export type Database = {
           name: string
           notes: string | null
           number_of_guests: number
+          owner_token: string | null
           souvenir_picked_up: boolean
           status: string
           updated_at: string
@@ -108,6 +109,7 @@ export type Database = {
           name: string
           notes?: string | null
           number_of_guests?: number
+          owner_token?: string | null
           souvenir_picked_up?: boolean
           status?: string
           updated_at?: string
@@ -122,6 +124,7 @@ export type Database = {
           name?: string
           notes?: string | null
           number_of_guests?: number
+          owner_token?: string | null
           souvenir_picked_up?: boolean
           status?: string
           updated_at?: string

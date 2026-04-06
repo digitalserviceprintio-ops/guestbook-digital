@@ -3,6 +3,7 @@ import { Guest, AttendanceStatus, GuestCategory } from "@/types/guest";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { syncGuestToSpreadsheet } from "@/lib/syncSpreadsheet";
+import { useTokenAuth } from "@/hooks/useTokenAuth";
 
 export function useGuests() {
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -11,12 +12,23 @@ export function useGuests() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuestCategory>("pengantin");
   const { toast } = useToast();
+  const { tokenRole, isAuthenticated } = useTokenAuth();
 
+  // Get current token from localStorage
+  const getCurrentToken = useCallback(() => localStorage.getItem("access_token") || "", []);
   const fetchGuests = useCallback(async () => {
-    const { data, error } = await supabase
+    let query = supabase
       .from("guests")
       .select("*")
       .order("created_at", { ascending: false });
+
+    // Operator only sees their own data; admin sees all
+    const currentToken = getCurrentToken();
+    if (isAuthenticated && tokenRole === "operator" && currentToken) {
+      query = query.eq("owner_token", currentToken);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       toast({ title: "Error", description: "Gagal memuat data tamu.", variant: "destructive" });
@@ -39,7 +51,7 @@ export function useGuests() {
       }))
     );
     setLoading(false);
-  }, [toast]);
+  }, [toast, tokenRole, isAuthenticated, getCurrentToken]);
 
   useEffect(() => {
     fetchGuests();
@@ -54,7 +66,8 @@ export function useGuests() {
 
   const addGuest = useCallback(
     async (guest: Omit<Guest, "id" | "createdAt">) => {
-      const { error } = await supabase.from("guests").insert({
+      const currentToken = getCurrentToken();
+      const insertData: Record<string, unknown> = {
         name: guest.name,
         gender: guest.gender,
         number_of_guests: guest.numberOfGuests,
@@ -63,7 +76,11 @@ export function useGuests() {
         status: guest.status,
         category: guest.category,
         notes: guest.notes,
-      });
+      };
+      if (currentToken) {
+        insertData.owner_token = currentToken;
+      }
+      const { error } = await supabase.from("guests").insert(insertData as any);
       if (error) {
         toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
       } else {
@@ -72,7 +89,7 @@ export function useGuests() {
         syncGuestToSpreadsheet("add", { id: "", ...guest });
       }
     },
-    [toast, fetchGuests]
+    [toast, fetchGuests, getCurrentToken]
   );
 
   const updateGuest = useCallback(
