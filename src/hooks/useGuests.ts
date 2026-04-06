@@ -66,7 +66,8 @@ export function useGuests() {
 
   const addGuest = useCallback(
     async (guest: Omit<Guest, "id" | "createdAt">) => {
-      const { error } = await supabase.from("guests").insert({
+      const currentToken = getCurrentToken();
+      const insertData: Record<string, unknown> = {
         name: guest.name,
         gender: guest.gender,
         number_of_guests: guest.numberOfGuests,
@@ -75,7 +76,11 @@ export function useGuests() {
         status: guest.status,
         category: guest.category,
         notes: guest.notes,
-      });
+      };
+      if (currentToken) {
+        insertData.owner_token = currentToken;
+      }
+      const { error } = await supabase.from("guests").insert(insertData as any);
       if (error) {
         toast({ title: "Error", description: "Gagal menambahkan tamu.", variant: "destructive" });
       } else {
