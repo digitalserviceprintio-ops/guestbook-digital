@@ -12,7 +12,10 @@ export function useGuests() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuestCategory>("pengantin");
   const { toast } = useToast();
+  const { tokenRole, isAuthenticated } = useTokenAuth();
 
+  // Get current token from localStorage
+  const getCurrentToken = useCallback(() => localStorage.getItem("access_token") || "", []);
   const fetchGuests = useCallback(async () => {
     const { data, error } = await supabase
       .from("guests")
