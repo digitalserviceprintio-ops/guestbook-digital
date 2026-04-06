@@ -3,6 +3,7 @@ import { Guest, AttendanceStatus, GuestCategory } from "@/types/guest";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { syncGuestToSpreadsheet } from "@/lib/syncSpreadsheet";
+import { useTokenAuth } from "@/hooks/useTokenAuth";
 
 export function useGuests() {
   const [guests, setGuests] = useState<Guest[]>([]);
