@@ -23,6 +23,7 @@ const RSVP = () => {
     if (!name.trim()) return;
     setSubmitting(true);
 
+    const currentToken = localStorage.getItem("access_token") || null;
     const { error } = await supabase.from("guests").insert({
       name: name.trim(),
       number_of_guests: numberOfGuests,
@@ -30,6 +31,7 @@ const RSVP = () => {
       address,
       notes,
       category: "pengantin",
+      owner_token: currentToken,
     });
 
     if (error) {
