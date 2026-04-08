@@ -22,9 +22,6 @@ const RSVP = () => {
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
   const [tokenLabel, setTokenLabel] = useState("");
 
-  // Determine effective token: URL param > localStorage
-  const effectiveToken = urlToken || localStorage.getItem("access_token") || null;
-
   // Validate token on mount
   useEffect(() => {
     if (!effectiveToken) {
