@@ -144,10 +144,10 @@ export function useWeddingSettings(ownerToken?: string | null) {
       }
     } else {
       // Public/admin: load shared default (owner_token IS NULL)
-      const { data } = await supabase
+      const { data } = await (supabase
         .from("wedding_settings")
-        .select("*")
-        .is("owner_token" as any, null)
+        .select("*") as any)
+        .is("owner_token", null)
         .limit(1)
         .single();
 
