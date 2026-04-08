@@ -90,10 +90,10 @@ export function useWeddingSettings(ownerToken?: string | null) {
 
     if (resolvedToken) {
       // Try to get operator-specific settings
-      const { data: tokenData } = await supabase
+      const { data: tokenData } = await (supabase
         .from("wedding_settings")
-        .select("*")
-        .eq("owner_token" as any, resolvedToken)
+        .select("*") as any)
+        .eq("owner_token", resolvedToken)
         .maybeSingle();
 
       if (tokenData) {
