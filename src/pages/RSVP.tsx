@@ -10,6 +10,7 @@ const RSVP = () => {
   const { toast } = useToast();
   const { settings, loading: settingsLoading } = useWeddingSettings();
   const navigate = useNavigate();
+  const { token: urlToken } = useParams<{ token?: string }>();
   const [name, setName] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [status, setStatus] = useState<"hadir" | "tidak_hadir">("hadir");
@@ -17,6 +18,33 @@ const RSVP = () => {
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  const [tokenLabel, setTokenLabel] = useState("");
+
+  // Determine effective token: URL param > localStorage
+  const effectiveToken = urlToken || localStorage.getItem("access_token") || null;
+
+  // Validate token on mount
+  useEffect(() => {
+    if (!effectiveToken) {
+      setTokenValid(false);
+      return;
+    }
+    supabase
+      .from("access_tokens")
+      .select("token, label, is_active")
+      .eq("token", effectiveToken)
+      .eq("is_active", true)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setTokenValid(true);
+          setTokenLabel(data.label);
+        } else {
+          setTokenValid(false);
+        }
+      });
+  }, [effectiveToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
