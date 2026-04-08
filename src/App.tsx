@@ -34,6 +34,7 @@ const App = () => (
             <AppVersionNotification />
             <Routes>
               <Route path="/" element={<Welcome />} />
+              <Route path="/rsvp/:token" element={<RSVP />} />
               <Route path="/rsvp" element={<RSVP />} />
               <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/laporan" element={<ProtectedRoute><Report /></ProtectedRoute>} />
