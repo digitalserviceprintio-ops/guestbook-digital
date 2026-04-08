@@ -109,7 +109,7 @@ export function useWeddingSettings() {
 
       const { error } = await supabase
         .from("wedding_settings")
-        .update(dbUpdates)
+        .update(dbUpdates as any)
         .eq("id", settings.id);
 
       if (error) {
