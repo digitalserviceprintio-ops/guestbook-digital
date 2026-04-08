@@ -48,10 +48,9 @@ const RSVP = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !effectiveToken) return;
     setSubmitting(true);
 
-    const currentToken = localStorage.getItem("access_token") || null;
     const { error } = await supabase.from("guests").insert({
       name: name.trim(),
       number_of_guests: numberOfGuests,
@@ -59,7 +58,7 @@ const RSVP = () => {
       address,
       notes,
       category: "pengantin",
-      owner_token: currentToken,
+      owner_token: effectiveToken,
     });
 
     if (error) {
