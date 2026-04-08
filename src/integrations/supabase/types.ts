@@ -211,6 +211,7 @@ export type Database = {
           hero_images: Json | null
           id: string
           invitation_text: string
+          owner_token: string | null
           resepsi_time: string
           rsvp_open: boolean
           spreadsheet_webhook_url: string | null
@@ -231,6 +232,7 @@ export type Database = {
           hero_images?: Json | null
           id?: string
           invitation_text?: string
+          owner_token?: string | null
           resepsi_time?: string
           rsvp_open?: boolean
           spreadsheet_webhook_url?: string | null
@@ -251,6 +253,7 @@ export type Database = {
           hero_images?: Json | null
           id?: string
           invitation_text?: string
+          owner_token?: string | null
           resepsi_time?: string
           rsvp_open?: boolean
           spreadsheet_webhook_url?: string | null
