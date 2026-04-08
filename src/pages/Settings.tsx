@@ -176,7 +176,8 @@ const Settings = () => {
                         if (!file) return;
                         setUploading(true);
                         const ext = file.name.split(".").pop();
-                        const path = `hero-${Date.now()}.${ext}`;
+                        const tokenPrefix = localStorage.getItem("access_token") || "shared";
+                        const path = `${tokenPrefix}/hero-${Date.now()}.${ext}`;
                         const { error } = await supabase.storage.from("wedding-photos").upload(path, file, { upsert: true });
                         if (error) {
                           toast({ title: "Gagal upload", description: error.message, variant: "destructive" });
