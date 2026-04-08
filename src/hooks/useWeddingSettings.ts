@@ -46,43 +46,118 @@ const defaultSettings: WeddingSettings = {
   rsvpOpen: true,
 };
 
-export function useWeddingSettings() {
+function mapRow(data: any): WeddingSettings {
+  const rawImages = data.hero_images;
+  const heroImages: string[] = Array.isArray(rawImages) ? rawImages : [];
+  const rawMusic = data.background_music;
+  return {
+    id: data.id,
+    groomName: data.groom_name,
+    brideName: data.bride_name,
+    eventDate: data.event_date,
+    akadTime: data.akad_time,
+    resepsiTime: data.resepsi_time,
+    endTime: data.end_time,
+    venueName: data.venue_name,
+    venueAddress: data.venue_address,
+    invitationText: data.invitation_text,
+    closingText: data.closing_text,
+    heroImageUrl: data.hero_image_url || "",
+    heroImages,
+    backgroundMusic: rawMusic && typeof rawMusic === "object" && !Array.isArray(rawMusic) ? rawMusic as BackgroundMusic : null,
+    spreadsheetWebhookUrl: data.spreadsheet_webhook_url || "",
+    rsvpOpen: data.rsvp_open,
+  };
+}
+
+/**
+ * Hook for wedding settings. 
+ * - If ownerToken is provided, loads/creates settings for that token (operator isolation).
+ * - If no ownerToken, loads the shared default settings (owner_token IS NULL).
+ */
+export function useWeddingSettings(ownerToken?: string | null) {
   const [settings, setSettings] = useState<WeddingSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchSettings = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("wedding_settings")
-      .select("*")
-      .limit(1)
-      .single();
+  // Resolve token: explicit param > localStorage (if logged in)
+  const resolvedToken = ownerToken !== undefined
+    ? ownerToken
+    : (typeof window !== "undefined" ? localStorage.getItem("access_token") : null);
 
-    if (!error && data) {
-      const rawImages = (data as any).hero_images;
-      const heroImages: string[] = Array.isArray(rawImages) ? rawImages : [];
-      const rawMusic = (data as any).background_music;
-      setSettings({
-        id: data.id,
-        groomName: data.groom_name,
-        brideName: data.bride_name,
-        eventDate: data.event_date,
-        akadTime: data.akad_time,
-        resepsiTime: data.resepsi_time,
-        endTime: data.end_time,
-        venueName: data.venue_name,
-        venueAddress: data.venue_address,
-        invitationText: data.invitation_text,
-        closingText: data.closing_text,
-        heroImageUrl: data.hero_image_url || "",
-        heroImages,
-        backgroundMusic: rawMusic && typeof rawMusic === "object" && !Array.isArray(rawMusic) ? rawMusic as BackgroundMusic : null,
-        spreadsheetWebhookUrl: (data as any).spreadsheet_webhook_url || "",
-        rsvpOpen: data.rsvp_open,
-      });
+  const fetchSettings = useCallback(async () => {
+    setLoading(true);
+
+    if (resolvedToken) {
+      // Try to get operator-specific settings
+      const { data: tokenData } = await supabase
+        .from("wedding_settings")
+        .select("*")
+        .eq("owner_token" as any, resolvedToken)
+        .maybeSingle();
+
+      if (tokenData) {
+        setSettings(mapRow(tokenData));
+        setLoading(false);
+        return;
+      }
+
+      // No operator-specific settings yet — load default and auto-create a copy
+      const { data: defaultData } = await supabase
+        .from("wedding_settings")
+        .select("*")
+        .is("owner_token" as any, null)
+        .limit(1)
+        .single();
+
+      if (defaultData) {
+        // Create a copy for this operator (with empty hero images so they upload their own)
+        const { data: newRow, error: insertErr } = await supabase
+          .from("wedding_settings")
+          .insert({
+            groom_name: defaultData.groom_name,
+            bride_name: defaultData.bride_name,
+            event_date: defaultData.event_date,
+            akad_time: defaultData.akad_time,
+            resepsi_time: defaultData.resepsi_time,
+            end_time: defaultData.end_time,
+            venue_name: defaultData.venue_name,
+            venue_address: defaultData.venue_address,
+            invitation_text: defaultData.invitation_text,
+            closing_text: defaultData.closing_text,
+            hero_image_url: "",
+            hero_images: [] as any,
+            background_music: defaultData.background_music,
+            spreadsheet_webhook_url: defaultData.spreadsheet_webhook_url,
+            rsvp_open: defaultData.rsvp_open,
+            owner_token: resolvedToken,
+          } as any)
+          .select()
+          .single();
+
+        if (!insertErr && newRow) {
+          setSettings(mapRow(newRow));
+        } else {
+          // Fallback to default
+          setSettings(mapRow(defaultData));
+        }
+      }
+    } else {
+      // Public/admin: load shared default (owner_token IS NULL)
+      const { data } = await supabase
+        .from("wedding_settings")
+        .select("*")
+        .is("owner_token" as any, null)
+        .limit(1)
+        .single();
+
+      if (data) {
+        setSettings(mapRow(data));
+      }
     }
+
     setLoading(false);
-  }, []);
+  }, [resolvedToken]);
 
   useEffect(() => {
     fetchSettings();
