@@ -197,7 +197,24 @@ const Index = () => {
 
       {/* Content */}
       <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 py-5 pb-24 space-y-5">
-        {/* Category Tabs */}
+        {/* RSVP Link Copy */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              const token = localStorage.getItem("access_token");
+              if (token) {
+                const rsvpUrl = `${window.location.origin}/rsvp/${token}`;
+                navigator.clipboard.writeText(rsvpUrl);
+                toast({ title: "Link RSVP disalin!", description: "Bagikan link ini kepada tamu undangan Anda." });
+              }
+            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary text-sm font-body font-medium transition-colors"
+          >
+            <Link2 className="h-4 w-4" />
+            Salin Link RSVP
+          </button>
+        </motion.div>
+
         <div className="flex rounded-xl bg-card p-1 shadow-card max-w-md">
           {categoryTabs.map((tab) => (
             <button
