@@ -103,10 +103,10 @@ export function useWeddingSettings(ownerToken?: string | null) {
       }
 
       // No operator-specific settings yet — load default and auto-create a copy
-      const { data: defaultData } = await supabase
+      const { data: defaultData } = await (supabase
         .from("wedding_settings")
-        .select("*")
-        .is("owner_token" as any, null)
+        .select("*") as any)
+        .is("owner_token", null)
         .limit(1)
         .single();
 
