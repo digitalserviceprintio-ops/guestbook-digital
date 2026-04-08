@@ -121,7 +121,7 @@ export function useGuests() {
       if (data.category !== undefined) updateData.category = data.category;
       if (data.notes !== undefined) updateData.notes = data.notes;
 
-      const { error } = await supabase.from("guests").update(updateData).eq("id", id);
+      const { error } = await supabase.from("guests").update(updateData as any).eq("id", id);
       if (error) {
         toast({ title: "Error", description: "Gagal mengupdate tamu.", variant: "destructive" });
       } else {

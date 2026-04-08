@@ -3,13 +3,14 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
-import { CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { CheckCircle2, XCircle, ArrowLeft, AlertTriangle } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const RSVP = () => {
   const { toast } = useToast();
   const { settings, loading: settingsLoading } = useWeddingSettings();
   const navigate = useNavigate();
+  const { token: urlToken } = useParams<{ token?: string }>();
   const [name, setName] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [status, setStatus] = useState<"hadir" | "tidak_hadir">("hadir");
@@ -17,13 +18,39 @@ const RSVP = () => {
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  const [tokenLabel, setTokenLabel] = useState("");
+
+  // Determine effective token: URL param > localStorage
+  const effectiveToken = urlToken || localStorage.getItem("access_token") || null;
+
+  // Validate token on mount
+  useEffect(() => {
+    if (!effectiveToken) {
+      setTokenValid(false);
+      return;
+    }
+    supabase
+      .from("access_tokens")
+      .select("token, label, is_active")
+      .eq("token", effectiveToken)
+      .eq("is_active", true)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setTokenValid(true);
+          setTokenLabel(data.label);
+        } else {
+          setTokenValid(false);
+        }
+      });
+  }, [effectiveToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || !effectiveToken) return;
     setSubmitting(true);
 
-    const currentToken = localStorage.getItem("access_token") || null;
     const { error } = await supabase.from("guests").insert({
       name: name.trim(),
       number_of_guests: numberOfGuests,
@@ -31,7 +58,7 @@ const RSVP = () => {
       address,
       notes,
       category: "pengantin",
-      owner_token: currentToken,
+      owner_token: effectiveToken,
     });
 
     if (error) {
@@ -52,10 +79,24 @@ const RSVP = () => {
     }
   }, [submitted, navigate]);
 
-  if (settingsLoading) {
+  if (settingsLoading || tokenValid === null) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <p className="text-muted-foreground font-body text-sm">Memuat...</p>
+      </div>
+    );
+  }
+
+  if (!tokenValid || !effectiveToken) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-5">
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm md:max-w-md w-full rounded-2xl bg-card p-8 shadow-elevated text-center space-y-4">
+          <AlertTriangle className="h-16 w-16 text-warning mx-auto" />
+          <h2 className="font-display text-2xl font-bold text-card-foreground">Link RSVP Tidak Valid</h2>
+          <p className="text-sm md:text-base font-body text-muted-foreground">
+            Link RSVP ini tidak valid atau token sudah tidak aktif. Silakan hubungi penyelenggara untuk mendapatkan link yang benar.
+          </p>
+        </motion.div>
       </div>
     );
   }
