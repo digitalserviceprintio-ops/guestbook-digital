@@ -8,9 +8,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const RSVP = () => {
   const { toast } = useToast();
-  const { settings, loading: settingsLoading } = useWeddingSettings();
   const navigate = useNavigate();
   const { token: urlToken } = useParams<{ token?: string }>();
+  const effectiveToken = urlToken || localStorage.getItem("access_token") || null;
+  const { settings, loading: settingsLoading } = useWeddingSettings(effectiveToken);
   const [name, setName] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [status, setStatus] = useState<"hadir" | "tidak_hadir">("hadir");
