@@ -91,7 +91,7 @@ const RSVP = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-5">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="max-w-sm md:max-w-md w-full rounded-2xl bg-card p-8 shadow-elevated text-center space-y-4">
-          <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto" />
+          <AlertTriangle className="h-16 w-16 text-warning mx-auto" />
           <h2 className="font-display text-2xl font-bold text-card-foreground">Link RSVP Tidak Valid</h2>
           <p className="text-sm md:text-base font-body text-muted-foreground">
             Link RSVP ini tidak valid atau token sudah tidak aktif. Silakan hubungi penyelenggara untuk mendapatkan link yang benar.
