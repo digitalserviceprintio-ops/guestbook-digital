@@ -17,7 +17,7 @@ const fadeUp = {
 
 const Welcome = () => {
   const navigate = useNavigate();
-  const { settings, loading } = useWeddingSettings();
+  const { settings, loading } = useWeddingSettings(null);
   const { isAuthenticated, hasSavedToken, quickLogin, tokenLabel } = useTokenAuth();
   const [quickLoading, setQuickLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
