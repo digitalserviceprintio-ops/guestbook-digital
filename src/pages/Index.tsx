@@ -12,6 +12,7 @@ import { GuestForm } from "@/components/GuestForm";
 import { Guest, GuestCategory, categoryLabels } from "@/types/guest";
 import { useToast } from "@/hooks/use-toast";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { InvitationPreview } from "@/components/InvitationPreview";
 
 const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[] = [
   { value: "pengantin", label: "Pengantin", icon: Heart },
@@ -66,6 +67,7 @@ const Index = () => {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { logout, fullLogout, tokenLabel, tokenRole } = useTokenAuth();
