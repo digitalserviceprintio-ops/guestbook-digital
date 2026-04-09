@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { useAppVersion } from "@/hooks/useAppVersion";
-import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive, Bell, Key, Link2 } from "lucide-react";
+import { Plus, BookOpen, FileBarChart, Heart, Users2, Gift, Settings, LogOut, HardDrive, Bell, Key, Link2, Eye } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
@@ -12,6 +12,7 @@ import { GuestForm } from "@/components/GuestForm";
 import { Guest, GuestCategory, categoryLabels } from "@/types/guest";
 import { useToast } from "@/hooks/use-toast";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { InvitationPreview } from "@/components/InvitationPreview";
 
 const categoryTabs: { value: GuestCategory; label: string; icon: typeof Heart }[] = [
   { value: "pengantin", label: "Pengantin", icon: Heart },
@@ -66,6 +67,7 @@ const Index = () => {
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { logout, fullLogout, tokenLabel, tokenRole } = useTokenAuth();
@@ -198,7 +200,7 @@ const Index = () => {
       {/* Content */}
       <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 py-5 pb-24 space-y-5">
         {/* RSVP Link Copy */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => {
               const token = localStorage.getItem("access_token");
@@ -212,6 +214,13 @@ const Index = () => {
           >
             <Link2 className="h-4 w-4" />
             Salin Link RSVP
+          </button>
+          <button
+            onClick={() => setPreviewOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl glass hover:bg-accent text-foreground text-sm font-body font-medium transition-colors shadow-card"
+          >
+            <Eye className="h-4 w-4" />
+            Preview Undangan
           </button>
         </motion.div>
 
@@ -287,6 +296,7 @@ const Index = () => {
         }}
         onUpdate={updateGuest}
       />
+      <InvitationPreview open={previewOpen} onClose={() => setPreviewOpen(false)} />
     </div>
   );
 };
