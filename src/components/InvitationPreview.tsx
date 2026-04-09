@@ -1,0 +1,247 @@
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Heart, MapPin, Calendar, Clock, Volume2, VolumeX, X, ExternalLink } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { useWeddingSettings } from "@/hooks/useWeddingSettings";
+import defaultHero from "@/assets/wedding-hero.jpg";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
+  }),
+};
+
+interface InvitationPreviewProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export const InvitationPreview = ({ open, onClose }: InvitationPreviewProps) => {
+  const { settings, loading } = useWeddingSettings();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const images = settings.heroImages && settings.heroImages.length > 0
+    ? settings.heroImages
+    : (settings.heroImageUrl ? [settings.heroImageUrl] : [defaultHero]);
+
+  useEffect(() => {
+    if (!open || images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [open, images.length]);
+
+  const musicUrl = settings.backgroundMusic?.url;
+
+  useEffect(() => {
+    if (!open || !musicUrl) return;
+    const audio = new Audio(musicUrl);
+    audio.loop = true;
+    audio.volume = 0.3;
+    audioRef.current = audio;
+    return () => {
+      audio.pause();
+      audio.src = "";
+      audioRef.current = null;
+    };
+  }, [open, musicUrl]);
+
+  // Stop music when dialog closes
+  useEffect(() => {
+    if (!open && audioRef.current) {
+      audioRef.current.pause();
+      setMusicPlaying(false);
+    }
+  }, [open]);
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicPlaying) {
+      audio.pause();
+    } else {
+      audio.play().catch(() => {});
+    }
+    setMusicPlaying(!musicPlaying);
+  };
+
+  const formatDate = (dateStr: string) => {
+    try {
+      const d = new Date(dateStr + "T00:00:00");
+      return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const token = localStorage.getItem("access_token");
+  const rsvpUrl = token ? `${window.location.origin}/rsvp/${token}` : "";
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-md md:max-w-lg p-0 overflow-hidden max-h-[90vh] overflow-y-auto border-0 rounded-2xl">
+        <DialogTitle className="sr-only">Preview Undangan Digital</DialogTitle>
+        
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="h-8 w-8 rounded-full gradient-hero animate-pulse" />
+          </div>
+        ) : (
+          <div className="bg-background">
+            {/* Header badge */}
+            <div className="sticky top-0 z-20 flex items-center justify-between px-4 py-2 bg-primary/10 backdrop-blur-sm">
+              <span className="text-xs font-body font-medium text-primary flex items-center gap-1.5">
+                <ExternalLink className="h-3 w-3" />
+                Preview Undangan
+              </span>
+              <button onClick={onClose} className="p-1 rounded-lg hover:bg-primary/10 transition-colors text-primary">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Hero */}
+            <div className="relative h-[280px] md:h-[320px]">
+              <AnimatePresence mode="wait">
+                {images.map((img, idx) =>
+                  idx === currentSlide ? (
+                    <motion.img
+                      key={idx}
+                      src={img}
+                      alt={`Foto ${idx + 1}`}
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.8 }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : null
+                )}
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-gradient-to-b from-foreground/30 via-foreground/10 to-background" />
+
+              <div className="relative z-10 h-full flex flex-col items-center justify-end pb-6 px-4 text-center">
+                <p className="text-[10px] font-body tracking-[0.3em] uppercase text-primary-foreground/80 font-medium">The Wedding of</p>
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground leading-tight mt-1">
+                  {settings.groomName} & {settings.brideName}
+                </h2>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="h-px w-8 bg-primary-foreground/40" />
+                  <Heart className="h-3 w-3 text-primary-foreground/60 fill-primary-foreground/60" />
+                  <div className="h-px w-8 bg-primary-foreground/40" />
+                </div>
+
+                {images.length > 1 && (
+                  <div className="flex items-center gap-1.5 mt-3">
+                    {images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`rounded-full transition-all duration-500 ${
+                          idx === currentSlide ? "w-5 h-1.5 gradient-hero" : "w-1.5 h-1.5 bg-primary-foreground/40"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Music toggle in preview */}
+              {musicUrl && (
+                <button
+                  onClick={toggleMusic}
+                  className="absolute top-3 right-3 z-20 h-8 w-8 rounded-full glass flex items-center justify-center text-primary-foreground"
+                >
+                  {musicPlaying ? <Volume2 className="h-3 w-3" /> : <VolumeX className="h-3 w-3" />}
+                </button>
+              )}
+            </div>
+
+            {/* Content */}
+            <div className="px-5 py-5 space-y-4">
+              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0} className="text-center space-y-1">
+                <p className="text-[10px] font-body text-muted-foreground tracking-widest uppercase font-medium">Bismillahirrahmanirrahim</p>
+                <p className="text-xs font-body text-muted-foreground leading-relaxed">{settings.invitationText}</p>
+              </motion.div>
+
+              {/* Event Details */}
+              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={1} className="rounded-xl glass-strong p-4 shadow-card space-y-3">
+                <h3 className="font-display text-sm font-bold text-card-foreground text-center">Detail Acara</h3>
+                <div className="space-y-2.5">
+                  <div className="flex items-start gap-2.5">
+                    <div className="h-7 w-7 rounded-lg gradient-hero flex items-center justify-center shrink-0">
+                      <Calendar className="h-3 w-3 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-body font-semibold text-card-foreground">{formatDate(settings.eventDate)}</p>
+                      <p className="text-[10px] font-body text-muted-foreground">Akad & Resepsi</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <div className="h-7 w-7 rounded-lg gradient-hero flex items-center justify-center shrink-0">
+                      <Clock className="h-3 w-3 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-body font-semibold text-card-foreground">{settings.akadTime} - {settings.endTime} WIB</p>
+                      <p className="text-[10px] font-body text-muted-foreground">Akad: {settings.akadTime} · Resepsi: {settings.resepsiTime}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <div className="h-7 w-7 rounded-lg gradient-hero flex items-center justify-center shrink-0">
+                      <MapPin className="h-3 w-3 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-body font-semibold text-card-foreground">{settings.venueName}</p>
+                      <p className="text-[10px] font-body text-muted-foreground">{settings.venueAddress}</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* RSVP Button Preview */}
+              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={2}>
+                {settings.rsvpOpen ? (
+                  <div className="w-full gradient-hero text-primary-foreground font-body font-semibold py-3 rounded-xl text-center text-xs opacity-80">
+                    Konfirmasi Kehadiran (RSVP)
+                  </div>
+                ) : (
+                  <div className="w-full glass text-muted-foreground font-body font-medium py-3 rounded-xl text-center text-xs">
+                    RSVP Sudah Ditutup
+                  </div>
+                )}
+              </motion.div>
+
+              <motion.p variants={fadeUp} initial="hidden" animate="visible" custom={3} className="text-center text-[10px] font-body text-muted-foreground">
+                {settings.closingText}
+              </motion.p>
+            </div>
+
+            {/* Footer with RSVP link */}
+            {rsvpUrl && (
+              <div className="px-5 pb-5">
+                <div className="rounded-xl bg-muted/50 p-3 space-y-2">
+                  <p className="text-[10px] font-body font-medium text-muted-foreground text-center">Link RSVP untuk dibagikan:</p>
+                  <div className="flex items-center gap-2">
+                    <code className="flex-1 text-[10px] font-mono bg-background rounded-lg px-2 py-1.5 text-foreground truncate">{rsvpUrl}</code>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(rsvpUrl);
+                      }}
+                      className="shrink-0 text-[10px] font-body font-medium px-3 py-1.5 rounded-lg gradient-hero text-primary-foreground"
+                    >
+                      Salin
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
