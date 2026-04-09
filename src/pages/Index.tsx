@@ -200,7 +200,7 @@ const Index = () => {
       {/* Content */}
       <main className="max-w-lg md:max-w-2xl lg:max-w-5xl mx-auto px-5 py-5 pb-24 space-y-5">
         {/* RSVP Link Copy */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => {
               const token = localStorage.getItem("access_token");
@@ -214,6 +214,13 @@ const Index = () => {
           >
             <Link2 className="h-4 w-4" />
             Salin Link RSVP
+          </button>
+          <button
+            onClick={() => setPreviewOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl glass hover:bg-accent text-foreground text-sm font-body font-medium transition-colors shadow-card"
+          >
+            <Eye className="h-4 w-4" />
+            Preview Undangan
           </button>
         </motion.div>
 
