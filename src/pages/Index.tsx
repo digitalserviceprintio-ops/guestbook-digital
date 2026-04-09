@@ -296,6 +296,7 @@ const Index = () => {
         }}
         onUpdate={updateGuest}
       />
+      <InvitationPreview open={previewOpen} onClose={() => setPreviewOpen(false)} />
     </div>
   );
 };
