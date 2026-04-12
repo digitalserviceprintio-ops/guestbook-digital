@@ -22,6 +22,7 @@ export type Database = {
           is_active: boolean
           label: string
           last_used_at: string | null
+          max_guests: number | null
           role: string
           token: string
         }
@@ -32,6 +33,7 @@ export type Database = {
           is_active?: boolean
           label?: string
           last_used_at?: string | null
+          max_guests?: number | null
           role?: string
           token: string
         }
@@ -42,6 +44,7 @@ export type Database = {
           is_active?: boolean
           label?: string
           last_used_at?: string | null
+          max_guests?: number | null
           role?: string
           token?: string
         }
