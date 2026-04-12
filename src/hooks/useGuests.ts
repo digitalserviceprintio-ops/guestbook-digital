@@ -68,17 +68,26 @@ export function useGuests() {
     async (guest: Omit<Guest, "id" | "createdAt">) => {
       const currentToken = getCurrentToken();
 
-      // Check 850 guest limit per token
+      // Check guest limit per token (max_guests from access_tokens, default 850)
       if (currentToken) {
-        const { count, error: countError } = await supabase
-          .from("guests")
-          .select("id", { count: "exact", head: true })
-          .eq("owner_token", currentToken);
+        const [{ count, error: countError }, { data: tokenData }] = await Promise.all([
+          supabase
+            .from("guests")
+            .select("id", { count: "exact", head: true })
+            .eq("owner_token", currentToken),
+          supabase
+            .from("access_tokens")
+            .select("max_guests")
+            .eq("token", currentToken)
+            .maybeSingle(),
+        ]);
 
-        if (!countError && count !== null && count >= 850) {
+        const maxGuests = (tokenData as any)?.max_guests ?? 850;
+
+        if (!countError && count !== null && count >= maxGuests) {
           toast({
             title: "Batas tercapai",
-            description: "Token ini sudah mencapai batas maksimal 850 tamu. Hubungi admin untuk token baru.",
+            description: `Token ini sudah mencapai batas maksimal ${maxGuests} tamu.${maxGuests <= 20 ? " Ini adalah akun demo." : " Hubungi admin untuk token baru."}`,
             variant: "destructive",
           });
           return;

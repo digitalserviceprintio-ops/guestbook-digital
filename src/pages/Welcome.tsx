@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Heart, MapPin, Calendar, Clock, Volume2, VolumeX, LogIn } from "lucide-react";
+import { Heart, MapPin, Calendar, Clock, Volume2, VolumeX, LogIn, Eye } from "lucide-react";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import { useTokenAuth } from "@/hooks/useTokenAuth";
 import { LoginModal } from "@/components/LoginModal";
@@ -18,7 +18,7 @@ const fadeUp = {
 const Welcome = () => {
   const navigate = useNavigate();
   const { settings, loading } = useWeddingSettings(null);
-  const { isAuthenticated, hasSavedToken, quickLogin, tokenLabel } = useTokenAuth();
+  const { isAuthenticated, hasSavedToken, quickLogin, login, tokenLabel } = useTokenAuth();
   const [quickLoading, setQuickLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [musicPlaying, setMusicPlaying] = useState(false);
@@ -237,6 +237,25 @@ const Welcome = () => {
       )}
 
       {/* Floating login buttons */}
+      {/* Demo Button */}
+      {!isAuthenticated && (
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 1.2, type: "spring" }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={async () => {
+            const result = await login("DEMO2026");
+            if (result.ok) navigate("/dashboard");
+          }}
+          className="fixed bottom-6 left-6 z-40 flex items-center gap-2 glass border border-border text-foreground font-body font-semibold px-5 py-3 rounded-full shadow-elevated hover:bg-accent transition-all text-sm"
+        >
+          <Eye className="h-4 w-4" />
+          Coba Demo
+        </motion.button>
+      )}
+
       {isAuthenticated ? (
         <motion.button
           initial={{ scale: 0 }}
