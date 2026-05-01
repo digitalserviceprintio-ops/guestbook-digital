@@ -118,6 +118,41 @@
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  html, body {
+    /* Prevent horizontal page scroll on mobile (blobs, transforms, etc.) */
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  /* Respect iOS safe areas for PWA / standalone */
+  @supports (padding: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  /* Better tap targets & no double-tap zoom on interactive elements */
+  button, a, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  /* Prevent iOS auto-zoom on focus when input font-size < 16px */
+  @media (max-width: 640px) {
+    input, select, textarea {
+      font-size: 16px;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -181,6 +216,7 @@
 
   /* Ambient background blobs */
   .bg-blob-purple {
+    will-change: transform;
     position: fixed;
     width: 400px;
     height: 400px;
@@ -191,6 +227,7 @@
     z-index: 0;
   }
   .bg-blob-blue {
+    will-change: transform;
     position: fixed;
     width: 350px;
     height: 350px;
@@ -201,6 +238,7 @@
     z-index: 0;
   }
   .bg-blob-pink {
+    will-change: transform;
     position: fixed;
     width: 300px;
     height: 300px;
@@ -209,5 +247,36 @@
     filter: blur(80px);
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* Hide scrollbars but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Subtle, modern scrollbar for areas where it should remain visible */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Reduce motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

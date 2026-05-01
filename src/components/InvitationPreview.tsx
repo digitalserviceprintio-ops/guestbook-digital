@@ -84,7 +84,7 @@ export const InvitationPreview = ({ open, onClose }: InvitationPreviewProps) => 
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-md md:max-w-lg p-0 overflow-hidden max-h-[90vh] overflow-y-auto border-0 rounded-2xl">
+      <DialogContent className="max-w-md md:max-w-lg !p-0 max-h-[90dvh] border-0 rounded-2xl w-[calc(100vw-1.5rem)]">
         <DialogTitle className="sr-only">Preview Undangan Digital</DialogTitle>
         <DialogDescription className="sr-only">
           Pratinjau tampilan undangan digital sebelum dibagikan ke tamu.
