@@ -216,6 +216,7 @@
 
   /* Ambient background blobs */
   .bg-blob-purple {
+    will-change: transform;
     position: fixed;
     width: 400px;
     height: 400px;
@@ -226,6 +227,7 @@
     z-index: 0;
   }
   .bg-blob-blue {
+    will-change: transform;
     position: fixed;
     width: 350px;
     height: 350px;
@@ -236,6 +238,7 @@
     z-index: 0;
   }
   .bg-blob-pink {
+    will-change: transform;
     position: fixed;
     width: 300px;
     height: 300px;
@@ -244,5 +247,36 @@
     filter: blur(80px);
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* Hide scrollbars but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Subtle, modern scrollbar for areas where it should remain visible */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Reduce motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
