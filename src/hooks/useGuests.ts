@@ -68,29 +68,31 @@ export function useGuests() {
     async (guest: Omit<Guest, "id" | "createdAt">) => {
       const currentToken = getCurrentToken();
 
-      // Check guest limit per token (max_guests from access_tokens, default 850)
+      // Check guest limit only when token has explicit max_guests (e.g., demo accounts).
+      // Regular tokens are unlimited.
       if (currentToken) {
-        const [{ count, error: countError }, { data: tokenData }] = await Promise.all([
-          supabase
+        const { data: tokenData } = await supabase
+          .from("access_tokens")
+          .select("max_guests")
+          .eq("token", currentToken)
+          .maybeSingle();
+
+        const maxGuests = (tokenData as any)?.max_guests ?? null;
+
+        if (maxGuests !== null && maxGuests > 0) {
+          const { count, error: countError } = await supabase
             .from("guests")
             .select("id", { count: "exact", head: true })
-            .eq("owner_token", currentToken),
-          supabase
-            .from("access_tokens")
-            .select("max_guests")
-            .eq("token", currentToken)
-            .maybeSingle(),
-        ]);
+            .eq("owner_token", currentToken);
 
-        const maxGuests = (tokenData as any)?.max_guests ?? 850;
-
-        if (!countError && count !== null && count >= maxGuests) {
-          toast({
-            title: "Batas tercapai",
-            description: `Token ini sudah mencapai batas maksimal ${maxGuests} tamu.${maxGuests <= 20 ? " Ini adalah akun demo." : " Hubungi admin untuk token baru."}`,
-            variant: "destructive",
-          });
-          return;
+          if (!countError && count !== null && count >= maxGuests) {
+            toast({
+              title: "Batas tercapai",
+              description: `Token ini sudah mencapai batas maksimal ${maxGuests} tamu.${maxGuests <= 20 ? " Ini adalah akun demo." : ""}`,
+              variant: "destructive",
+            });
+            return;
+          }
         }
       }
 
