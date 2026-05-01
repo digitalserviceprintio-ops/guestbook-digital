@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, MapPin, Calendar, Clock, Volume2, VolumeX, X, ExternalLink } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useWeddingSettings } from "@/hooks/useWeddingSettings";
 import defaultHero from "@/assets/wedding-hero.jpg";
 
@@ -86,7 +86,10 @@ export const InvitationPreview = ({ open, onClose }: InvitationPreviewProps) => 
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-md md:max-w-lg p-0 overflow-hidden max-h-[90vh] overflow-y-auto border-0 rounded-2xl">
         <DialogTitle className="sr-only">Preview Undangan Digital</DialogTitle>
-        
+        <DialogDescription className="sr-only">
+          Pratinjau tampilan undangan digital sebelum dibagikan ke tamu.
+        </DialogDescription>
+
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 rounded-full gradient-hero animate-pulse" />
@@ -109,16 +112,21 @@ export const InvitationPreview = ({ open, onClose }: InvitationPreviewProps) => 
               <AnimatePresence mode="wait">
                 {images.map((img, idx) =>
                   idx === currentSlide ? (
-                    <motion.img
+                    <motion.div
                       key={idx}
-                      src={img}
-                      alt={`Foto ${idx + 1}`}
                       initial={{ opacity: 0, scale: 1.05 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.8 }}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
+                      className="absolute inset-0"
+                    >
+                      <img
+                        src={img}
+                        alt={`Foto ${idx + 1}`}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
                   ) : null
                 )}
               </AnimatePresence>
